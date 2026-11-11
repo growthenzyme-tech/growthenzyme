@@ -3,7 +3,7 @@ import Hero from "./components/sections/Hero";
 import Services from "./components/sections/Services";
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#4F7942]/50">
+    <main className="min-h-screen bg-[#A8CFA8]/50">
 
       <Hero />
 
