@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
@@ -15,7 +16,7 @@ export default function Hero() {
     <section className="relative isolate mx-auto w-full max-w-[1320px] overflow-hidden bg-[#F5F0E5] text-[#29382F]">
 
       {/* Hero Main Content */}
-      <div className="relative mx-auto grid min-h-[660px] max-w-[1320px] items-center gap-10 px-6 py-16 sm:px-10 lg:min-h-[700px] lg:grid-cols-[1fr_0.95fr] lg:gap-8 lg:px-14">
+      <div className="relative mx-auto grid min-h-0 max-w-[1320px] items-center gap-8 px-5 py-12 sm:px-10 sm:py-16 lg:min-h-[700px] lg:grid-cols-[1fr_0.95fr] lg:gap-8 lg:px-14 lg:py-16">
 
         {/* Soft Background Decorations */}
         <div
@@ -24,134 +25,127 @@ export default function Hero() {
         />
 
         {/* LEFT CONTENT */}
-        <div className="relative z-20 max-w-[660px] py-8 lg:py-12">
+        <div className="relative z-20 mx-auto w-full max-w-[660px] py-2 sm:py-8 lg:mx-0 lg:py-12">
 
           {/* Label */}
-          <div className="mb-8 inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.22em] text-[#506B59] ml-2">
-          
+          <div className="mb-6 ml-0 inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.18em] text-[#506B59] sm:mb-8 sm:ml-2 sm:text-xs sm:tracking-[0.22em]">
             Digital Growth Agency
           </div>
 
           {/* Heading */}
-          <h1 className="text-[clamp(3rem,5.4vw,5.6rem)] font-semibold leading-[0.98] tracking-[-0.065em] text-[#29382F]">
+          <h1 className="text-[clamp(2.25rem,9.5vw,3.8rem)] font-semibold leading-[1.02] tracking-[-0.065em] text-[#29382F] lg:text-[clamp(3rem,5.4vw,5.6rem)] lg:leading-[0.98]">
             We Catalyze
             <br />
 
-            <span className="mt-3 inline-block whitespace-nowrap rounded-full bg-[#A5B59F] px-5 py-2 text-[#29382F] sm:px-8">
+            <span className="mt-2 -ml-2 inline-block whitespace-nowrap rounded-full bg-[#A5B59F] px-3 py-2 text-[#29382F] sm:-ml-4 sm:mt-3 sm:px-8 lg:-ml-7">
               Digital Growth.
             </span>
           </h1>
 
           {/* Description */}
-          <p className="mt-9 max-w-[510px] text-base font-medium leading-8 text-[#667568] sm:text-lg sm:leading-9">
+          <p className="mt-6 max-w-[510px] text-sm font-medium leading-7 text-[#667568] sm:mt-9 sm:text-lg sm:leading-9">
             We&apos;re a full-service digital growth agency — combining
             performance marketing, intelligent automation, and
             standout design to grow businesses that matter.
           </p>
 
           {/* CTA Buttons */}
-        
-{/* CTA Buttons */}
-<div className="mt-10 flex flex-wrap items-center gap-5">
+          <div className="mt-8 flex flex-col items-start gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
 
-  {/* Primary Button */}
-  <Link
-    href="#contact"
-    className="group inline-flex items-center overflow-hidden rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] p-[4px] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.18),inset_0_2px_3px_rgba(255,255,255,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.2)] active:translate-y-1 active:shadow-[0_2px_0_#6F9259]"
-  >
-    <span className="flex items-center gap-5 rounded-lg px-6 py-3.5 text-sm font-bold text-[#29382F]">
-      Start Growing
+            {/* Primary Button */}
+            <Link
+              href="#contact"
+              className="group inline-flex items-center overflow-hidden rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] p-[4px] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.18),inset_0_2px_3px_rgba(255,255,255,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.2)] active:translate-y-1 active:shadow-[0_2px_0_#6F9259]"
+            >
+              <span className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-bold text-[#29382F] sm:gap-5 sm:px-6 sm:py-3.5">
+                Start Growing
 
-      <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/50 bg-white/35 shadow-[inset_0_1px_3px_rgba(255,255,255,0.7)]">
-        <ArrowRight
-          size={18}
-          className="transition-transform duration-300 group-hover:translate-x-1"
-        />
-      </span>
-    </span>
-  </Link>
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/50 bg-white/35 shadow-[inset_0_1px_3px_rgba(255,255,255,0.7)]">
+                  <ArrowRight
+                    size={18}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </span>
+              </span>
+            </Link>
 
-  {/* Secondary Button */}
-  <Link
-    href="#work"
-    className="group inline-flex items-center overflow-hidden rounded-xl border border-[#E5E4DC] bg-gradient-to-b from-white to-[#E9E9E3] p-[4px] shadow-[0_5px_0_#C5C5BC,0_9px_18px_rgba(41,56,47,0.13),inset_0_2px_3px_rgba(255,255,255,0.9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#C5C5BC,0_12px_22px_rgba(41,56,47,0.16)] active:translate-y-1 active:shadow-[0_2px_0_#C5C5BC]"
-  >
-    <span className="flex items-center gap-5 rounded-lg px-6 py-3.5 text-sm font-bold text-[#29382F]">
-      View Our Work
+            {/* Secondary Button */}
+            <Link
+              href="#work"
+              className="group inline-flex items-center overflow-hidden rounded-xl border border-[#E5E4DC] bg-gradient-to-b from-white to-[#E9E9E3] p-[4px] shadow-[0_5px_0_#C5C5BC,0_9px_18px_rgba(41,56,47,0.13),inset_0_2px_3px_rgba(255,255,255,0.9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#C5C5BC,0_12px_22px_rgba(41,56,47,0.16)] active:translate-y-1 active:shadow-[0_2px_0_#C5C5BC]"
+            >
+              <span className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-bold text-[#29382F] sm:gap-5 sm:px-6 sm:py-3.5">
+                View Our Work
 
-      <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#DADBD2] bg-[#F5F5EF] shadow-[inset_0_1px_3px_rgba(255,255,255,0.9)]">
-        <ArrowUpRight
-          size={18}
-          className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-        />
-      </span>
-    </span>
-  </Link>
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#DADBD2] bg-[#F5F5EF] shadow-[inset_0_1px_3px_rgba(255,255,255,0.9)]">
+                  <ArrowUpRight
+                    size={18}
+                    className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </span>
+              </span>
+            </Link>
 
-</div>
-
+          </div>
         </div>
 
-        {/* RIGHT IMAGE FRAME */}
-     
-{/* RIGHT SIDE - MAIN FRAME WITH OVERFLOW IMAGE */}
-<div className="relative mx-auto mt-10 h-[350px] w-full max-w-[420px] overflow-visible lg:ml-auto lg:mr-0 lg:mt-0 lg:h-[440px]">
+        {/* RIGHT SIDE - MAIN FRAME WITH OVERFLOW IMAGE */}
+        <div className="relative mx-auto mt-6 h-[310px] w-full max-w-[320px] overflow-visible sm:mt-10 sm:h-[380px] sm:max-w-[380px] lg:ml-auto lg:mr-0 lg:mt-0 lg:h-[440px] lg:max-w-[420px]">
 
-  {/* Sage backing */}
-  <div
-    aria-hidden="true"
-    className="absolute inset-0 translate-x-3 translate-y-3 rounded-[2rem] bg-[#A5B59F]"
-  />
+          {/* Sage backing */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 translate-x-2 translate-y-2 rounded-[1.5rem] bg-[#A5B59F] sm:translate-x-3 sm:translate-y-3 sm:rounded-[2rem]"
+          />
 
-  {/* Existing Main Frame */}
-  <div className="absolute inset-0 overflow-hidden rounded-[2rem] border-[8px] border-[#FFFDF8] bg-[#A5B59F] shadow-[0_25px_55px_rgba(41,56,47,0.18)]">
+          {/* Existing Main Frame */}
+          <div className="absolute inset-0 overflow-hidden rounded-[1.5rem] border-[5px] border-[#FFFDF8] bg-[#A5B59F] shadow-[0_25px_55px_rgba(41,56,47,0.18)] sm:rounded-[2rem] sm:border-[8px]">
 
-    <Image
-      src="/images/growthenzyme-hero.png"
-      alt="Botanical foliage and organic natural textures"
-      fill
-      priority
-      sizes="(max-width: 1024px) 100vw, 40vw"
-      className="object-cover object-center"
-    />
+            <Image
+              src="/images/growthenzyme-hero.png"
+              alt="Botanical foliage and organic natural textures"
+              fill
+              priority
+              sizes="(max-width: 640px) 90vw, (max-width: 1024px) 65vw, 40vw"
+              className="object-cover object-center"
+            />
 
-    <div className="absolute inset-0 bg-[#A5B59F]/15 mix-blend-color" />
-    <div className="absolute inset-0 bg-gradient-to-t from-[#29382F]/20 via-transparent to-white/10" />
+            <div className="absolute inset-0 bg-[#A5B59F]/15 mix-blend-color" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#29382F]/20 via-transparent to-white/10" />
 
-  </div>
+          </div>
 
-  {/* Transparent sculpture overlaps the frame and rises above its top edge */}
-  <Image
-    src="/images/growthenzyme-hero.png"
-    alt="Sculptural botanical illustration representing growth"
-    width={373}
-    height={669}
-    priority
-    sizes="(max-width: 1024px) 65vw, 30vw"
-    className="pointer-events-none absolute left-1/2 top-[-38%] z-20 h-[145%] w-auto max-w-none -translate-x-1/2 object-contain"
-  />
+          {/* Transparent sculpture */}
+          <Image
+            src="/images/growthenzyme-hero.png"
+            alt="Sculptural botanical illustration representing growth"
+            width={373}
+            height={669}
+            priority
+            sizes="(max-width: 640px) 65vw, (max-width: 1024px) 55vw, 30vw"
+            className="pointer-events-none absolute left-1/2 top-[-28%] z-20 h-[130%] w-auto max-w-none -translate-x-1/2 object-contain lg:top-[-38%] lg:h-[145%]"
+          />
 
-  {/* Terracotta floating detail */}
-  <div className="absolute bottom-8 left-[-6%] z-30 flex items-center gap-3 rounded-full border border-[#F5F0E5]/70 bg-[#D78359] px-5 py-3 text-xs font-semibold tracking-wide text-[#FFF9EF] shadow-[0_12px_25px_rgba(41,56,47,0.2)]">
-    <span className="h-2 w-2 rounded-full bg-[#FFF9EF]" />
-    Ideas into Impact
-  </div>
+          {/* Terracotta floating detail */}
+          <div className="absolute bottom-5 left-[-2%] z-30 flex items-center gap-2 rounded-full border border-[#F5F0E5]/70 bg-[#D78359] px-3 py-2.5 text-[10px] font-semibold tracking-wide text-[#FFF9EF] shadow-[0_12px_25px_rgba(41,56,47,0.2)] sm:bottom-8 sm:left-[-6%] sm:gap-3 sm:px-5 sm:py-3 sm:text-xs">
+            <span className="h-2 w-2 rounded-full bg-[#FFF9EF]" />
+            Ideas into Impact
+          </div>
 
-  {/* Small decorative accent */}
-  <div className="absolute -right-3 top-[45%] z-30 flex h-14 w-14 items-center justify-center rounded-full border-4 border-[#F5F0E5] bg-[#506B59] text-xl text-[#F5F0E5] shadow-lg">
-    ✳
-  </div>
+          {/* Small decorative accent */}
+          <div className="absolute -right-2 top-[45%] z-30 flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-[#F5F0E5] bg-[#506B59] text-lg text-[#F5F0E5] shadow-lg sm:-right-3 sm:h-14 sm:w-14 sm:border-4 sm:text-xl">
+            ✳
+          </div>
 
-</div>
-
+        </div>
       </div>
 
       {/* SERVICES TICKER */}
       <div className="bg-[#A5B59F] text-[#29382F]">
-        <div className="mx-auto flex min-h-16 max-w-[1320px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-5 text-[10px] font-bold uppercase tracking-[0.1em] sm:px-10 sm:text-xs lg:px-14">
+        <div className="mx-auto flex min-h-16 max-w-[1320px] flex-wrap items-center justify-center gap-x-4 gap-y-3 px-5 py-5 text-[9px] font-bold uppercase tracking-[0.08em] sm:justify-between sm:gap-x-6 sm:px-10 sm:text-xs sm:tracking-[0.1em] lg:px-14">
 
           {focusAreas.map((area, index) => (
-            <div key={area} className="flex items-center gap-5">
+            <div key={area} className="flex items-center gap-3 sm:gap-5">
               <span>{area}</span>
 
               {index !== focusAreas.length - 1 && (
