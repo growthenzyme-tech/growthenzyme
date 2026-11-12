@@ -10,7 +10,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-
 const services = [
   {
     number: "01",
@@ -106,126 +105,137 @@ export default function Services() {
     >
       <div className="mx-auto max-w-[1320px]">
 
-        {/* Heading */}
-        <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex items-center rounded-full bg-[#B6CBA9]/30 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#506B59] sm:text-xs">
-            What We Do
-          </span>
+        {/* LEFT HEADING + RIGHT SERVICE CARDS */}
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-center lg:gap-16">
 
-          <h2 className="mt-5 text-4xl font-bold uppercase leading-[0.95] tracking-[-0.06em] sm:text-6xl lg:text-7xl">
-            Our{" "}
-               <span className="mt-2 inline-block whitespace-nowrap rounded-full bg-[#29382F] px-5 py-2 text-white sm:px-8">
-      Services
-    </span>
+          {/* LEFT SIDE - HEADING */}
+          <div className="relative flex flex-col items-start lg:sticky lg:top-28">
 
-          </h2>
+            <span className="inline-flex items-center rounded-full bg-[#B6CBA9]/30 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#506B59] sm:text-xs">
+              What We Do
+            </span>
 
-          <p className="mt-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#506B59] sm:text-sm">
-            Take your business to the next level
-          </p>
-        </div>
-
-        {/* Dashed Divider */}
-        <div className="relative my-10 flex items-center">
-          <div className="w-full border-t border-dashed border-[#506B59]/45" />
-          <span className="absolute left-0 flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#D78359]">
-            ✳
-          </span>
-          <span className="absolute right-0 flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#D78359]">
-            ✳
-          </span>
-        </div>
-
-        {/* Service Cards */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6 lg:gap-3">
-
-          {services.map((service, index) => {
-            const Icon = service.Icon;
-
-            return (
-              <article
-                key={service.number}
-                className={`group relative flex min-h-[260px] flex-col items-center border border-[#29382F]/10 ${service.card} px-3 pb-6 pt-7 shadow-[0_12px_25px_rgba(41,56,47,0.08)] transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_30px_rgba(41,56,47,0.14)] sm:min-h-[290px] lg:min-h-[350px]`}
-                style={{
-                  marginTop: index % 2 === 1 ? "22px" : "0px",
-                }}
-              >
-                {/* Hanging Top Detail */}
-                <div className="absolute -top-2 left-1/2 h-4 w-16 -translate-x-1/2 bg-[#E8D9C5] shadow-sm" />
-
-                {/* Service Number */}
-                <span className={`absolute left-3 top-4 text-[9px] font-bold tracking-widest ${service.metaColor}`}>
-                  {service.number}
-                </span>
-
-                {/* Icon */}
-                <div className={`mt-5 flex h-12 w-12 items-center justify-center rounded-full ${service.iconBg} ${service.iconColor} shadow-sm transition-all duration-300 group-hover:scale-110`}>
-                  <Icon size={23} strokeWidth={1.8} />
-                </div>
-
-                {/* Mobile / Tablet Content */}
-                <div className="mt-5 text-center lg:hidden">
-                  <h3 className={`text-sm font-bold leading-5 sm:text-base ${service.titleColor}`}>
-                    {service.title}
-                  </h3>
-                  <p className={`mt-3 text-xs leading-6 ${service.descColor}`}>
-                    {service.description}
-                  </p>
-                </div>
-
-                {/* Desktop Vertical Title */}
-                <div className="mt-7 hidden flex-1 items-center justify-center lg:flex">
-                  <h3
-                    className={`whitespace-nowrap text-sm font-bold tracking-wide ${service.titleColor}`}
-                    style={{
-                      writingMode: "vertical-rl",
-                      transform: "rotate(180deg)",
-                    }}
-                  >
-                    {service.shortTitle}
-                  </h3>
-                </div>
-
-                {/* Bottom Accent */}
-                <div className={`mt-auto flex w-full items-center justify-center border-t border-dashed border-current/30 pt-4`}>
-                  <span className={`text-[10px] font-bold uppercase tracking-[0.18em] ${service.titleColor}`}>
-                    Explore
-                  </span>
-                  <ArrowUpRight
-                    size={14}
-                    className="ml-2 text-[#D78359] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                  />
-                </div>
-              </article>
-            );
-          })}
-
-        </div>
-
-        {/* Bottom Message */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-5 border-t border-[#29382F]/15 pt-7 sm:flex-row">
-          <p className="max-w-lg text-center text-sm leading-7 text-[#506B59] sm:text-left">
-            Every service works together to create meaningful digital growth
-            for your business.
-          </p>
-
-        <a
-  href="#contact"
-  className="group inline-flex items-center overflow-hidden rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] p-[4px] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.18),inset_0_2px_3px_rgba(255,255,255,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.2)] active:translate-y-1 active:shadow-[0_2px_0_#6F9259]"
->
-  <span className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-bold text-[#29382F] sm:gap-5 sm:px-6 sm:py-3.5">
-    Let's Work Together
-
-    <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/50 bg-white/35 shadow-[inset_0_1px_3px_rgba(255,255,255,0.7)]">
-      <ArrowRight
-        size={18}
-        className="transition-transform duration-300 group-hover:translate-x-1"
-      />
-    </span>
+           <h2 className="mt-6 max-w-[520px] text-5xl font-bold uppercase leading-[0.95] tracking-[-0.065em] sm:text-6xl lg:text-7xl">
+  Six Ways We Grow Your{" "}
+  <span className="mt-3 inline-block rounded-full bg-[#29382F] px-5 py-3 text-white sm:px-7">
+    Business
   </span>
-</a>
-        </div>
+</h2>
 
+            <p className="mt-7 max-w-[390px] text-sm leading-7 text-[#506B59] sm:text-base sm:leading-8">
+              rom traffic to conversions, brand to automation — we cover every growth lever.
+            </p>
+
+            {/* Decorative line */}
+            <div className="mt-9 flex w-full max-w-[300px] items-center gap-3">
+              <div className="h-px flex-1 bg-[#506B59]/30" />
+              <span className="text-lg text-[#D78359]">✳</span>
+              <div className="h-px w-12 bg-[#506B59]/30" />
+            </div>
+
+            {/* Bottom Message */}
+            <p className="mt-8 max-w-[360px] text-sm leading-7 text-[#506B59]">
+              Every service works together to create meaningful digital growth
+              for your business.
+            </p>
+
+            {/* CTA */}
+            <a
+              href="#contact"
+              className="group mt-7 inline-flex items-center overflow-hidden rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] p-[4px] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.18),inset_0_2px_3px_rgba(255,255,255,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.2)] active:translate-y-1 active:shadow-[0_2px_0_#6F9259]"
+            >
+              <span className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-bold text-[#29382F] sm:gap-5 sm:px-6 sm:py-3.5">
+                Let's Work Together
+
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/50 bg-white/35 shadow-[inset_0_1px_3px_rgba(255,255,255,0.7)]">
+                  <ArrowRight
+                    size={18}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </span>
+              </span>
+            </a>
+          </div>
+
+          {/* RIGHT SIDE - SERVICE CARD COLLAGE */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+
+            {services.map((service, index) => {
+              const Icon = service.Icon;
+
+              return (
+                <article
+                  key={service.number}
+                  className={`group relative flex min-h-[245px] flex-col overflow-hidden rounded-[1.5rem] border border-[#29382F]/10 ${service.card} p-6 shadow-[0_12px_30px_rgba(41,56,47,0.08)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_22px_38px_rgba(41,56,47,0.15)] sm:min-h-[265px] sm:p-7 ${
+                    index % 2 === 1 ? "sm:translate-y-7" : ""
+                  }`}
+                >
+
+                  {/* Background Decoration */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full border-[22px] border-white/10 transition-transform duration-500 group-hover:scale-125"
+                  />
+
+                  {/* Number and Arrow */}
+                  <div className="relative flex items-center justify-between">
+                    <span
+                      className={`text-[11px] font-bold tracking-[0.2em] ${service.metaColor}`}
+                    >
+                      {service.number}
+                    </span>
+
+                    <ArrowUpRight
+                      size={19}
+                      className={`transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 ${service.titleColor}`}
+                    />
+                  </div>
+
+                  {/* Icon */}
+                  <div
+                    className={`relative mt-7 flex h-12 w-12 items-center justify-center rounded-xl ${service.iconBg} ${service.iconColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}
+                  >
+                    <Icon size={23} strokeWidth={1.8} />
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative mt-6">
+                    <h3
+                      className={`max-w-[250px] text-lg font-bold leading-tight tracking-tight sm:text-xl ${service.titleColor}`}
+                    >
+                      {service.title}
+                    </h3>
+
+                    <p
+                      className={`mt-3 max-w-[290px] text-xs leading-6 sm:text-sm sm:leading-7 ${service.descColor}`}
+                    >
+                      {service.description}
+                    </p>
+                  </div>
+
+                  {/* Bottom Accent */}
+                  <div
+                    className={`relative mt-auto flex items-center justify-between border-t border-dashed border-current/25 pt-4`}
+                  >
+                    <span
+                      className={`text-[10px] font-bold uppercase tracking-[0.18em] ${service.titleColor}`}
+                    >
+                      Explore
+                    </span>
+
+                    <span
+                      className={`flex h-8 w-8 items-center justify-center rounded-full ${service.iconBg} ${service.iconColor} transition-transform duration-300 group-hover:rotate-45`}
+                    >
+                      <ArrowUpRight size={16} />
+                    </span>
+                  </div>
+
+                </article>
+              );
+            })}
+
+          </div>
+        </div>
       </div>
     </section>
   );
