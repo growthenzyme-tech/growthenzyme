@@ -123,21 +123,9 @@ export default function Services() {
 </h2>
 
             <p className="mt-7 max-w-[390px] text-sm leading-7 text-[#506B59] sm:text-base sm:leading-8">
-              rom traffic to conversions, brand to automation — we cover every growth lever.
+              From traffic to conversions, brand to automation — we cover every growth lever.
             </p>
 
-            {/* Decorative line */}
-            <div className="mt-9 flex w-full max-w-[300px] items-center gap-3">
-              <div className="h-px flex-1 bg-[#506B59]/30" />
-              <span className="text-lg text-[#D78359]">✳</span>
-              <div className="h-px w-12 bg-[#506B59]/30" />
-            </div>
-
-            {/* Bottom Message */}
-            <p className="mt-8 max-w-[360px] text-sm leading-7 text-[#506B59]">
-              Every service works together to create meaningful digital growth
-              for your business.
-            </p>
 
             {/* CTA */}
             <a
@@ -158,83 +146,59 @@ export default function Services() {
           </div>
 
           {/* RIGHT SIDE - SERVICE CARD COLLAGE */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+       
+{/* SERVICES GRID */}
+<div className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3 lg:gap-6">
 
-            {services.map((service, index) => {
-              const Icon = service.Icon;
+  {services.map((service, index) => {
+    const Icon = service.Icon;
 
-              return (
-                <article
-                  key={service.number}
-                  className={`group relative flex min-h-[245px] flex-col overflow-hidden rounded-[1.5rem] border border-[#29382F]/10 ${service.card} p-6 shadow-[0_12px_30px_rgba(41,56,47,0.08)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_22px_38px_rgba(41,56,47,0.15)] sm:min-h-[265px] sm:p-7 ${
-                    index % 2 === 1 ? "sm:translate-y-7" : ""
-                  }`}
-                >
+const cardColors = [
+  "bg-[#B6C5AA]", // Sage green
+  "bg-[#D6BBA5]", // Muted warm beige
+  "bg-[#B8B69A]", // Soft olive
+  "bg-[#A9BDB0]", // Eucalyptus green
+  "bg-[#C5AD9C]", // Muted terracotta
+  "bg-[#A5B59F]", // Hero sage green
+];
 
-                  {/* Background Decoration */}
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full border-[22px] border-white/10 transition-transform duration-500 group-hover:scale-125"
-                  />
+    return (
+      <article
+        key={service.number}
+       className={`group relative flex min-h-[230px] flex-col overflow-hidden  border border-[#29382F]/10 ${cardColors[index]} p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_18px_35px_rgba(41,56,47,0.12)] sm:p-7`}
+      >
 
-                  {/* Number and Arrow */}
-                  <div className="relative flex items-center justify-between">
-                    <span
-                      className={`text-[11px] font-bold tracking-[0.2em] ${service.metaColor}`}
-                    >
-                      {service.number}
-                    </span>
+   
+        {/* DECORATIVE CIRCLE */}
+        {/* <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-10 top-10 h-36 w-36 rounded-full border-[22px] border-[#29382F]/[0.04] transition-transform duration-500 group-hover:scale-125"
+        /> */}
 
-                    <ArrowUpRight
-                      size={19}
-                      className={`transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 ${service.titleColor}`}
-                    />
-                  </div>
+        {/* ICON */}
+        <div className="relative z-10 mt-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#29382F] text-[#F5F0E5] shadow-[0_5px_12px_rgba(41,56,47,0.12)] transition-transform duration-300 group-hover:scale-110">
+          <Icon size={25} strokeWidth={1.7} />
+        </div>
 
-                  {/* Icon */}
-                  <div
-                    className={`relative mt-7 flex h-12 w-12 items-center justify-center rounded-xl ${service.iconBg} ${service.iconColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}
-                  >
-                    <Icon size={23} strokeWidth={1.8} />
-                  </div>
+        {/* CONTENT */}
+        <div className="relative z-10 mt-7">
+          <h3 className="max-w-[260px] text-xl font-bold leading-tight tracking-tight text-[#29382F] sm:text-[22px]">
+            {service.title}
+          </h3>
 
-                  {/* Content */}
-                  <div className="relative mt-6">
-                    <h3
-                      className={`max-w-[250px] text-lg font-bold leading-tight tracking-tight sm:text-xl ${service.titleColor}`}
-                    >
-                      {service.title}
-                    </h3>
+          <p className="mt-3 max-w-[290px] text-xs leading-6 text-[#506B59] sm:text-sm sm:leading-7">
+            {service.description}
+          </p>
+        </div>
 
-                    <p
-                      className={`mt-3 max-w-[290px] text-xs leading-6 sm:text-sm sm:leading-7 ${service.descColor}`}
-                    >
-                      {service.description}
-                    </p>
-                  </div>
+  
 
-                  {/* Bottom Accent */}
-                  <div
-                    className={`relative mt-auto flex items-center justify-between border-t border-dashed border-current/25 pt-4`}
-                  >
-                    <span
-                      className={`text-[10px] font-bold uppercase tracking-[0.18em] ${service.titleColor}`}
-                    >
-                      Explore
-                    </span>
+      </article>
+    );
+  })}
 
-                    <span
-                      className={`flex h-8 w-8 items-center justify-center rounded-full ${service.iconBg} ${service.iconColor} transition-transform duration-300 group-hover:rotate-45`}
-                    >
-                      <ArrowUpRight size={16} />
-                    </span>
-                  </div>
+</div>
 
-                </article>
-              );
-            })}
-
-          </div>
         </div>
       </div>
     </section>
