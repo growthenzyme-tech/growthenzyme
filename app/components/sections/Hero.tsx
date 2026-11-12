@@ -101,29 +101,31 @@ export default function Hero() {
           {/* Existing Main Frame */}
           <div className="absolute inset-0 overflow-hidden rounded-[1.5rem] border-[5px] border-[#FFFDF8] bg-[#A5B59F] shadow-[0_25px_55px_rgba(41,56,47,0.18)] sm:rounded-[2rem] sm:border-[8px]">
 
-            <Image
-              src="/images/growthenzyme-hero.png"
+            {/* <Image
+              src="/images/pohone2.webp"
               alt="Botanical foliage and organic natural textures"
               fill
               priority
+              quality={100}
               sizes="(max-width: 640px) 90vw, (max-width: 1024px) 65vw, 40vw"
               className="object-cover object-center"
             />
 
             <div className="absolute inset-0 bg-[#A5B59F]/15 mix-blend-color" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#29382F]/20 via-transparent to-white/10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#29382F]/20 via-transparent to-white/10" /> */}
 
           </div>
 
           {/* Transparent sculpture */}
           <Image
-            src="/images/growthenzyme-hero.png"
+            src="/images/phone6.webp"
             alt="Sculptural botanical illustration representing growth"
             width={373}
             height={669}
             priority
+            quality={100}
             sizes="(max-width: 640px) 65vw, (max-width: 1024px) 55vw, 30vw"
-            className="pointer-events-none absolute left-1/2 top-[-28%] z-20 h-[130%] w-auto max-w-none -translate-x-1/2 object-contain lg:top-[-38%] lg:h-[145%]"
+            className="pointer-events-none absolute left-[51%] top-[-30%] z-20 h-[140%] w-auto max-w-none -translate-x-1/2 object-contain lg:top-[-51%] lg:h-[160%]"
           />
 
           {/* Terracotta floating detail */}
