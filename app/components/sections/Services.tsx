@@ -106,10 +106,15 @@ export default function Services() {
       <div className="mx-auto max-w-[1320px]">
 
         {/* LEFT HEADING + RIGHT SERVICE CARDS */}
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-center lg:gap-16">
+        <div className="relative isolate grid grid-cols-1 gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-center lg:gap-16">
+          {/* FULL-WIDTH TOP GREEN BACKGROUND SHADE */}
+<div
+  aria-hidden="true"
+  className="pointer-events-none absolute left-1/2 top-[98px] z-0 hidden h-[380px] w-screen -translate-x-1/2 bg-gradient-to-b from-[#DCE8D7] via-[#EAF0E6] to-white lg:block"
+/>
 
           {/* LEFT SIDE - HEADING */}
-          <div className="relative flex flex-col items-start lg:sticky lg:top-28">
+          <div className="relative z-10 flex flex-col items-start lg:sticky lg:top-28">
 
             <span className="inline-flex items-center rounded-full bg-[#B6CBA9]/30 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#506B59] sm:text-xs">
               What We Do
@@ -148,7 +153,14 @@ export default function Services() {
           {/* RIGHT SIDE - SERVICE CARD COLLAGE */}
        
 {/* SERVICES GRID */}
-<div className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3 lg:gap-6">
+{/* SERVICES GRID WRAPPER */}
+<div className="relative z-10 mt-16 lg:mt-20">
+
+  {/* TOP GREEN BACKGROUND SHADE */}
+
+
+  {/* SERVICE CARDS */}
+  <div className="relative z-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
 
   {services.map((service, index) => {
     const Icon = service.Icon;
@@ -165,7 +177,7 @@ const cardColors = [
     return (
       <article
         key={service.number}
-       className={`group relative flex min-h-[230px] flex-col overflow-hidden  border border-[#29382F]/10 ${cardColors[index]} p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_18px_35px_rgba(41,56,47,0.12)] sm:p-7`}
+       className={`group relative flex min-h-[230px] flex-col overflow-hidden  border border-[#506B59]/30 ${cardColors[index]} p-6 shadow-[0_3px_10px_rgba(41,56,47,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#29382F]/60 hover:shadow-[0_12px_28px_rgba(41,56,47,0.10)] sm:p-7`}
       >
 
    
@@ -199,7 +211,8 @@ const cardColors = [
 
 </div>
 
-        </div>
+       </div> {/* SERVICE CARDS */}
+</div>   {/* SERVICES GRID WRAPPER */}
       </div>
     </section>
   );
