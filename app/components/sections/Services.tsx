@@ -103,7 +103,7 @@ export default function Services() {
       id="services"
       className="relative w-full overflow-hidden bg-white px-5 py-20 text-[#29382F] sm:px-10 sm:py-24 lg:px-14 lg:py-28"
     >
-      <div className="mx-auto max-w-[1320px]">
+      <div className="mx-auto max-w-[1320px] -translate-y-28">
 
         {/* LEFT HEADING + RIGHT SERVICE CARDS */}
         <div className="relative isolate grid grid-cols-1 gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-center lg:gap-16">
