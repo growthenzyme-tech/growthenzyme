@@ -97,19 +97,19 @@ export default function Process() {
               return (
                 <article
                   key={step.number}
-                  className="group relative min-w-0 px-2 py-2"
+                  className="group relative flex h-full min-w-0 px-2 py-2"
                 >
                   {/* DARK GREEN ROTATED BACKGROUND */}
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-2 rotate-[-6deg] rounded-[1.5rem] bg-[#29382F] transition-transform duration-500 group-hover:rotate-[-10deg]"
-                  />
+<div
+  aria-hidden="true"
+  className="absolute inset-[5px] rotate-[-4deg] rounded-[1.5rem] bg-[#29382F]"
+/>
 
                   {/* SAGE ACCENT LAYER */}
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-2 rotate-[5deg] rounded-[1.5rem] bg-[#B6CBA9] transition-transform duration-500 group-hover:rotate-[9deg]"
-                  />
+<div
+  aria-hidden="true"
+  className="absolute inset-2 rotate-[4deg] rounded-[1.5rem] bg-[#B6CBA9]"
+/>
 
                   {/* MAIN WHITE CARD */}
                   <div className="relative z-10 flex min-h-[245px] flex-col items-center overflow-hidden rounded-[1.5rem] border border-[#29382F]/10 bg-[#FAFBF8] px-5 py-6 text-center shadow-[0_10px_25px_rgba(41,56,47,0.12)] transition-all duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_18px_35px_rgba(41,56,47,0.18)] sm:min-h-[285px] sm:px-6 sm:py-7">
