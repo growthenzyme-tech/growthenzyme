@@ -1,6 +1,7 @@
 
 import Hero from "./components/sections/Hero";
 import Services from "./components/sections/Services";
+import Work from "./components/sections/Work";
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
@@ -11,7 +12,9 @@ export default function Home() {
       <div className="w-full">
         <Services />
         {/* Services component goes here */}
+
         {/* Works component goes here */}
+        <Work />
         {/* Process component goes here */}
 
       </div>
