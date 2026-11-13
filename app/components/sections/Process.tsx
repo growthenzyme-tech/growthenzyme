@@ -80,7 +80,7 @@ export default function Process() {
         </div>
 
         {/* RIGHT — GREEN BACKGROUND + RESPONSIVE CARD GRID */}
-        <div className="relative isolate my-6 flex items-center overflow-hidden bg-[#B6CBA9] px-4 py-10 sm:my-8 sm:px-10 sm:py-12 lg:my-14 lg:px-12 lg:py-16">
+        <div className="relative isolate my-6 flex items-center overflow-hidden bg-[#B6CBA9] px-4 py-10 sm:my-8 sm:px-10 sm:py-12 lg:my-14 lg:px-12 lg:py-16 [mask-image:linear-gradient(to_bottom,transparent_0%,black_12%,black_88%,transparent_100%)]">
 
           {/* CURVED WHITE EDGE */}
           <div className="absolute -left-[110px] top-1/2 hidden h-[125%] w-[220px] -translate-y-1/2 rounded-[50%] bg-white lg:block" />
