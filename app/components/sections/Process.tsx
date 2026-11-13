@@ -3,7 +3,7 @@ import {
   Search,
   Lightbulb,
   TrendingUp,
-  ArrowUpRight,
+  ChartNoAxesCombined,
 } from "lucide-react";
 
 const steps = [
@@ -37,7 +37,7 @@ const steps = [
     description:
       "We track, test, and continuously improve based on real performance data.",
     detail: "Tracking & Improvement",
-    icon: TrendingUp,
+    icon: ChartNoAxesCombined,
   },
 ];
 
