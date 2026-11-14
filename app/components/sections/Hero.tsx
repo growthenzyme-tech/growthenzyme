@@ -103,12 +103,12 @@ export default function Hero() {
             <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF8] via-[#F7F3EB] to-[#ECE7DA]" />
           </div>
 
-          {/* 4K 3D Smartphone with Glowing Data Dashboard, Upward Terracotta Growth Arrow, SEO & Web Design Wireframes */}
+          {/* 4K 3D Flagship Smartphone with Growth Charts, Data Table Grid, Upward Arrow, SEO & Wireframes */}
           <Image
-            src="/images/hero-phone-portrait-4k-transparent.webp"
-            alt="4K 3D flagship smartphone displaying Growth Matters analytics dashboard, upward terracotta growth arrow, web design wireframes, and SEO metrics"
+            src="/images/hero-phone-charts-4k-transparent.webp"
+            alt="4K 3D flagship smartphone displaying growth charts, analytics data tables, upward terracotta growth arrow, web design wireframes, and SEO metrics"
             width={896}
-            height={1052}
+            height={1043}
             priority
             quality={100}
             sizes="(max-width: 640px) 95vw, (max-width: 1024px) 70vw, 45vw"
