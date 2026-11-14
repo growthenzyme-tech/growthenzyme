@@ -99,7 +99,7 @@ export default function Hero() {
           />
 
           {/* Existing Main Frame */}
-          <div className="absolute inset-0 overflow-hidden rounded-[1.5rem] border-[5px] border-[#FFFDF8] bg-[#F5F0E5] shadow-[0_25px_55px_rgba(41,56,47,0.18)] sm:rounded-[2rem] sm:border-[8px]">
+          <div className="absolute inset-0 overflow-hidden rounded-[1.5rem] border-[5px] border-[#FFFDF8] bg-white shadow-[0_25px_55px_rgba(41,56,47,0.18)] sm:rounded-[2rem] sm:border-[8px]">
           </div>
 
           {/* Transparent sculpture */}
