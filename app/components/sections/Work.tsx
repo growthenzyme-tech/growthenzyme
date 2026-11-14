@@ -71,7 +71,7 @@ export default function Work() {
   return (
     <section
       id="work"
-      className="relative w-full overflow-hidden bg-[#B6CBA9] px-5 pb-12 pt-14 text-[#29382F] sm:px-10 sm:pb-14 sm:pt-16 lg:px-14 lg:pb-16 lg:pt-20 -mt-20"
+      className="relative -mt-20 w-full overflow-hidden bg-[#B6CBA9] px-5 pb-0 pt-14 text-[#29382F] sm:px-10 sm:pb-2 sm:pt-16 lg:px-14 lg:pb-10 lg:pt-20"
     >
       {/* Big soft cream circle behind heading */}
       <div
@@ -85,7 +85,7 @@ export default function Work() {
         className="pointer-events-none absolute bottom-[-99vw] left-1/2 h-[122vw] w-[140vw] -translate-x-1/2 rounded-[50%] bg-white"
       /> */}
 
-      <div className="relative mx-auto max-w-[1320px] -translate-y-35">
+      <div className="relative mx-auto -mt-35 max-w-[1320px]">
 
         {/* SECTION HEADING */}
         <div className="mb-10 flex flex-col items-center text-center sm:mb-12">
@@ -95,7 +95,8 @@ export default function Work() {
 <h2 className="mt-5 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:mt-6 sm:text-6xl lg:text-7xl">
   Work we're
   <br />
-  <span className="mt-2 inline-block rounded-full bg-[#29382F] px-4 py-2.5 text-[#F5F0E5] sm:mt-3 sm:px-7 sm:py-3">
+
+  <span className="mt-2 inline-block rounded-full bg-[#29382F] px-4 py-2.5 text-white sm:mt-3 sm:px-7 sm:py-3">
     proud of.
   </span>
 </h2>

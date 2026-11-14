@@ -100,7 +100,7 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="relative w-full overflow-hidden bg-white px-4 py-14 text-[#29382F] sm:px-10 sm:py-24 lg:px-14 lg:py-28"
+      className="relative w-full overflow-hidden bg-white px-4 py-14 text-[#29382F] sm:px-10 sm:py-24 lg:px-14 lg:py-28 "
     >
       <div className="mx-auto max-w-[1320px] -translate-y-8 sm:-translate-y-28">
 
