@@ -90,42 +90,39 @@ export default function Hero() {
         </div>
 
         {/* RIGHT SIDE - MAIN FRAME WITH OVERFLOW IMAGE */}
-        <div className="relative mx-auto mt-5 h-[260px] w-full max-w-[320px] overflow-visible sm:mt-8 sm:h-[340px] sm:max-w-[420px] lg:ml-auto lg:mr-0 lg:mt-0 lg:h-[400px] lg:max-w-[460px]">
+        <div className="relative mx-auto mt-5 h-[250px] w-full max-w-[290px] overflow-visible sm:mt-8 sm:h-[305px] sm:max-w-[360px] lg:ml-auto lg:mr-0 lg:mt-0 lg:h-[355px] lg:max-w-[390px]">
 
           {/* Sage backing */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 translate-x-2 translate-y-2 rounded-[1.5rem] bg-[#A5B59F] sm:translate-x-3 sm:translate-y-3 sm:rounded-[2rem]"
+            className="absolute inset-0 translate-x-2.5 translate-y-2.5 rounded-[1.5rem] bg-[#A5B59F] sm:translate-x-3.5 sm:translate-y-3.5 sm:rounded-[2rem]"
           />
 
-          {/* Main Frame with subtle warm gradient & glow */}
+          {/* Main Frame Card */}
           <div className="absolute inset-0 overflow-hidden rounded-[1.5rem] border-[5px] border-[#FFFDF8] bg-[#F5F0E5] shadow-[0_25px_55px_rgba(41,56,47,0.18)] sm:rounded-[2rem] sm:border-[8px]">
-            <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF8] via-[#F5F0E5] to-[#ECE7DA]" />
-            <div className="absolute -bottom-10 left-1/2 h-52 w-52 -translate-x-1/2 rounded-full bg-[#B6CBA9]/30 blur-2xl" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF8] via-[#F7F3EB] to-[#ECE7DA]" />
           </div>
 
-          {/* Overflow wrapper: Allows upward growth arrow overflow at top, but strictly clips bottom at frame border */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 top-[-80%] z-20 overflow-hidden rounded-b-[1.5rem] sm:rounded-b-[2rem]">
-            <Image
-              src="/images/hero-phone-growth-clean.webp"
-              alt="3D smartphone with upward growth arrow, web design wireframes, and digital marketing SEO analytics"
-              width={768}
-              height={1010}
-              priority
-              quality={100}
-              sizes="(max-width: 640px) 95vw, (max-width: 1024px) 70vw, 45vw"
-              className="absolute left-1/2 bottom-2 sm:bottom-3 lg:bottom-4 h-[132%] sm:h-[135%] lg:h-[140%] w-auto max-w-none -translate-x-1/2 object-contain drop-shadow-[0_22px_42px_rgba(41,56,47,0.24)]"
-            />
-          </div>
+          {/* 4K 3D Smartphone with Glowing Data Dashboard, Upward Terracotta Growth Arrow, SEO & Web Design Wireframes */}
+          <Image
+            src="/images/hero-phone-portrait-4k-transparent.webp"
+            alt="4K 3D flagship smartphone displaying Growth Matters analytics dashboard, upward terracotta growth arrow, web design wireframes, and SEO metrics"
+            width={896}
+            height={1052}
+            priority
+            quality={100}
+            sizes="(max-width: 640px) 95vw, (max-width: 1024px) 70vw, 45vw"
+            className="pointer-events-none absolute left-1/2 top-[-24%] z-20 h-[132%] w-auto max-w-none -translate-x-1/2 object-contain drop-shadow-[0_24px_46px_rgba(41,56,47,0.22)] sm:top-[-26%] sm:h-[134%] lg:top-[-26%] lg:h-[135%]"
+          />
 
           {/* Terracotta floating detail */}
-          <div className="absolute bottom-4 left-[-2%] z-30 flex items-center gap-2 rounded-full border border-[#F5F0E5]/70 bg-[#D78359] px-3 py-2 text-[9px] font-semibold tracking-wide text-[#FFF9EF] shadow-[0_12px_25px_rgba(41,56,47,0.2)] sm:bottom-8 sm:left-[-6%] sm:gap-3 sm:px-5 sm:py-3 sm:text-xs">
+          <div className="absolute bottom-3.5 left-[-2%] z-30 flex items-center gap-2 rounded-full border border-[#F5F0E5]/70 bg-[#D78359] px-3.5 py-1.5 text-[10px] font-semibold tracking-wide text-[#FFF9EF] shadow-[0_12px_25px_rgba(41,56,47,0.2)] sm:bottom-5 sm:left-[-5%] sm:gap-3 sm:px-5 sm:py-2.5 sm:text-xs">
             <span className="h-2 w-2 rounded-full bg-[#FFF9EF]" />
             Ideas into Impact
           </div>
 
           {/* Small decorative accent */}
-          <div className="absolute -right-2 top-[45%] z-30 flex h-10 w-10 items-center justify-center rounded-full border-[3px] border-[#F5F0E5] bg-[#506B59] text-base text-[#F5F0E5] shadow-lg sm:-right-3 sm:h-14 sm:w-14 sm:border-4 sm:text-xl">
+          <div className="absolute -right-2.5 top-1/2 z-30 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border-[3px] border-[#F5F0E5] bg-[#506B59] text-sm text-[#F5F0E5] shadow-lg sm:-right-3.5 sm:h-11 sm:w-11 sm:border-4 sm:text-base">
             ✳
           </div>
 
