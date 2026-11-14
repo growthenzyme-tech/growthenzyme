@@ -90,16 +90,16 @@ export default function Hero() {
         </div>
 
         {/* RIGHT SIDE - MAIN FRAME WITH OVERFLOW IMAGE */}
-        <div className="relative mx-auto mt-5 h-[250px] w-full max-w-[290px] overflow-visible sm:mt-8 sm:h-[305px] sm:max-w-[360px] lg:ml-auto lg:mr-0 lg:mt-0 lg:h-[355px] lg:max-w-[390px]">
+        <div className="relative mx-auto mt-6 h-[290px] w-full max-w-[325px] overflow-visible sm:mt-10 sm:h-[365px] sm:max-w-[415px] lg:ml-auto lg:mr-0 lg:mt-0 lg:h-[430px] lg:max-w-[465px] xl:h-[465px] xl:max-w-[500px]">
 
           {/* Sage backing */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 translate-x-2.5 translate-y-2.5 rounded-[1.5rem] bg-[#A5B59F] sm:translate-x-3.5 sm:translate-y-3.5 sm:rounded-[2rem]"
+            className="absolute inset-0 translate-x-3 translate-y-3 rounded-[1.75rem] bg-[#A5B59F] sm:translate-x-4 sm:translate-y-4 sm:rounded-[2.25rem]"
           />
 
           {/* Main Frame Card */}
-          <div className="absolute inset-0 overflow-hidden rounded-[1.5rem] border-[5px] border-[#FFFDF8] bg-[#F5F0E5] shadow-[0_25px_55px_rgba(41,56,47,0.18)] sm:rounded-[2rem] sm:border-[8px]">
+          <div className="absolute inset-0 overflow-hidden rounded-[1.75rem] border-[6px] border-[#FFFDF8] bg-[#F5F0E5] shadow-[0_25px_55px_rgba(41,56,47,0.18)] sm:rounded-[2.25rem] sm:border-[8px]">
             <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF8] via-[#F7F3EB] to-[#ECE7DA]" />
           </div>
 
@@ -112,7 +112,7 @@ export default function Hero() {
             priority
             quality={100}
             sizes="(max-width: 640px) 95vw, (max-width: 1024px) 70vw, 45vw"
-            className="pointer-events-none absolute left-1/2 top-[-22%] z-20 h-[130%] w-auto max-w-none -translate-x-1/2 object-contain drop-shadow-[0_24px_46px_rgba(41,56,47,0.22)] sm:top-[-24%] sm:h-[132%] lg:top-[-24%] lg:h-[132%]"
+            className="pointer-events-none absolute left-1/2 top-[-22%] z-20 h-[134%] w-auto max-w-none -translate-x-1/2 object-contain drop-shadow-[0_24px_46px_rgba(41,56,47,0.22)] sm:top-[-23%] sm:h-[136%] lg:top-[-23%] lg:h-[138%]"
           />
 
           {/* Terracotta floating detail */}
