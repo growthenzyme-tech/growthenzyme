@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   title: "GrowthEnzyme | Engineered for Growth",
   description:
     "We combine strategy, creativity and technology to accelerate business growth.",
+  icons: {
+    icon: "/images/logo.jpg",
+    apple: "/images/logo.jpg",
+  },
 };
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

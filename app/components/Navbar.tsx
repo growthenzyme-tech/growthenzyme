@@ -21,14 +21,14 @@ export default function Navbar() {
 
         {/* Logo */}
         <Link href="/" className="relative z-50 flex items-center">
-          {/* <Image
-            src="/images/logo.png"
+          <Image
+            src="/images/logo.jpg"
             alt="GrowthEnzyme Logo"
-            width={65}
-            height={55}
+            width={52}
+            height={52}
             priority
             className="h-[48px] w-auto object-contain"
-          /> */}
+          />
         </Link>
 
         {/* Desktop Navigation */}
