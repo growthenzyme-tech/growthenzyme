@@ -103,16 +103,16 @@ export default function Hero() {
             <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF8] via-[#F7F3EB] to-[#ECE7DA]" />
           </div>
 
-          {/* 4K 3D Flagship Smartphone with Growth Charts, Data Table Grid, Upward Arrow, SEO & Wireframes */}
+          {/* 4K 3D Smartphone with Glowing Data Dashboard, Upward Terracotta Growth Arrow, SEO & Web Design Wireframes */}
           <Image
-            src="/images/hero-phone-charts-4k-transparent.webp"
-            alt="4K 3D flagship smartphone displaying growth charts, analytics data tables, upward terracotta growth arrow, web design wireframes, and SEO metrics"
-            width={896}
-            height={1043}
+            src="/images/hero-phone-growth-final.webp"
+            alt="4K 3D flagship smartphone displaying Growth Matters analytics dashboard, upward terracotta growth arrow, web design wireframes, and SEO metrics"
+            width={872}
+            height={1024}
             priority
             quality={100}
             sizes="(max-width: 640px) 95vw, (max-width: 1024px) 70vw, 45vw"
-            className="pointer-events-none absolute left-1/2 top-[-24%] z-20 h-[132%] w-auto max-w-none -translate-x-1/2 object-contain drop-shadow-[0_24px_46px_rgba(41,56,47,0.22)] sm:top-[-26%] sm:h-[134%] lg:top-[-26%] lg:h-[135%]"
+            className="pointer-events-none absolute left-1/2 top-[-22%] z-20 h-[130%] w-auto max-w-none -translate-x-1/2 object-contain drop-shadow-[0_24px_46px_rgba(41,56,47,0.22)] sm:top-[-24%] sm:h-[132%] lg:top-[-24%] lg:h-[132%]"
           />
 
           {/* Terracotta floating detail */}
