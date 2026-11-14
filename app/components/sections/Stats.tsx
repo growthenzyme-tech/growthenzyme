@@ -52,24 +52,21 @@ export default function GrowthNumbers() {
           Side cards sit a little higher, center card sits lower. */}
     
 {/* STAT CARDS ROW */}
+
+{/* PREMIUM 3D STAT CARDS */}
 <div className="absolute inset-x-0 bottom-0 z-30 mx-auto flex w-full max-w-[1050px] items-end justify-center gap-3 px-5 pb-8 sm:gap-6 sm:px-8 sm:pb-10 lg:gap-10 lg:pb-14">
 
-  {/* LEFT STAT CARD */}
-  <div className="relative mb-8 flex min-h-[210px] min-w-0 flex-1 flex-col justify-between overflow-hidden border border-[#DCE5D7] bg-[#F8FAF5] p-4 sm:mb-10 sm:min-h-[260px] sm:p-6 lg:mb-14 lg:min-h-[280px] lg:p-7">
+  {/* LEFT CARD */}
+  <div className="group mb-8 flex min-h-[210px] min-w-0 flex-1 flex-col justify-between overflow-hidden rounded-2xl border border-white bg-gradient-to-br from-white via-[#F5F8F1] to-[#E5EDDF] p-4 shadow-[0_8px_0_#D2DECC,0_16px_30px_rgba(41,56,47,0.12)] transition-all duration-300 hover:-translate-y-2 sm:mb-10 sm:min-h-[260px] sm:p-6 lg:mb-14 lg:min-h-[280px] lg:p-7">
 
-    {/* Angular vector detail */}
-    <svg className="pointer-events-none absolute right-0 top-0 h-24 w-24 text-[#B6CBA9] sm:h-32 sm:w-32" viewBox="0 0 120 120" fill="none">
-      <path d="M120 0H65L120 55V0Z" fill="currentColor" opacity=".25" />
-      <path d="M78 0L120 42M94 0L120 26M110 0L120 10" stroke="currentColor" strokeWidth="1.2" />
-      <path d="M65 0L120 55" stroke="#657365" strokeWidth="1" opacity=".5" />
-    </svg>
+    <div className="pointer-events-none absolute" />
 
-    <p className="relative z-10 text-[9px] font-semibold uppercase leading-relaxed tracking-[0.12em] text-[#657365] sm:text-xs sm:tracking-[0.14em]">
+    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#71816E] sm:text-xs">
       Projects Delivered
     </p>
 
-    <div className="relative z-10">
-      <h3 className="text-3xl font-bold tracking-[-0.06em] text-[#29382F] sm:text-5xl">
+    <div>
+      <h3 className="text-3xl font-extrabold tracking-[-0.07em] text-[#29382F] sm:text-5xl">
         150+
       </h3>
       <p className="mt-3 max-w-[180px] text-[10px] leading-relaxed text-[#657365] sm:text-sm">
@@ -77,62 +74,50 @@ export default function GrowthNumbers() {
       </p>
     </div>
 
-    <div className="relative z-10 flex items-center gap-2">
-      <div className="h-[3px] w-10 bg-[#506B59]" />
-      <div className="h-[3px] w-3 bg-[#B6CBA9]" />
-    </div>
+    <span className="text-[8px] font-semibold uppercase tracking-[0.16em] text-[#899783] sm:text-[10px]">
+      Our Experience
+    </span>
   </div>
 
 
-  {/* CENTER STAT CARD */}
-  <div className="relative flex min-h-[260px] min-w-0 flex-[1.15] flex-col justify-between overflow-hidden bg-[#29382F] p-4 text-white shadow-[0_18px_45px_rgba(41,56,47,0.16)] sm:min-h-[330px] sm:p-7 lg:min-h-[360px] lg:p-8">
+  {/* CENTER FEATURED CARD */}
+  <div className="relative mb-0 flex min-h-[260px] min-w-0 flex-[1.15] flex-col justify-between overflow-hidden rounded-2xl border border-[#718775] bg-gradient-to-br from-[#405C48] via-[#29382F] to-[#17291F] p-4 text-white shadow-[0_10px_0_#17291F,0_22px_45px_rgba(25,43,31,0.28)] transition-all duration-300 hover:-translate-y-2 sm:min-h-[330px] sm:p-7 lg:min-h-[360px] lg:p-8">
 
-    {/* Geometric vector pattern */}
-    <svg className="pointer-events-none absolute right-0 top-0 h-36 w-36 text-[#B6CBA9] sm:h-48 sm:w-48" viewBox="0 0 180 180" fill="none">
-      <path d="M180 0H80L180 100V0Z" fill="currentColor" opacity=".12" />
-      <path d="M95 0L180 85M115 0L180 65M135 0L180 45M155 0L180 25" stroke="currentColor" strokeWidth="1" opacity=".65" />
-      <path d="M80 0L180 100" stroke="currentColor" strokeWidth="1.2" opacity=".8" />
-      <path d="M180 100V180H100L180 100Z" fill="currentColor" opacity=".07" />
-    </svg>
+    {/* INTERNAL WAVE GRADIENT */}
+    <div className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 rounded-full bg-[#B6CBA9]/25 blur-3xl sm:h-64 sm:w-64" />
 
-    <p className="relative z-10 text-[9px] font-semibold uppercase leading-relaxed tracking-[0.12em] text-[#C5D2BD] sm:text-xs sm:tracking-[0.14em]">
-      Business Growth
-    </p>
+    <div className="pointer-events-none absolute -bottom-20 -left-12 h-48 w-48 rounded-full bg-[#8DAE8C]/30 blur-3xl sm:h-60 sm:w-60" />
 
     <div className="relative z-10">
-      <h3 className="text-4xl font-bold tracking-[-0.06em] text-white sm:text-6xl">
+      <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#C5D8BB] sm:text-xs">
+        Business Growth
+      </p>
+    </div>
+
+    <div className="relative z-10">
+      <h3 className="text-4xl font-extrabold tracking-[-0.07em] text-white sm:text-6xl">
         3X
       </h3>
-      <p className="mt-3 max-w-[200px] text-[10px] leading-relaxed text-[#D1D9CE] sm:text-sm">
+      <p className="mt-3 max-w-[200px] text-[10px] leading-relaxed text-[#D2DDCF] sm:text-sm">
         Driving measurable business growth through digital strategies
       </p>
     </div>
 
-    <div className="relative z-10 flex items-center justify-between">
-      <div className="h-[3px] w-12 bg-[#B6CBA9]" />
-      <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#C5D2BD]">
-        Growth / 02
-      </span>
-    </div>
+    <span className="relative z-10 text-[8px] font-semibold uppercase tracking-[0.16em] text-[#B6CBA9] sm:text-[10px]">
+      Growth / 02
+    </span>
   </div>
 
 
-  {/* RIGHT STAT CARD */}
-  <div className="relative mb-8 flex min-h-[210px] min-w-0 flex-1 flex-col justify-between overflow-hidden border border-[#DCE5D7] bg-[#F8FAF5] p-4 sm:mb-10 sm:min-h-[260px] sm:p-6 lg:mb-14 lg:min-h-[280px] lg:p-7">
+  {/* RIGHT CARD */}
+  <div className="mb-8 flex min-h-[210px] min-w-0 flex-1 flex-col justify-between overflow-hidden rounded-2xl border border-white bg-gradient-to-br from-white via-[#F5F8F1] to-[#E5EDDF] p-4 shadow-[0_8px_0_#D2DECC,0_16px_30px_rgba(41,56,47,0.12)] transition-all duration-300 hover:-translate-y-2 sm:mb-10 sm:min-h-[260px] sm:p-6 lg:mb-14 lg:min-h-[280px] lg:p-7">
 
-    {/* Diagonal vector detail */}
-    <svg className="pointer-events-none absolute right-0 top-0 h-24 w-24 text-[#B6CBA9] sm:h-32 sm:w-32" viewBox="0 0 120 120" fill="none">
-      <path d="M120 0V65L55 0H120Z" fill="currentColor" opacity=".25" />
-      <path d="M120 78L42 0M120 94L26 0M120 110L10 0" stroke="currentColor" strokeWidth="1.2" />
-      <path d="M55 0L120 65" stroke="#657365" strokeWidth="1" opacity=".5" />
-    </svg>
-
-    <p className="relative z-10 text-[9px] font-semibold uppercase leading-relaxed tracking-[0.12em] text-[#657365] sm:text-xs sm:tracking-[0.14em]">
+    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#71816E] sm:text-xs">
       Client Satisfaction
     </p>
 
-    <div className="relative z-10">
-      <h3 className="text-3xl font-bold tracking-[-0.06em] text-[#29382F] sm:text-5xl">
+    <div>
+      <h3 className="text-3xl font-extrabold tracking-[-0.07em] text-[#29382F] sm:text-5xl">
         98%
       </h3>
       <p className="mt-3 max-w-[180px] text-[10px] leading-relaxed text-[#657365] sm:text-sm">
@@ -140,13 +125,13 @@ export default function GrowthNumbers() {
       </p>
     </div>
 
-    <div className="relative z-10 flex items-center gap-2">
-      <div className="h-[3px] w-10 bg-[#506B59]" />
-      <div className="h-[3px] w-3 bg-[#B6CBA9]" />
-    </div>
+    <span className="text-[8px] font-semibold uppercase tracking-[0.16em] text-[#899783] sm:text-[10px]">
+      Client Trust
+    </span>
   </div>
 
 </div>
+
 
       
 
