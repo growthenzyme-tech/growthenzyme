@@ -122,12 +122,12 @@ C700 520 520 700 300 700
         </Link>
 
         {/* Heading */}
-        <h2 className="mt-7 text-[clamp(3.2rem,9vw,7rem)] font-semibold leading-[0.98] tracking-[-0.065em] text-[#29382F]">
-          Ready to{" "}
-          <span className="relative -top-[2px] mt-2 inline-block rounded-full bg-[#29382F] px-6 py-2.5 text-white sm:mt-3 sm:px-8 sm:py-3">
-            grow?
-          </span>
-        </h2>
+      <h2 className="mt-7 text-[clamp(2.8rem,7vw,5.5rem)] font-semibold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F]">
+  Ready to{" "}
+  <span className="relative -top-[2px] mt-2 inline-block rounded-full bg-[#29382F] px-5 py-2 text-[0.85em] text-white sm:mt-3 sm:px-7 sm:py-2.5">
+    grow?
+  </span>
+</h2>
 
         {/* Description */}
         <p className="mt-6 max-w-[650px] text-sm font-medium leading-7 text-[#506B59] sm:mt-8 sm:text-base lg:text-lg">
