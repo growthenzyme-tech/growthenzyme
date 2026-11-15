@@ -1,3 +1,4 @@
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -12,175 +13,150 @@ const services = [
 ];
 
 const socials = [
-  { name: "LinkedIn", href: "#" },
-  { name: "Instagram", href: "#" },
-  { name: "Facebook", href: "#" },
-  { name: "Threads", href: "#" },
-  { name: "X (Twitter)", href: "#" },
+  { name: "Linkedin", href: "https://www.linkedin.com" },
+  { name: "Instagram", href: "https://www.instagram.com" },
+  { name: "Facebook", href: "https://www.facebook.com" },
+  { name: "Threads", href: "https://www.threads.net" },
+  { name: "X (Twitter)", href: "https://x.com" },
 ];
 
 export default function Footer() {
   return (
-    <footer className="relative mt-0 w-full overflow-hidden bg-[#B6CBA9] text-[#29382F]">
-      {/* TOP GEOMETRIC BOXES PATTERN (ONLY BOXES - SOLID RECTANGLE REMOVED) */}
+    <footer className="w-full bg-white text-[#29382F]">
+      {/* TOP GEOMETRIC BOXES PATTERN (INCREASED WIDTH & LENGTH) */}
       <div
         aria-hidden="true"
-        className="w-full select-none overflow-hidden leading-none pointer-events-none"
+        className="w-full select-none overflow-hidden leading-none pointer-events-none bg-[#B6CBA9]"
       >
         <svg
-          className="h-7 w-full sm:h-8"
-          viewBox="0 0 1020 33"
+          className="h-10 w-full sm:h-12 md:h-14"
+          viewBox="0 0 1120 54"
           preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
             <pattern
               id="footerGeometricFringe"
-              width="34"
-              height="33"
+              width="56"
+              height="54"
               patternUnits="userSpaceOnUse"
             >
-              {/* Upper box (width 17, height 22) */}
-              <rect x="17" y="0" width="17" height="22" fill="#29382F" />
-              {/* Lower staggered box (width 17, height 11) */}
-              <rect x="0" y="22" width="17" height="11" fill="#29382F" />
+              {/* Upper background: Sage green (width 28, height 36) */}
+              <rect x="0" y="0" width="28" height="36" fill="#B6CBA9" />
+              {/* Upper dark box: Forest green (width 28, height 36) */}
+              <rect x="28" y="0" width="28" height="36" fill="#29382F" />
+              {/* Lower staggered dark box: Forest green (width 28, height 18) */}
+              <rect x="0" y="36" width="28" height="18" fill="#29382F" />
+              {/* Lower given rectangle: Pure white (width 28, height 18) */}
+              <rect x="28" y="36" width="28" height="18" fill="#FFFFFF" />
             </pattern>
           </defs>
-          <rect width="100%" height="33" fill="url(#footerGeometricFringe)" />
+          <rect width="100%" height="54" fill="url(#footerGeometricFringe)" />
         </svg>
       </div>
 
-      <div className="relative z-10 mx-auto max-w-[1500px] px-6 pb-5 pt-8 sm:px-10 sm:pt-12 lg:px-14 lg:pb-6 lg:pt-16">
+      {/* WATTS-STYLE CAPSULE CARD AREA */}
+      <div className="w-full px-3 py-6 sm:px-6 sm:py-10 md:px-8 lg:px-12 lg:py-14">
+        <div className="relative mx-auto max-w-[1520px] overflow-hidden bg-[#B6CBA9] px-6 pt-10 pb-8 sm:pb-10 md:pb-12 sm:px-10 sm:pt-12 md:px-12 md:pt-14 lg:rounded-l-full lg:rounded-r-[3.5rem] rounded-[2rem] sm:rounded-[2.8rem] lg:pl-28 lg:pr-14 xl:pl-36 xl:pr-16 shadow-[0_20px_50px_rgba(41,56,47,0.12)]">
 
-        {/* WHITE FRAME CARD */}
-        <div className="relative  bg-white p-2.5 shadow-[0_6px_0_#8FA68B,0_18px_36px_rgba(41,56,47,0.16)]  sm:p-3">
+          {/* TOP 3-COLUMN CONTENT GRID (MATCHING USER CONTENTS) */}
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-[1.7fr_1fr_1fr] lg:gap-14 xl:gap-20">
 
-          {/* INNER DASHED FRAME */}
-          <div className="rounded-[0.5rem] border border-dashed border-[#29382F]/20 p-5 sm:rounded-[1rem] sm:p-7 lg:p-9">
-
-            {/* FOOTER MAIN CONTENT */}
-            <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-[1.7fr_0.45fr_0.35fr] lg:gap-16">
-
-              {/* BRAND & CONTACT */}
-              <div className="flex flex-col items-start">
-
-                <Link href="/" className="flex items-center gap-4">
-                  <div className="relative flex h-[76px] w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-white ring-4 ring-[#B6CBA9] sm:h-[90px] sm:w-[90px]">
+            {/* BRAND & CONTACT COLUMN (Left) */}
+            <div className="flex flex-col justify-between">
+              <div>
+                <Link href="/" className="inline-flex items-center gap-3.5 group">
+                  <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white ring-2 ring-[#29382F]/15 transition-transform duration-300 group-hover:scale-105">
                     <Image
                       src="/images/logo.png"
                       alt="GrowthEnzyme logo"
-                      width={90}
-                      height={90}
-                      className="h-full w-full object-contain p-2"
+                      width={48}
+                      height={48}
+                      className="h-full w-full object-contain p-1.5"
                     />
                   </div>
-
-                  <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-none tracking-[-0.07em] text-[#243B2D]">
+                  <span className="text-2xl font-bold tracking-tight text-[#29382F]">
                     Growth Enzyme
                   </span>
                 </Link>
 
-                <h2 className="mt-8 text-xl font-semibold tracking-tight text-[#29382F] sm:text-2xl">
+                <h3 className="mt-6 text-2xl font-bold leading-tight tracking-tight text-[#29382F] sm:text-3xl">
                   Catalyzing Digital Growth
-                </h2>
+                </h3>
 
-                <p className="mt-4 text-sm leading-7 text-[#405C48] sm:text-base">
+                <p className="mt-3 text-sm text-[#405C48] sm:text-base">
                   A full-service digital growth agency.
                 </p>
-
-                {/* CONTACT DETAILS */}
-                <div className="mt-7 flex flex-col items-start gap-3">
-                  <h3 className="text-base font-bold text-[#243B2D]">
-                    Contact
-                  </h3>
-
-                  <a
-                    href="mailto:contact@growthenzyme.com"
-                    className="rounded-full bg-[#EEF3EA] px-4 py-2 text-sm text-[#405C48] transition-colors duration-300 hover:bg-[#29382F] hover:text-white sm:text-base"
-                  >
-                    contact@growthenzyme.com
-                  </a>
-
-                  <a
-                    href="tel:+918807457959"
-                    className="rounded-full bg-[#EEF3EA] px-4 py-2 text-sm text-[#405C48] transition-colors duration-300 hover:bg-[#29382F] hover:text-white sm:text-base"
-                  >
-                    +91 88074 57959
-                  </a>
-                </div>
               </div>
 
-              {/* SERVICES */}
-              <div className="relative lg:border-l lg:border-[#29382F]/10 lg:pl-10 lg:pt-2">
-                <span
-                  aria-hidden="true"
-                  className="mb-3 block h-1 w-10 rounded-full bg-[#D78359]"
-                />
+              {/* CONTACT DETAILS */}
+              <div className="mt-8 flex flex-col items-start gap-2.5">
+                <h4 className="text-sm font-bold text-[#243B2D]">
+                  Contact
+                </h4>
 
-                <h3 className="mb-7 text-base font-bold text-[#243B2D]">
-                  Services
-                </h3>
+                <a
+                  href="mailto:contact@growthenzyme.com"
+                  className="text-sm font-medium text-[#405C48] transition-colors hover:text-[#17291F] sm:text-base underline-offset-2 hover:underline"
+                >
+                  contact@growthenzyme.com
+                </a>
 
-                <ul className="flex flex-col gap-5">
-                  {services.map((service) => (
-                    <li key={service.name}>
-                      <Link
-                        href={service.href}
-                        className="text-sm text-[#405C48] transition-all duration-300 hover:translate-x-1 hover:text-[#17291F] sm:text-base"
-                      >
-                        {service.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                <a
+                  href="tel:+918807457959"
+                  className="text-sm font-medium text-[#405C48] transition-colors hover:text-[#17291F] sm:text-base underline-offset-2 hover:underline"
+                >
+                  +91 88074 57959
+                </a>
               </div>
-
-              {/* SOCIALS */}
-              <div className="relative lg:border-l lg:border-[#29382F]/10 lg:pl-10 lg:pt-2">
-                <span
-                  aria-hidden="true"
-                  className="mb-3 block h-1 w-10 rounded-full bg-[#D78359]"
-                />
-
-                <h3 className="mb-7 text-base font-bold text-[#243B2D]">
-                  Socials
-                </h3>
-
-                <ul className="flex flex-col gap-5">
-                  {socials.map((social) => (
-                    <li key={social.name}>
-                      <a
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-[#405C48] transition-all duration-300 hover:translate-x-1 hover:text-[#17291F] sm:text-base"
-                      >
-                        {social.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
             </div>
+
+            {/* SERVICES COLUMN (Middle) */}
+            <div className="lg:pt-2">
+              <h4 className="text-base font-bold text-[#243B2D]">
+                Services
+              </h4>
+              <ul className="mt-5 flex flex-col gap-3.5 sm:gap-4">
+                {services.map((service) => (
+                  <li key={service.name}>
+                    <Link
+                      href={service.href}
+                      className="text-sm font-medium text-[#405C48] transition-all duration-200 hover:translate-x-1 hover:text-[#17291F] inline-block sm:text-base"
+                    >
+                      {service.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* SOCIALS COLUMN (Right) */}
+            <div className="lg:pt-2">
+              <h4 className="text-base font-bold text-[#243B2D]">
+                Socials
+              </h4>
+              <ul className="mt-5 flex flex-col gap-3.5 sm:gap-4">
+                {socials.map((social) => (
+                  <li key={social.name}>
+                    <a
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium text-[#405C48] transition-all duration-200 hover:translate-x-1 hover:text-[#17291F] inline-block sm:text-base"
+                    >
+                      {social.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
           </div>
-        </div>
 
-        {/* COPYRIGHT PILL */}
-        <div className="mt-7 flex items-center justify-center gap-4 sm:mt-8">
-          <span
-            aria-hidden="true"
-            className="hidden h-px flex-1 bg-white/60 sm:block"
-          />
-
-          <p className="rounded-full bg-white px-6 py-3 text-center text-xs text-[#405C48] shadow-[0_4px_0_#8FA68B] sm:text-sm">
-            © {new Date().getFullYear()} Growth Enzyme. All rights reserved.
-          </p>
-
-          <span
-            aria-hidden="true"
-            className="hidden h-px flex-1 bg-white/60 sm:block"
-          />
+          {/* COPYRIGHT LINE */}
+          <div className="mt-10 border-t border-[#29382F]/10 pt-5 text-center text-xs text-[#405C48] sm:text-sm">
+            <p>© {new Date().getFullYear()} Growth Enzyme. All rights reserved.</p>
+          </div>
         </div>
 
       </div>
