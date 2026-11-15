@@ -6,8 +6,8 @@ export default function ContactCTA() {
   return (
     <section
       id="contact"
-    className="relative z-10 isolate -mt-px flex min-h-[560px] w-full items-center justify-center overflow-hidden border-0 bg-white px-5 pt-28 pb-20 text-[#29382F] sm:min-h-[640px] sm:px-5 sm:pt-32 sm:pb-24 lg:min-h-[720px] lg:pt-36"
-    style={{ transform: "translateY(32px)", marginBottom: "-32px" }}
+    className="relative z-10 isolate -mt-px flex min-h-[560px] w-full items-center justify-center overflow-hidden border-0 bg-white px-5 pt-28 pb-20 text-[#29382F] sm:min-h-[640px] sm:px-5 sm:pt-32 sm:pb-24 lg:min-h-[720px] lg:pt-32"
+    style={{ transform: "translateY(20px)" }}
     >
       <div
         aria-hidden="true"
