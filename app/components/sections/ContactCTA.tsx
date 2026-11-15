@@ -105,7 +105,7 @@ export default function ContactCTA() {
 </div>
 
       {/* MAIN CONTENT */}
-      <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-col items-center text-center">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-col items-center text-center -mt-40">
 
         {/* Label */}
         <Link
