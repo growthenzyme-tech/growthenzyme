@@ -28,9 +28,12 @@ export default function Hero() {
         <div className="relative z-20 mx-auto w-full max-w-[660px] py-1 sm:py-5 lg:mx-0 lg:py-12">
 
           {/* Label */}
-          <div className="mb-5 ml-0 inline-flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.18em] text-[#2F4A39] sm:mb-7 sm:ml-2 sm:text-xs sm:tracking-[0.22em] lg:mb-8">
-            Digital Growth Agency
-          </div>
+          
+<div className="mb-5 ml-0 inline-flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.18em] text-[#2F4A39] sm:mb-7 sm:ml-2 sm:text-xs sm:tracking-[0.22em] lg:mb-8">
+  <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+  Digital Growth Agency
+</div>
+
 
           {/* Heading */}
           <h1 className="text-[clamp(2.6rem,11vw,4.2rem)] font-semibold leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:text-[clamp(3.5rem,9vw,5rem)] lg:text-[clamp(3rem,5.4vw,5.6rem)] lg:leading-[0.98]">

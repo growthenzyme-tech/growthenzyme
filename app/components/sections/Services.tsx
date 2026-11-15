@@ -116,9 +116,11 @@ export default function Services() {
           {/* LEFT SIDE - HEADING */}
           <div className="relative z-10 flex flex-col items-center text-center sm:items-start sm:text-left lg:sticky lg:top-28">
 
-            <span className="inline-flex items-center rounded-full bg-[#B6CBA9]/30 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#506B59] sm:text-xs">
-              What We Do
-            </span>
+           
+<div className=" ml-0 inline-flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.18em] text-[#2F4A39] sm:ml-2 sm:text-xs sm:tracking-[0.22em]">
+  <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+  What We Do
+</div>
 
             <h2 className="mt-5 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] sm:mt-6 sm:text-6xl lg:text-7xl">
               Six Ways We Grow Your{" "}

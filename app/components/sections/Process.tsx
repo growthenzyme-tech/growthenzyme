@@ -52,11 +52,12 @@ export default function Process() {
         {/* LEFT — HEADING AREA */}
         <div className="flex flex-col justify-center bg-white px-6 py-12 sm:px-10 sm:py-14 lg:px-14 xl:px-20">
 
-          <div className="ml-2 flex items-center gap-3">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#506B59]">
-              How We Work
-            </span>
-          </div>
+         <div className="ml-2 flex items-center gap-3">
+  <span className="inline-flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.18em] text-[#2F4A39] sm:text-xs sm:tracking-[0.22em]">
+    <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+    How We Work
+  </span>
+</div>
 
           <h2 className="mt-6 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:text-6xl lg:text-7xl">
             Our process,
@@ -125,9 +126,9 @@ export default function Process() {
                     </span>
 
                     {/* ICON */}
-                    <div className="mt-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#E8EEE5] text-[#29382F] transition-all duration-300 group-hover:bg-[#29382F] group-hover:text-[#F5F0E5] sm:h-11 sm:w-11">
-                      <Icon size={21} strokeWidth={1.6} />
-                    </div>
+                    <div className="mt-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#E58A32]/50 text-[#29382F] transition-all duration-300 group-hover:bg-[#29382F] group-hover:text-[#F5F0E5] sm:h-11 sm:w-11">
+  <Icon size={21} strokeWidth={1.6} />
+</div>
 
                     {/* TITLE */}
                     <h3 className="mt-3 text-base font-bold uppercase leading-tight tracking-[-0.035em] text-[#29382F] sm:text-lg">
