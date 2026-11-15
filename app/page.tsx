@@ -5,6 +5,7 @@ import Work from "./components/sections/Work";
 import Process from "./components/sections/Process";
 import Stats from "./components/sections/Stats";
 import ContactCTA from "./components/sections/ContactCTA";
+import Footer from "./components/sections/Footer";
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
@@ -22,7 +23,7 @@ export default function Home() {
         <Process />
         <Stats/>
         <ContactCTA />
-
+<Footer />
 
       </div>
 
