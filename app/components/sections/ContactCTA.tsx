@@ -24,6 +24,12 @@ export default function ContactCTA() {
 <div
   aria-hidden="true"
   className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+style={{
+  WebkitMaskImage:
+    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 15%, rgba(0,0,0,0.55) 35%, black 65%, black 100%)",
+  maskImage:
+    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 15%, rgba(0,0,0,0.55) 35%, black 65%, black 100%)",
+}}
 >
   <svg
     viewBox="0 0 1440 600"
