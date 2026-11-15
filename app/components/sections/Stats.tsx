@@ -161,7 +161,7 @@ export default function GrowthNumbers() {
   C620 100 710 245 810 170
   C910 95 1010 225 1110 160
   C1210 45 1330 85 1440 105
-  L1440 520 L0 520 Z
+  L1440 540 L0 540 Z
 "
       fill="#FFFFFF"
       opacity="0.22"
@@ -176,7 +176,7 @@ export default function GrowthNumbers() {
   C650 135 740 285 840 210
   C940 130 1030 270 1130 205
   C1230 85 1350 115 1440 145
-  L1440 520 L0 520 Z
+  L1440 540 L0 540 Z
 "
       fill="#FFFFFF"
       opacity="0.45"
@@ -208,8 +208,8 @@ export default function GrowthNumbers() {
   C650 165 740 320 840 245
   C940 165 1030 305 1130 240
   C1230 115 1350 145 1440 165
-  L1440 520
-  L0 520 Z
+  L1440 540
+  L0 540 Z
 "
       fill="#FFFFFF"
     />
