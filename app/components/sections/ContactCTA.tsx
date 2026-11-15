@@ -24,12 +24,6 @@ export default function ContactCTA() {
 <div
   aria-hidden="true"
   className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
-style={{
-  WebkitMaskImage:
-    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 15%, rgba(0,0,0,0.55) 35%, black 65%, black 100%)",
-  maskImage:
-    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 15%, rgba(0,0,0,0.55) 35%, black 65%, black 100%)",
-}}
 >
   <svg
     viewBox="0 0 1440 600"
@@ -108,6 +102,18 @@ style={{
       opacity="0.35"
     />
   </svg>
+
+{/* WHITE FADE — TOP LEFT ONLY */}
+{/* SMALL TOP FADE: only the top edge of the wave melts into white */}
+<div
+  aria-hidden="true"
+  className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[70px] sm:h-[100px] lg:h-[130px]"
+  style={{
+    background:
+      "linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.75) 30%, rgba(255,255,255,0.3) 65%, rgba(255,255,255,0) 100%)",
+  }}
+/>
+
 </div>
 
       {/* MAIN CONTENT */}
