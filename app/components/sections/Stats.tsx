@@ -136,7 +136,7 @@ export default function GrowthNumbers() {
       
 
       {/* ORGANIC WAVE VECTOR */}
-     <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[68%] overflow-hidden">
+     <div className="pointer-events-none absolute inset-x-0 -bottom-10 z-20 h-[68%] overflow-hidden">
 
   <svg
     viewBox="0 0 1440 520"
@@ -153,7 +153,7 @@ export default function GrowthNumbers() {
     </defs>
 
     {/* BACK WAVE - subtle and elevated */}
-    <path
+    {/* <path
      d="
   M0 155
   C90 65 160 195 250 125
@@ -165,7 +165,7 @@ export default function GrowthNumbers() {
 "
       fill="#FFFFFF"
       opacity="0.22"
-    />
+    /> */}
 
     {/* SECOND WAVE - more movement */}
     <path
