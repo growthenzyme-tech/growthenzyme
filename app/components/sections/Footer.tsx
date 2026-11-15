@@ -21,9 +21,36 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="relative mt-20 w-full overflow-hidden bg-[#B6CBA9] text-[#29382F]">
+    <footer className="relative mt-0 w-full overflow-hidden bg-[#B6CBA9] text-[#29382F]">
+      {/* TOP GEOMETRIC BOXES PATTERN (ONLY BOXES - SOLID RECTANGLE REMOVED) */}
+      <div
+        aria-hidden="true"
+        className="w-full select-none overflow-hidden leading-none pointer-events-none"
+      >
+        <svg
+          className="h-7 w-full sm:h-8"
+          viewBox="0 0 1020 33"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <pattern
+              id="footerGeometricFringe"
+              width="34"
+              height="33"
+              patternUnits="userSpaceOnUse"
+            >
+              {/* Upper box (width 17, height 22) */}
+              <rect x="17" y="0" width="17" height="22" fill="#29382F" />
+              {/* Lower staggered box (width 17, height 11) */}
+              <rect x="0" y="22" width="17" height="11" fill="#29382F" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="33" fill="url(#footerGeometricFringe)" />
+        </svg>
+      </div>
 
-      <div className="relative z-10 mx-auto max-w-[1500px] px-6 pb-5 pt-12 sm:px-10 sm:pt-16 lg:px-14 lg:pb-6 lg:pt-20">
+      <div className="relative z-10 mx-auto max-w-[1500px] px-6 pb-5 pt-8 sm:px-10 sm:pt-12 lg:px-14 lg:pb-6 lg:pt-16">
 
         {/* WHITE FRAME CARD */}
         <div className="relative  bg-white p-2.5 shadow-[0_6px_0_#8FA68B,0_18px_36px_rgba(41,56,47,0.16)]  sm:p-3">
