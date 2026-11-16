@@ -9,11 +9,11 @@ export default function SplashScreen() {
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
-    // Show for just 1 second, then open home page immediately
+    // Show for 1.3 seconds, then open home page immediately without fade
     const timer = setTimeout(() => {
       setIsOpen(false);
       document.body.style.overflow = "";
-    }, 1000);
+    }, 1300);
 
     return () => {
       clearTimeout(timer);
