@@ -87,7 +87,7 @@ export default function Process() {
           <div className="absolute -left-[110px] top-1/2 hidden h-[125%] w-[220px] -translate-y-1/2 rounded-[50%] bg-white lg:block" />
 
           {/* DECORATIVE CIRCLE */}
-          <div className="pointer-events-none absolute -right-24 -top-32 h-[330px] w-[330px] rounded-full border border-[#506B59]/15 sm:-right-28 sm:-top-40 sm:h-[420px] sm:w-[420px]" />
+          {/* <div className="pointer-events-none absolute -right-24 -top-32 h-[330px] w-[330px] rounded-full border border-[#506B59]/15 sm:-right-28 sm:-top-40 sm:h-[420px] sm:w-[420px]" /> */}
 
           {/* PROCESS CARDS */}
           <div className="relative z-10 mx-auto grid w-full max-w-[570px] grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-5">
