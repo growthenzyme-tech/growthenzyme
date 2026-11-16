@@ -28,15 +28,26 @@ export default function Hero() {
         <div className="relative z-20 mx-auto w-full max-w-[660px] py-1 sm:py-5 lg:mx-0 lg:py-12">
 
           {/* Label */}
-          
-<div className="mb-5 ml-0 inline-flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.18em] text-[#2F4A39] sm:mb-7 sm:ml-2 sm:text-xs sm:tracking-[0.22em] lg:mb-8">
-  <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
-  Digital Growth Agency
-</div>
+          <div
+            className="font-instrument mb-5 ml-0 inline-flex items-center gap-3 sm:mb-7 sm:ml-2 lg:mb-8"
+            style={{
+              fontFamily: '"Instrument Sans", "Instrument Sans Placeholder", sans-serif',
+              fontSize: "12px",
+              fontWeight: 600,
+              fontStyle: "normal",
+              lineHeight: "14.4px",
+              letterSpacing: "0.72px",
+              color: "#0D0D0D",
+              textTransform: "uppercase",
+            }}
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+            Digital Growth Agency
+          </div>
 
 
           {/* Heading */}
-          <h1 className="text-[clamp(2.6rem,11vw,4.2rem)] font-semibold leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:text-[clamp(3.5rem,9vw,5rem)] lg:text-[clamp(3rem,5.4vw,5.6rem)] lg:leading-[0.98]">
+          <h1 className="font-heading text-[clamp(2.6rem,11vw,4.2rem)] font-bold leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:text-[clamp(3.5rem,9vw,5rem)] lg:text-[clamp(3rem,5.4vw,5.6rem)] lg:leading-[0.98]">
             We Catalyze
             <br />
 
@@ -46,7 +57,10 @@ export default function Hero() {
           </h1>
 
           {/* Description */}
-          <p className="mt-5 max-w-[510px] text-[13px] font-medium leading-6 text-[#29382F]/85 sm:mt-7 sm:text-base sm:leading-8 lg:mt-9 lg:text-lg lg:leading-9">
+          <p
+            style={{ fontFamily: "var(--font-instrument-sans), 'Instrument Sans', sans-serif" }}
+            className="font-instrument mt-5 max-w-[510px] text-[13px] font-medium leading-6 text-[#29382F]/85 sm:mt-7 sm:text-base sm:leading-8 lg:mt-9 lg:text-lg lg:leading-9"
+          >
             We&apos;re a full-service digital growth agency — combining
             performance marketing, intelligent automation, and
             standout design to grow businesses that matter.
@@ -60,7 +74,10 @@ export default function Hero() {
               href="#contact"
               className="group inline-flex w-full items-center justify-between overflow-hidden rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] p-[4px] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.18),inset_0_2px_3px_rgba(255,255,255,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.2)] active:translate-y-1 active:shadow-[0_2px_0_#6F9259] sm:w-auto"
             >
-              <span className="flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2.5 text-sm font-bold text-[#29382F] sm:gap-5 sm:px-5 sm:py-3.5">
+              <span
+                style={{ fontFamily: "var(--font-instrument-sans), 'Instrument Sans', sans-serif" }}
+                className="font-instrument flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2.5 text-sm font-bold text-[#29382F] sm:gap-5 sm:px-5 sm:py-3.5"
+              >
                 Start Growing
 
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/50 bg-white/35 shadow-[inset_0_1px_3px_rgba(255,255,255,0.7)]">
@@ -77,8 +94,11 @@ export default function Hero() {
               href="#work"
               className="group inline-flex w-full items-center justify-between overflow-hidden rounded-xl border border-[#E5E4DC] bg-gradient-to-b from-white to-[#E9E9E3] p-[4px] shadow-[0_5px_0_#C5C5BC,0_9px_18px_rgba(41,56,47,0.13),inset_0_2px_3px_rgba(255,255,255,0.9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#C5C5BC,0_12px_22px_rgba(41,56,47,0.16)] active:translate-y-1 active:shadow-[0_2px_0_#C5C5BC] sm:w-auto"
             >
-              <span className="flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2.5 text-sm font-bold text-[#29382F] sm:gap-5 sm:px-5 sm:py-3.5">
-                View Our Work
+              <span
+                style={{ fontFamily: "var(--font-instrument-sans), 'Instrument Sans', sans-serif" }}
+                className="font-instrument flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2.5 text-sm font-bold text-[#29382F] sm:gap-5 sm:px-5 sm:py-3.5"
+              >
+                Our Work
 
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#DADBD2] bg-[#F5F5EF] shadow-[inset_0_1px_3px_rgba(255,255,255,0.9)]">
                   <ArrowUpRight
@@ -119,7 +139,7 @@ export default function Hero() {
           />
 
           {/* Terracotta floating detail */}
-          <div className="absolute bottom-3.5 left-[-2%] z-30 flex items-center gap-2 rounded-full border border-[#F5F0E5]/70 bg-[#D78359] px-3.5 py-1.5 text-[10px] font-semibold tracking-wide text-[#FFF9EF] shadow-[0_12px_25px_rgba(41,56,47,0.2)] sm:bottom-5 sm:left-[-5%] sm:gap-3 sm:px-5 sm:py-2.5 sm:text-xs">
+          <div className="font-heading absolute bottom-3.5 left-[-2%] z-30 flex items-center gap-2 rounded-full border border-[#F5F0E5]/70 bg-[#D78359] px-3.5 py-1.5 text-[10px] font-semibold tracking-wide text-[#FFF9EF] shadow-[0_12px_25px_rgba(41,56,47,0.2)] sm:bottom-5 sm:left-[-5%] sm:gap-3 sm:px-5 sm:py-2.5 sm:text-xs">
             <span className="h-2 w-2 rounded-full bg-[#FFF9EF]" />
             Ideas into Impact
           </div>
@@ -134,7 +154,7 @@ export default function Hero() {
 
       {/* SERVICES TICKER */}
       <div className="bg-[#A5B59F] text-[#29382F]">
-        <div className="mx-auto flex min-h-14 max-w-[1320px] flex-wrap items-center justify-center gap-x-3 gap-y-2 px-4 py-4 text-[8px] font-bold uppercase tracking-[0.06em] sm:min-h-16 sm:gap-x-6 sm:gap-y-3 sm:px-10 sm:py-5 sm:text-xs sm:tracking-[0.1em] sm:justify-between lg:px-14">
+        <div className="font-heading mx-auto flex min-h-14 max-w-[1320px] flex-wrap items-center justify-center gap-x-3 gap-y-2 px-4 py-4 text-[8px] font-bold uppercase tracking-[0.06em] sm:min-h-16 sm:gap-x-6 sm:gap-y-3 sm:px-10 sm:py-5 sm:text-xs sm:tracking-[0.1em] sm:justify-between lg:px-14">
 
           {focusAreas.map((area, index) => (
             <div key={area} className="flex items-center gap-2 sm:gap-5">

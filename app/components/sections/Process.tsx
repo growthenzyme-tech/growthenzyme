@@ -52,14 +52,14 @@ export default function Process() {
         {/* LEFT — HEADING AREA */}
         <div className="flex flex-col justify-center bg-white px-6 py-12 sm:px-10 sm:py-14 lg:px-14 xl:px-20">
 
-         <div className="ml-2 flex items-center gap-3">
-  <span className="inline-flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.18em] text-[#2F4A39] sm:text-xs sm:tracking-[0.22em]">
+          <div className="ml-2 flex items-center gap-3">
+  <span className="font-heading inline-flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.18em] text-[#2F4A39] sm:text-xs sm:tracking-[0.22em]">
     <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
     How We Work
   </span>
 </div>
 
-          <h2 className="mt-6 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:text-6xl lg:text-7xl">
+          <h2 className="font-heading mt-6 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:text-6xl lg:text-7xl">
             Our process,
             <br />
             <span className="mt-2 -ml-2 inline-block rounded-full bg-[#29382F] px-4 py-2.5 text-white sm:mt-3 sm:px-7 sm:py-3">
@@ -131,7 +131,7 @@ export default function Process() {
 </div>
 
                     {/* TITLE */}
-                    <h3 className="mt-3 text-base font-bold uppercase leading-tight tracking-[-0.035em] text-[#29382F] sm:text-lg">
+                    <h3 className="font-heading mt-3 text-base font-bold uppercase leading-tight tracking-[-0.035em] text-[#29382F] sm:text-lg">
                       {step.title}
                     </h3>
 

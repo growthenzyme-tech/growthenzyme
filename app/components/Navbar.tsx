@@ -44,13 +44,12 @@ export default function Navbar() {
           ))}
 
           {/* Let's Talk Button */}
-        
-<Link
-  href="#contact"
-  className="group inline-flex items-center gap-3 rounded-xl border border-[#A5B59F] bg-gradient-to-b from-[#B6CBA9] to-[#91A88F] px-4 py-3 text-[15px] font-bold text-[#29382F] shadow-[0_4px_0_#71876F,0_8px_16px_rgba(41,56,47,0.15),inset_0_2px_3px_rgba(255,255,255,0.45)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_6px_0_#71876F,0_11px_20px_rgba(41,56,47,0.18)] active:translate-y-1 active:shadow-[0_2px_0_#71876F]"
->
-  Let's Talk
-</Link>
+          <Link
+            href="#contact"
+            className="font-instrument group inline-flex items-center gap-3 rounded-xl border border-[#A5B59F] bg-gradient-to-b from-[#B6CBA9] to-[#91A88F] px-4 py-3 text-[15px] font-bold text-[#29382F] shadow-[0_4px_0_#71876F,0_8px_16px_rgba(41,56,47,0.15),inset_0_2px_3px_rgba(255,255,255,0.45)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_6px_0_#71876F,0_11px_20px_rgba(41,56,47,0.18)] active:translate-y-1 active:shadow-[0_2px_0_#71876F]"
+          >
+            Let's Talk
+          </Link>
 
         </div>
 
@@ -85,10 +84,9 @@ export default function Navbar() {
             <Link
               href="#contact"
               onClick={() => setMenuOpen(false)}
-              className="group flex items-center justify-center gap-3 rounded-xl border border-[#F5F0E5] bg-gradient-to-b from-[#FDFBF4] to-[#E9E5D9] px-5 py-3 font-bold text-[#29382F] shadow-[0_4px_0_#6F856D,0_8px_16px_rgba(41,56,47,0.12)] transition-all duration-300 active:translate-y-1 active:shadow-[0_2px_0_#6F856D]"
+              className="font-instrument group flex items-center justify-center gap-3 rounded-xl border border-[#F5F0E5] bg-gradient-to-b from-[#FDFBF4] to-[#E9E5D9] px-5 py-3 font-bold text-[#29382F] shadow-[0_4px_0_#6F856D,0_8px_16px_rgba(41,56,47,0.12)] transition-all duration-300 active:translate-y-1 active:shadow-[0_2px_0_#6F856D]"
             >
               Let's Talk
-           
             </Link>
           </div>
         </div>

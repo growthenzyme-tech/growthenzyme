@@ -32,12 +32,12 @@ export default function GrowthNumbers() {
       {/* HEADING */}
       <div className="relative z-10 flex min-h-[720px] flex-col items-center px-5 pt-14 text-center sm:min-h-[770px] sm:pt-20 lg:min-h-[850px] lg:pt-24">
 
-       <p className="inline-flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.18em] text-[#2F4A39] sm:text-xs sm:tracking-[0.22em]">
+       <p className="font-heading inline-flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.18em] text-[#2F4A39] sm:text-xs sm:tracking-[0.22em]">
   <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
   By The Numbers
 </p>
 
-        <h2 className="mt-6 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:text-6xl lg:text-7xl">
+        <h2 className="font-heading mt-6 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:text-6xl lg:text-7xl">
           Growth that,
           <br />
           speaks for
@@ -62,12 +62,12 @@ export default function GrowthNumbers() {
 
     <div className="pointer-events-none absolute" />
 
-    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#71816E] sm:text-xs">
+    <p className="font-heading text-[9px] font-bold uppercase tracking-[0.16em] text-[#71816E] sm:text-xs">
       Projects Delivered
     </p>
 
     <div>
-      <h3 className="text-3xl font-extrabold tracking-[-0.07em] text-[#29382F] sm:text-5xl">
+      <h3 className="font-heading text-3xl font-extrabold tracking-[-0.07em] text-[#29382F] sm:text-5xl">
         150+
       </h3>
       <p className="mt-3 max-w-[180px] text-[10px] leading-relaxed text-[#657365] sm:text-sm">
@@ -90,13 +90,13 @@ export default function GrowthNumbers() {
     <div className="pointer-events-none absolute -bottom-20 -left-12 h-48 w-48 rounded-full bg-[#8DAE8C]/30 blur-3xl sm:h-60 sm:w-60" />
 
     <div className="relative z-10">
-      <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#C5D8BB] sm:text-xs">
+      <p className="font-heading text-[9px] font-bold uppercase tracking-[0.16em] text-[#C5D8BB] sm:text-xs">
         Business Growth
       </p>
     </div>
 
     <div className="relative z-10">
-      <h3 className="text-4xl font-extrabold tracking-[-0.07em] text-white sm:text-6xl">
+      <h3 className="font-heading text-4xl font-extrabold tracking-[-0.07em] text-white sm:text-6xl">
         3X
       </h3>
       <p className="mt-3 max-w-[200px] text-[10px] leading-relaxed text-[#D2DDCF] sm:text-sm">
@@ -113,12 +113,12 @@ export default function GrowthNumbers() {
   {/* RIGHT CARD */}
   <div className="mb-8 flex min-h-[190px] min-w-0 flex-1 flex-col justify-between overflow-hidden rounded-2xl border border-white bg-gradient-to-br from-white via-[#F5F8F1] to-[#E5EDDF] p-4 shadow-[0_8px_0_#D2DECC,0_16px_30px_rgba(41,56,47,0.12)] transition-all duration-300 hover:-translate-y-2 sm:mb-10 sm:min-h-[240px] sm:p-6 lg:mb-14 lg:min-h-[240px] lg:p-7">
 
-    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#71816E] sm:text-xs">
+    <p className="font-heading text-[9px] font-bold uppercase tracking-[0.16em] text-[#71816E] sm:text-xs">
       Client Satisfaction
     </p>
 
     <div>
-      <h3 className="text-3xl font-extrabold tracking-[-0.07em] text-[#29382F] sm:text-5xl">
+      <h3 className="font-heading text-3xl font-extrabold tracking-[-0.07em] text-[#29382F] sm:text-5xl">
         98%
       </h3>
       <p className="mt-3 max-w-[180px] text-[10px] leading-relaxed text-[#657365] sm:text-sm">
@@ -141,13 +141,13 @@ export default function GrowthNumbers() {
   <div className="pointer-events-none absolute -bottom-20 -left-12 h-48 w-48 rounded-full bg-[#8DAE8C]/30 blur-3xl sm:h-60 sm:w-60" />
 
   <div className="relative z-10">
-    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#C5D8BB] sm:text-xs">
+    <p className="font-heading text-[9px] font-bold uppercase tracking-[0.16em] text-[#C5D8BB] sm:text-xs">
       Industries Served
     </p>
   </div>
 
   <div className="relative z-10 mt-4">
-    <h3 className="text-4xl font-extrabold tracking-[-0.07em] text-white sm:text-6xl">
+    <h3 className="font-heading text-4xl font-extrabold tracking-[-0.07em] text-white sm:text-6xl">
       12
     </h3>
     <p className="mt-4 max-w-[180px] text-[10px] leading-relaxed text-[#D2DDCF] sm:text-sm">

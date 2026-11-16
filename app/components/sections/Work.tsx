@@ -89,10 +89,10 @@ export default function Work() {
 
         {/* SECTION HEADING */}
         <div className="mb-10 flex flex-col items-center text-center sm:mb-12">
-          <span className="inline-flex items-center rounded-full border border-[#506B59]/30 bg-[#FFFDF8]/60 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#506B59] backdrop-blur sm:text-xs">
+          <span className="font-heading inline-flex items-center rounded-full border border-[#506B59]/30 bg-[#FFFDF8]/60 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#506B59] backdrop-blur sm:text-xs">
             Our Portfolio
           </span>
-<h2 className="mt-5 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:mt-6 sm:text-6xl lg:text-7xl">
+<h2 className="font-heading mt-5 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:mt-6 sm:text-6xl lg:text-7xl">
   Work we're
   <br />
 
@@ -191,7 +191,7 @@ export default function Work() {
   ))}
 </div>
 
-                  <h3 className="mt-4 text-2xl font-semibold uppercase leading-[1.05] tracking-[-0.03em] text-[#29382F] sm:text-[1.7rem]">
+                  <h3 className="font-heading mt-4 text-2xl font-semibold uppercase leading-[1.05] tracking-[-0.03em] text-[#29382F] sm:text-[1.7rem]">
                     {project.name}
                   </h3>
 

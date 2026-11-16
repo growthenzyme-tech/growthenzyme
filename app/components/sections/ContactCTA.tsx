@@ -110,14 +110,14 @@ export default function ContactCTA() {
         {/* Label */}
         <Link
           href="#contact"
-          className="inline-flex items-center gap-2 rounded-full border border-[#29382F]/20 bg-white/80 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#29382F] shadow-sm backdrop-blur-sm transition-all duration-300 hover:bg-[#29382F] hover:text-[#FFFDF8] sm:px-5 sm:py-2.5 sm:text-xs"
+          className="font-heading inline-flex items-center gap-2 rounded-full border border-[#29382F]/20 bg-white/80 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#29382F] shadow-sm backdrop-blur-sm transition-all duration-300 hover:bg-[#29382F] hover:text-[#FFFDF8] sm:px-5 sm:py-2.5 sm:text-xs"
         >
           <span className="h-2 w-2 rounded-full bg-[#D78359]" />
           Get in touch
         </Link>
 
         {/* Heading */}
-        <h2 className="mt-7 text-[clamp(2.6rem,7.5vw,5.2rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F]">
+        <h2 className="font-heading mt-7 text-[clamp(2.6rem,7.5vw,5.2rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F]">
           Ready to{" "}
           <span className="relative -top-[2px] mt-2 inline-block rounded-full bg-[#29382F] px-6 py-2.5 text-[0.88em] text-white shadow-[0_8px_20px_rgba(41,56,47,0.18)] sm:mt-3 sm:px-8 sm:py-3">
             grow?
@@ -134,9 +134,9 @@ export default function ContactCTA() {
         <div className="mt-8 flex flex-col items-stretch gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
           <Link
             href="mailto:hello@growthenzyme.com"
-            className="group inline-flex w-full items-center justify-between overflow-hidden rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] p-[4px] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.18),inset_0_2px_3px_rgba(255,255,255,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.2)] active:translate-y-1 active:shadow-[0_2px_0_#6F9259] sm:w-auto"
+            className="font-instrument group inline-flex w-full items-center justify-between overflow-hidden rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] p-[4px] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.18),inset_0_2px_3px_rgba(255,255,255,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.2)] active:translate-y-1 active:shadow-[0_2px_0_#6F9259] sm:w-auto"
           >
-            <span className="flex w-full items-center justify-between gap-4 rounded-lg px-5 py-3 text-sm font-bold text-[#29382F] sm:gap-5 sm:px-6 sm:py-3.5">
+            <span className="font-instrument flex w-full items-center justify-between gap-4 rounded-lg px-5 py-3 text-sm font-bold text-[#29382F] sm:gap-5 sm:px-6 sm:py-3.5">
               Start the Conversation
 
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/50 bg-white/35 shadow-[inset_0_1px_3px_rgba(255,255,255,0.7)]">
@@ -150,6 +150,12 @@ export default function ContactCTA() {
         </div>
 
       </div>
+
+      {/* FADED BOTTOM EFFECT TRANSITIONING INTO FOOTER (WHITE) */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-28 sm:h-36 lg:h-48 bg-gradient-to-b from-transparent via-[#B6CBA9]/30 to-white"
+      />
     </section>
   );
 }

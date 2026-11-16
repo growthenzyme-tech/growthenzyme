@@ -117,12 +117,12 @@ export default function Services() {
           <div className="relative z-10 flex flex-col items-center text-center sm:items-start sm:text-left lg:sticky lg:top-28">
 
            
-<div className=" ml-0 inline-flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.18em] text-[#2F4A39] sm:ml-2 sm:text-xs sm:tracking-[0.22em]">
-  <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
-  What We Do
-</div>
+            <div className="font-heading ml-0 inline-flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.18em] text-[#2F4A39] sm:ml-2 sm:text-xs sm:tracking-[0.22em]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+              What We Do
+            </div>
 
-            <h2 className="mt-5 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] sm:mt-6 sm:text-6xl lg:text-7xl">
+            <h2 className="font-heading mt-5 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] sm:mt-6 sm:text-6xl lg:text-7xl">
               Six Ways We Grow Your{" "}
               <span className="mt-2 inline-block rounded-full bg-[#29382F] px-4 py-2.5 text-white sm:mt-3 sm:px-7 sm:py-3">
                 Business
@@ -136,9 +136,9 @@ export default function Services() {
             {/* CTA */}
             <a
               href="#contact"
-              className="group mt-6 inline-flex w-full max-w-[280px] items-center justify-center overflow-hidden rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] p-[4px] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.18),inset_0_2px_3px_rgba(255,255,255,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.2)] active:translate-y-1 active:shadow-[0_2px_0_#6F9259] sm:mt-7 sm:w-auto sm:max-w-none"
+              className="font-instrument group mt-6 inline-flex w-full max-w-[280px] items-center justify-center overflow-hidden rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] p-[4px] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.18),inset_0_2px_3px_rgba(255,255,255,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.2)] active:translate-y-1 active:shadow-[0_2px_0_#6F9259] sm:mt-7 sm:w-auto sm:max-w-none"
             >
-              <span className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-3 text-sm font-bold text-[#29382F] sm:w-auto sm:gap-5 sm:px-6 sm:py-3.5">
+              <span className="font-instrument flex w-full items-center justify-between gap-3 rounded-lg px-3 py-3 text-sm font-bold text-[#29382F] sm:w-auto sm:gap-5 sm:px-6 sm:py-3.5">
                 Let's Work Together
 
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/50 bg-white/35 shadow-[inset_0_1px_3px_rgba(255,255,255,0.7)]">
@@ -184,7 +184,7 @@ export default function Services() {
 
                     {/* CONTENT */}
                     <div className="relative z-10 mt-5 sm:mt-7">
-                      <h3 className="max-w-[260px] text-lg font-bold leading-tight tracking-tight text-[#29382F] sm:text-[22px]">
+                      <h3 className="font-heading max-w-[260px] text-lg font-bold leading-tight tracking-tight text-[#29382F] sm:text-[22px]">
                         {service.title}
                       </h3>
 
