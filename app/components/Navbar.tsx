@@ -17,17 +17,17 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-[#29382F]/10 bg-white text-[#29382F] shadow-[0_3px_15px_rgba(41,56,47,0.05)]">
-      <nav className="mx-auto flex h-[76px] max-w-[1320px] items-center justify-between px-5 sm:px-10 lg:px-14">
+      <nav className="mx-auto flex h-[82px] sm:h-[88px] max-w-[1320px] items-center justify-between px-5 sm:px-10 lg:px-14">
 
         {/* Logo */}
-        <Link href="/" className="relative z-50 flex items-center">
+        <Link href="/" className="relative z-50 flex items-center py-1">
           <Image
-            src="/images/logo.jpg"
+            src="/images/logo.png"
             alt="GrowthEnzyme Logo"
-            width={52}
-            height={52}
+            width={80}
+            height={80}
             priority
-            className="h-[48px] w-auto object-contain"
+            className="h-[58px] sm:h-[66px] w-auto object-contain transition-transform duration-300 hover:scale-105"
           />
         </Link>
 

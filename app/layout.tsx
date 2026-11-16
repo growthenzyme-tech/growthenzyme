@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import SplashScreen from "./components/SplashScreen";
 
 const bricolageGrotesque = localFont({
   src: "../public/fonts/BricolageGrotesque.woff2",
@@ -20,8 +21,12 @@ export const metadata: Metadata = {
   description:
     "We combine strategy, creativity and technology to accelerate business growth.",
   icons: {
-    icon: "/images/logo.jpg",
-    apple: "/images/logo.jpg",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/images/logo-tab-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/images/logo-tab.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: "/images/logo-tab.png",
   },
 };
 
@@ -36,6 +41,10 @@ export default function RootLayout({
       className={`${bricolageGrotesque.variable} ${instrumentSans.variable} h-full antialiased`}
     >
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-tab-32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-tab-16.png" />
+        <link rel="apple-touch-icon" href="/images/logo-tab.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -48,6 +57,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col font-sans">
+        <SplashScreen />
         <Navbar />
         {children}
       </body>
