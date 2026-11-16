@@ -13,9 +13,9 @@ const services = [
 ];
 
 const socials = [
-  { name: "Linkedin", href: "https://www.linkedin.com" },
-  { name: "Instagram", href: "https://www.instagram.com" },
-  { name: "Facebook", href: "https://www.facebook.com" },
+  { name: "LinkedIn", href: "https://www.linkedin.com/company/growth-enzyme/posts/" },
+  { name: "Instagram", href: "https://www.instagram.com/growthenzyme/" },
+  { name: "Facebook", href: "https://www.facebook.com/growthenzyme/" },
   { name: "Threads", href: "https://www.threads.net" },
   { name: "X (Twitter)", href: "https://x.com" },
 ];
@@ -91,7 +91,7 @@ export default function Footer() {
                 </h3>
                 <a
                   href="mailto:contact@growthenzyme.com"
-                  className="mt-1.5 text-xl sm:text-2xl font-bold tracking-tight text-[#173D32] hover:text-[#D78359] transition-colors block"
+                  className="mt-1.5 text-sm sm:text-base font-semibold tracking-tight text-[#173D32] hover:text-[#D78359] transition-colors block"
                 >
                   contact@growthenzyme.com
                 </a>

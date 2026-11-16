@@ -3,11 +3,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
-const projects = [
+interface Project {
+  number: string;
+  name: string;
+  categories: string[];
+  description: string;
+  image: string;
+  imageAlt: string;
+  results: { value: string; label: string }[];
+  theme: string;
+  link?: string;
+}
+
+const projects: Project[] = [
   {
     number: "01",
     name: "JClick Solutions",
-    categories: ["Performance Marketing", "Meta Ads"],
+    categories: ["Performance Marketing", "Meta Ads", "EdTech"],
     description:
       "Ran a 14-day Meta Ads campaign for JClick Solutions across 3 ad sets. Reached 78,011 people, drove 1.9L+ video views, and generated 32 form submissions - all within a ₹5,575 budget. The Turing Point ad set alone delivered 29 leads.",
     image: "/services/img1.webp",
@@ -48,6 +60,7 @@ const projects = [
       { value: "Conversion", label: "Focused" },
     ],
     theme: "bg-[#EAE8DC]",
+    link: "https://pattanamvaidhyar.in/",
   },
   {
     number: "04",
@@ -63,6 +76,7 @@ const projects = [
       { value: "Industry-first", label: "Layout" },
     ],
     theme: "bg-[#E5EBE5]",
+    link: "https://eternal-mars-253427.framer.app/",
   },
 ];
 
@@ -109,12 +123,12 @@ export default function Work() {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:gap-6">
           {projects.map((project, index) => {
             const isLeftCard = index % 2 === 0;
+            const cardClasses = `group relative flex min-w-0 flex-col overflow-visible border border-white/60 bg-white p-4 shadow-[0_18px_40px_rgba(41,56,47,0.14)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_50px_rgba(41,56,47,0.2)] sm:p-5 ${
+              project.link ? "cursor-pointer" : ""
+            }`;
 
-            return (
-              <article
-                key={project.number}
-                className="group relative flex min-w-0 flex-col overflow-visible border border-white/60 bg-white p-4 shadow-[0_18px_40px_rgba(41,56,47,0.14)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_50px_rgba(41,56,47,0.2)] sm:p-5"
-              >
+            const cardContent = (
+              <>
                 {/* IMAGE FRAME */}
                 <div className="relative h-[400px] w-full shrink-0 overflow-visible bg-[#DCE4D7] sm:h-[480px]">
 
@@ -144,28 +158,28 @@ export default function Work() {
                   </div>
 
                   {/* THREE OVERLAPPING RESULT BOXES */}
-                <div
-  className={`absolute top-1/2 z-20 flex w-[100px] -translate-y-1/2 flex-col gap-3 sm:w-[108px] md:w-[116px] ${
-    isLeftCard
-      ? "left-2 md:left-[-76px]"
-      : "right-2 md:right-[-76px]"
-  }`}
->
-  {project.results.map((result) => (
-    <div
-      key={result.label}
-      className="flex h-[85px] w-full flex-col items-center justify-center border border-[#B6CBA9]/40 bg-[#29382F] px-2 text-center shadow-[0_8px_22px_rgba(41,56,47,0.22)] transition-transform duration-300 group-hover:scale-[1.03] sm:h-[95px]"
-    >
-      <p className="break-words text-sm font-bold leading-tight text-white sm:text-base">
-        {result.value}
-      </p>
+                  <div
+                    className={`absolute top-1/2 z-20 flex w-[100px] -translate-y-1/2 flex-col gap-3 sm:w-[108px] md:w-[116px] ${
+                      isLeftCard
+                        ? "left-2 md:left-[-76px]"
+                        : "right-2 md:right-[-76px]"
+                    }`}
+                  >
+                    {project.results.map((result) => (
+                      <div
+                        key={result.label}
+                        className="flex h-[85px] w-full flex-col items-center justify-center border border-[#B6CBA9]/40 bg-[#29382F] px-2 text-center shadow-[0_8px_22px_rgba(41,56,47,0.22)] transition-transform duration-300 group-hover:scale-[1.03] sm:h-[95px]"
+                      >
+                        <p className="break-words text-sm font-bold leading-tight text-white sm:text-base">
+                          {result.value}
+                        </p>
 
-      <p className="mt-1 text-[8px] font-semibold uppercase leading-3 tracking-[0.08em] text-white sm:text-[9px]">
-        {result.label}
-      </p>
-    </div>
-  ))}
-</div>
+                        <p className="mt-1 text-[8px] font-semibold uppercase leading-3 tracking-[0.08em] text-white sm:text-[9px]">
+                          {result.label}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* CONTENT */}
@@ -194,28 +208,35 @@ export default function Work() {
                     })}
                   </div>
 
-                  <h3 className="font-heading mt-4 text-2xl font-semibold uppercase leading-[1.05] tracking-[-0.03em] text-[#29382F] sm:text-[1.7rem]">
+                  <h3 className="font-heading mt-4 text-2xl font-semibold uppercase leading-[1.05] tracking-[-0.03em] text-[#29382F] transition-colors duration-300 group-hover:text-[#D78359] sm:text-[1.7rem]">
                     {project.name}
                   </h3>
 
                   <p className="mt-3 text-[13px] leading-6 text-[#506B59] sm:text-sm sm:leading-6">
                     {project.description}
                   </p>
-
-                  {/* Button */}
-                  {/* <Link
-                    href="#contact"
-                    className="group/btn mt-5 inline-flex w-fit items-center gap-3 rounded-full bg-[#29382F] py-2 pl-5 pr-2 text-xs font-semibold text-[#F5F0E5] transition-colors duration-300 hover:bg-[#D78359] sm:mt-auto sm:pt-2"
-                  >
-                    Learn more
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F5F0E5] text-[#29382F]">
-                      <ArrowRight
-                        size={14}
-                        className="transition-transform duration-300 group-hover/btn:translate-x-0.5"
-                      />
-                    </span>
-                  </Link> */}
                 </div>
+              </>
+            );
+
+            if (project.link) {
+              return (
+                <a
+                  key={project.number}
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`View ${project.name} live project`}
+                  className={cardClasses}
+                >
+                  {cardContent}
+                </a>
+              );
+            }
+
+            return (
+              <article key={project.number} className={cardClasses}>
+                {cardContent}
               </article>
             );
           })}
