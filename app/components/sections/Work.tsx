@@ -52,15 +52,14 @@ const projects = [
   {
     number: "04",
     name: "Hameed Marine",
-    categories: ["Web Design", "Manufacturing"],
-    status: "In Progress",
+    categories: ["Web Design", "Manufacturing", "Business", "In Progress"],
     description:
       "Built a complete business website for Hameed Marine — a manufacturer of fish meal, fish oil, and fish soluble paste. The challenge was making an industrial B2B product feel credible and approachable online. Clean product presentation, clear specs, and a direct inquiry flow — built for buyers, not browsers.",
     image: "/services/img4.webp",
     imageAlt: "Hameed Marine project",
     results: [
       { value: "End-to-end", label: "Design" },
-      { value: "B2B", label: "Focused" },
+      { value: "B2B", label: "Business" },
       { value: "Industry-first", label: "Layout" },
     ],
     theme: "bg-[#E5EBE5]",
@@ -132,13 +131,6 @@ export default function Work() {
 
                     <div className="absolute inset-0 bg-gradient-to-t from-[#29382F]/55 via-transparent to-transparent" />
 
-                    {/* Status */}
-                    {project.status && (
-                      <span className="absolute left-1/2 top-[18%] -translate-x-1/2 rounded-full border border-white/30 bg-[#29382F]/85 px-3 py-1.5 text-[8px] font-bold uppercase tracking-[0.15em] text-white backdrop-blur-sm">
-                        {project.status}
-                      </span>
-                    )}
-
                     {/* Number label + arrow */}
                     <div className="absolute inset-x-3 bottom-3 flex items-center justify-between">
                       <span className="text-sm font-semibold tracking-[0.18em] text-[#F5F0E5]">
@@ -180,16 +172,27 @@ export default function Work() {
                 <div className="flex min-w-0 flex-1 flex-col px-1 pt-5 sm:pt-6">
 
                   {/* Categories */}
-                <div className="flex flex-wrap gap-2">
-  {project.categories.map((category) => (
-    <span
-      key={category}
-      className="rounded-full border border-[#D5E0D2] bg-[#E8EEE5] px-3 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-[#29382F] sm:text-[10px]"
-    >
-      {category}
-    </span>
-  ))}
-</div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {project.categories.map((category) => {
+                      const isInProgress = category.toLowerCase() === "in progress";
+
+                      return (
+                        <span
+                          key={category}
+                          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[9px] font-bold uppercase tracking-[0.12em] sm:text-[10px] ${
+                            isInProgress
+                              ? "border border-[#D78359]/40 bg-[#FAECE5] text-[#C26233]"
+                              : "border border-[#D5E0D2] bg-[#E8EEE5] text-[#29382F]"
+                          }`}
+                        >
+                          {isInProgress && (
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+                          )}
+                          {category}
+                        </span>
+                      );
+                    })}
+                  </div>
 
                   <h3 className="font-heading mt-4 text-2xl font-semibold uppercase leading-[1.05] tracking-[-0.03em] text-[#29382F] sm:text-[1.7rem]">
                     {project.name}

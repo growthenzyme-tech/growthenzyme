@@ -2,14 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-
-const focusAreas = [
-  "Performance Marketing",
-  "Business Automation",
-  "Search Optimisation",
-  "Brand Design",
-  "Web Development",
-];
+import HeroTicker from "../HeroTicker";
 
 export default function Hero() {
   return (
@@ -152,27 +145,8 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* SERVICES TICKER */}
-      <div className="bg-[#A5B59F] text-[#29382F]">
-        <div className="font-heading mx-auto flex min-h-14 max-w-[1320px] flex-wrap items-center justify-center gap-x-3 gap-y-2 px-4 py-4 text-[8px] font-bold uppercase tracking-[0.06em] sm:min-h-16 sm:gap-x-6 sm:gap-y-3 sm:px-10 sm:py-5 sm:text-xs sm:tracking-[0.1em] sm:justify-between lg:px-14">
-
-          {focusAreas.map((area, index) => (
-            <div key={area} className="flex items-center gap-2 sm:gap-5">
-              <span>{area}</span>
-
-              {index !== focusAreas.length - 1 && (
-                <span
-                  aria-hidden="true"
-                  className="text-base leading-none text-[#D78359] sm:text-lg"
-                >
-                  ✳
-                </span>
-              )}
-            </div>
-          ))}
-
-        </div>
-      </div>
+      {/* SERVICES RUNNING MARQUEE TICKER */}
+      <HeroTicker />
 
     </section>
   );
