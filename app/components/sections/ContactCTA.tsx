@@ -102,6 +102,18 @@ export default function ContactCTA() {
       opacity="0.35"
     />
   </svg>
+
+{/* WHITE FADE — TOP LEFT ONLY */}
+{/* SMALL TOP FADE: only the top edge of the wave melts into white */}
+<div
+  aria-hidden="true"
+  className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[70px] sm:h-[100px] lg:h-[130px]"
+  style={{
+    background:
+      "linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.75) 30%, rgba(255,255,255,0.3) 65%, rgba(255,255,255,0) 100%)",
+  }}
+/>
+
 </div>
 
       {/* MAIN CONTENT */}
