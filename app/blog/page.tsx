@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { getPublishedBlogs } from "@/app/lib/blog";
+import { getPublishedBlogs, getMediaById } from "@/app/lib/blog";
 
 type Blog = {
   id: string;
@@ -13,6 +13,7 @@ type Blog = {
   excerpt?: string;
   category?: string;
   coverImageId?: string;
+  coverImage?: string | null;
   createdAt?: any;
   publishedAt?: any;
 };
@@ -23,17 +24,31 @@ export default function BlogPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    async function fetchBlogs() {
-      try {
-        const data = await getPublishedBlogs();
-        setBlogs(data as Blog[]);
-      } catch (err) {
-        console.error("Error fetching published blogs:", err);
-        setError("Unable to load articles at the moment.");
-      } finally {
-        setLoading(false);
-      }
-    }
+  async function fetchBlogs() {
+  try {
+    const data = await getPublishedBlogs();
+
+    const blogsWithImages = await Promise.all(
+      data.map(async (blog: any) => {
+        const coverImage = blog.coverImageId
+          ? await getMediaById(blog.coverImageId)
+          : null;
+
+        return {
+          ...blog,
+          coverImage,
+        };
+      })
+    );
+
+    setBlogs(blogsWithImages as Blog[]);
+  } catch (err) {
+    console.error("Error fetching published blogs:", err);
+    setError("Unable to load articles at the moment.");
+  } finally {
+    setLoading(false);
+  }
+}
 
     fetchBlogs();
   }, []);
@@ -115,11 +130,19 @@ export default function BlogPage() {
                   href={`/blog/${blog.slug}`}
                   className="group block"
                 >
-                  <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-[#e9ece7]">
-                    <div className="flex h-full items-center justify-center text-sm text-[#829181]">
-                      GrowthEnzyme
-                    </div>
-                  </div>
+                <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-[#e9ece7]">
+  {blog.coverImage ? (
+    <img
+      src={blog.coverImage}
+      alt={blog.title || "Blog cover"}
+      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+    />
+  ) : (
+    <div className="flex h-full items-center justify-center text-sm text-[#829181]">
+      GrowthEnzyme
+    </div>
+  )}
+</div>
 
                   <div className="mt-6 flex items-center justify-between">
                     <span className="text-xs font-semibold uppercase tracking-wider text-[#829181]">

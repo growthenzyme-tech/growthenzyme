@@ -109,3 +109,13 @@ export async function updateBlogStatus(
     updatedAt: serverTimestamp(),
   });
 }
+
+export async function getMediaById(id: string): Promise<string | null> {
+  const mediaDoc = await getDoc(doc(db, "media", id));
+
+  if (!mediaDoc.exists()) return null;
+
+  const mediaData = mediaDoc.data();
+
+  return mediaData.data || null;
+}

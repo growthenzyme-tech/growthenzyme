@@ -5,21 +5,9 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, CalendarDays, Clock3 } from "lucide-react";
-import { getBlogBySlug } from "@/app/lib/blog";
+import { getBlogBySlug, getMediaById, type Blog } from "@/app/lib/blog";
 
-type Blog = {
-  id: string;
-  title?: string;
-  slug?: string;
-  excerpt?: string;
-  category?: string;
-  content?: string;
-  authorName?: string;
-  coverImageId?: string;
-  createdAt?: any;
-  publishedAt?: any;
-  status?: string;
-};
+
 
 export default function SingleBlogPage() {
   const params = useParams();
@@ -30,6 +18,7 @@ export default function SingleBlogPage() {
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [coverImage, setCoverImage] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchBlog() {
@@ -45,6 +34,14 @@ export default function SingleBlogPage() {
         }
 
         setBlog(data as Blog);
+
+        if (data.coverImageId) {
+  const imageData = await getMediaById(data.coverImageId);
+  setCoverImage(imageData);
+} else {
+  setCoverImage(null);
+}
+
       } catch (err) {
         console.error("Error fetching blog:", err);
         setError("Unable to load this article. Please try again.");
@@ -151,15 +148,23 @@ export default function SingleBlogPage() {
       </section>
 
       {/* Cover Image Placeholder */}
-      <section className="px-6 md:px-12 lg:px-20">
-        <div className="mx-auto max-w-5xl">
-          <div className="flex aspect-[16/8] items-center justify-center overflow-hidden rounded-2xl bg-[#e9ece7]">
-            <span className="font-serif text-2xl text-[#829181]">
-              GrowthEnzyme
-            </span>
-          </div>
+   <section className="px-6 md:px-12 lg:px-20">
+  <div className="mx-auto max-w-5xl">
+    <div className="aspect-[16/8] overflow-hidden rounded-2xl bg-[#e9ece7]">
+      {coverImage ? (
+        <img
+          src={coverImage}
+          alt={blog.title || "Blog cover"}
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        <div className="flex h-full items-center justify-center font-serif text-2xl text-[#829181]">
+          GrowthEnzyme
         </div>
-      </section>
+      )}
+    </div>
+  </div>
+</section>
 
       {/* Article Content */}
       <article className="px-6 pb-24 pt-16 md:px-12 lg:px-20">
