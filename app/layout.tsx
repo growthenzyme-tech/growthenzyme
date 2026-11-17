@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "./components/Navbar";
+import SiteNavbar from "./components/SiteNavbar";
 import SplashScreen from "./components/SplashScreen";
 
 const bricolageGrotesque = localFont({
@@ -58,7 +58,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col font-sans">
         <SplashScreen />
-        <Navbar />
+        <SiteNavbar />
         {children}
       </body>
     </html>

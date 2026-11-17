@@ -91,3 +91,55 @@ button *,
 [data-font="button"] {
   font-family: 'Instrument Sans', var(--font-instrument-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
+
+
+/* GrowthEnzyme CMS Blog Editor */
+
+
+.blog-editor-content .tiptap {
+  min-height: 300px;
+  padding: 20px;
+  outline: none;
+  line-height: 1.8;
+  color: #405C48;
+  font-family: "DM Sans", sans-serif;
+}
+
+.blog-editor-content .tiptap h2 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: #29382F;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.blog-editor-content .tiptap h3 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #29382F;
+  margin: 1.25rem 0 0.5rem;
+}
+
+.blog-editor-content .tiptap p {
+  margin: 0.75rem 0;
+}
+
+.blog-editor-content .tiptap ul,
+.blog-editor-content .tiptap ol {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.blog-editor-content .tiptap ul {
+  list-style: disc;
+}
+
+.blog-editor-content .tiptap ol {
+  list-style: decimal;
+}
+
+.blog-editor-content .tiptap a {
+  color: #405C48;
+  text-decoration: underline;
+}

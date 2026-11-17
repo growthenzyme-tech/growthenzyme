@@ -1,17 +1,26 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "growthenzyme",
-  "main": ".open-next/worker.js",
-  "compatibility_date": "2026-11-11",
-  "compatibility_flags": ["nodejs_compat"],
-  "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS"
-  },
-  "services": [
-    {
-      "binding": "WORKER_SELF_REFERENCE",
-      "service": "growthenzyme"
-    }
-  ]
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "growthenzyme",
+	"main": ".open-next/worker.js",
+	"compatibility_date": "2026-11-11",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS"
+	},
+	"services": [
+		{
+			"binding": "WORKER_SELF_REFERENCE",
+			"service": "growthenzyme"
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "growthenzyme-db",
+			"database_id": "930fccd9-cbd4-48c5-975e-712e6d8aa5b3"
+		}
+	]
 }
