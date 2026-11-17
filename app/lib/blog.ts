@@ -16,6 +16,20 @@ import { db } from "./firebase";
 
 const blogsRef = collection(db, "blogs");
 
+export type Blog = {
+  id: string;
+  title?: string;
+  slug?: string;
+  excerpt?: string;
+  category?: string;
+  content?: string;
+  authorName?: string;
+  coverImageId?: string;
+  status?: "draft" | "published";
+  createdAt?: any;
+  updatedAt?: any;
+  publishedAt?: any;
+};
 export async function createBlog(data: Record<string, any>) {
   return await addDoc(blogsRef, {
     ...data,
@@ -51,7 +65,9 @@ export async function getPublishedBlogs() {
   }));
 }
 
-export async function getBlogBySlug(slug: string) {
+export async function getBlogBySlug(
+  slug: string
+): Promise<Blog | null> {
   const q = query(blogsRef, where("slug", "==", slug));
   const snapshot = await getDocs(q);
 
@@ -62,7 +78,7 @@ export async function getBlogBySlug(slug: string) {
   return {
     id: item.id,
     ...item.data(),
-  };
+  } as Blog;
 }
 
 export async function updateBlog(
