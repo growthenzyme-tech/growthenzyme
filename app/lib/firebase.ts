@@ -1,19 +1,51 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, getApps, getApp, deleteApp, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyB5OVrLYAR5zJAmm422lKgvGgbIS40U7w8",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "growthenzyme-cms.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "growthenzyme-cms",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "growthenzyme-cms.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "978032210326",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:978032210326:web:0efd042ec4e6bbcdfa6db7",
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "G-QQWB2LP1X4",
 };
 
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+let app: FirebaseApp;
+const existingApps = getApps();
 
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+if (existingApps.length > 0) {
+  const current = getApp();
+  if (current.options.apiKey !== firebaseConfig.apiKey) {
+    try {
+      deleteApp(current);
+    } catch {
+      // ignore
+    }
+    app = initializeApp(firebaseConfig);
+  } else {
+    app = current;
+  }
+} else {
+  app = initializeApp(firebaseConfig);
+}
 
+let auth: Auth;
+try {
+  auth = getAuth(app);
+} catch (e) {
+  console.warn("⚠️ [Firebase Auth Warning]:", e);
+  auth = {} as Auth;
+}
+
+let db: Firestore;
+try {
+  db = getFirestore(app);
+} catch (e) {
+  console.warn("⚠️ [Firestore Warning]:", e);
+  db = {} as Firestore;
+}
+
+export { auth, db };
 export default app;
