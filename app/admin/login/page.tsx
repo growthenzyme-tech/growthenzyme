@@ -88,15 +88,15 @@ export default function AdminLogin() {
   return (
     <main className="h-screen max-h-screen overflow-hidden bg-[#EEF5EB] flex flex-col justify-between selection:bg-[#29382F]/20 selection:text-[#1B2921]">
       {/* ========================================================= */}
-      {/* TOP BANNER HERO (ge.jpg 4K - Revealed More, Smooth Fade)   */}
+      {/* TOP BANNER HERO (4k.jpg - High Clarity Hero Banner)        */}
       {/* ========================================================= */}
       <section className="relative w-full h-[39vh] sm:h-[43vh] md:h-[47vh] min-h-[285px] max-h-[425px] shrink-0 overflow-hidden bg-[#EEF5EB]">
         <img
-          src="/images/ge.jpg"
-          alt="GrowthEnzyme Workspace Banner"
+          src="/images/4k.jpg"
+          alt="GrowthEnzyme Hero Banner"
           loading="eager"
           decoding="async"
-          className="w-full h-full object-cover object-[center_52%]"
+          className="w-full h-full object-cover object-[center_50%]"
         />
 
         {/* Graceful image fade: reveals photo details clearly up top, softly melting into light greenish canvas */}
