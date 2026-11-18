@@ -50,105 +50,242 @@ export default function AdminShell({
   const [loggingOut, setLoggingOut] = useState(false);
 
   // Authentication states
-  const [role, setRole] = useState<"admin" | "writer" | null>(null);
-  const [checkingAuth, setCheckingAuth] = useState(true);
-  const [authError, setAuthError] = useState("");
+type PermissionKey =
+  | "dashboard"
+  | "blogs"
+  | "comments"
+  | "media"
+  | "caseStudies"
+  | "users"
+  | "settings";
+
+type RolePermissions = Record<PermissionKey, boolean>;
+
+const [role, setRole] = useState<string | null>(null);
+
+const [permissions, setPermissions] = useState<RolePermissions>({
+  dashboard: false,
+  blogs: false,
+  comments: false,
+  media: false,
+  caseStudies: false,
+  users: false,
+  settings: false,
+});
+
+const [checkingAuth, setCheckingAuth] = useState(true);
+const [authError, setAuthError] = useState("");
 
   // Authentication check
-  useEffect(() => {
-    if (pathname === "/admin/login") {
+
+  // Authentication check
+// Verify authentication and load role permissions only once.
+useEffect(() => {
+  let active = true;
+
+  const unsubscribe = observeAuth(async (user) => {
+    if (!active) return;
+
+    if (!user) {
+      setRole(null);
       setCheckingAuth(false);
+      router.replace("/admin/login");
       return;
     }
 
-    let active = true;
+    try {
+      setCheckingAuth(true);
+      setAuthError("");
 
-    setCheckingAuth(true);
+      // Fetch the user's Firestore profile.
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
 
-    const unsubscribe = observeAuth(async (user) => {
       if (!active) return;
 
-      if (!user) {
-        setRole(null);
-        setCheckingAuth(false);
-        router.replace("/admin/login");
-        return;
+      if (!userSnap.exists()) {
+        throw new Error("User profile not found.");
       }
 
-      try {
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
+      const profile = userSnap.data();
+
+      if (profile.isActive !== true) {
+        throw new Error("Your account is inactive.");
+      }
+
+      let userRole = "writer";
+
+      let userPermissions: RolePermissions = {
+        dashboard: false,
+        blogs: false,
+        comments: false,
+        media: false,
+        caseStudies: false,
+        users: false,
+        settings: false,
+      };
+
+      // Legacy administrator.
+      if (profile.role === "admin") {
+        userRole = "admin";
+
+        userPermissions = {
+          dashboard: true,
+          blogs: true,
+          comments: true,
+          media: true,
+          caseStudies: true,
+          users: true,
+          settings: true,
+        };
+      }
+
+      // Legacy writer.
+      else if (profile.role === "writer" && !profile.roleId) {
+        userRole = "writer";
+
+        // Preserve the existing writer navigation access.
+        userPermissions = {
+          dashboard: true,
+          blogs: true,
+          comments: false,
+          media: true,
+          caseStudies: false,
+          users: false,
+          settings: false,
+        };
+      }
+
+      // Custom role.
+      else if (profile.roleId) {
+        const roleRef = doc(db, "roles", profile.roleId);
+        const roleSnap = await getDoc(roleRef);
 
         if (!active) return;
 
-        if (!userSnap.exists()) {
-          await logoutUser();
-
-          if (active) {
-            setRole(null);
-            router.replace("/admin/login");
-          }
-
-          return;
+        if (!roleSnap.exists()) {
+          throw new Error("Assigned role not found.");
         }
 
-        const profile = userSnap.data();
+        const roleData = roleSnap.data();
 
-        if (
-          profile.isActive !== true ||
-          !["admin", "writer"].includes(profile.role)
-        ) {
-          await logoutUser();
-
-          if (active) {
-            setRole(null);
-            router.replace("/admin/login");
-          }
-
-          return;
+        if (roleData.isActive !== true) {
+          throw new Error("Assigned role is inactive.");
         }
 
-        const userRole = profile.role as "admin" | "writer";
+        const savedPermissions = roleData.permissions || {};
 
-        setRole(userRole);
-        setAuthError("");
+        userPermissions = {
+          dashboard: savedPermissions.dashboard === true,
+          blogs: savedPermissions.blogs === true,
+          comments: savedPermissions.comments === true,
+          media: savedPermissions.media === true,
+          caseStudies: savedPermissions.caseStudies === true,
+          users: savedPermissions.users === true,
+          settings: savedPermissions.settings === true,
+        };
 
-        const adminOnlyPaths = [
-          "/admin/users",
-          "/admin/settings",
-          "/admin/case-studies",
-          "/admin/comments",
-           "/admin/roles",
-        ];
-
-        const isAdminOnlyPage = adminOnlyPaths.some(
-          (path) =>
-            pathname === path || pathname.startsWith(`${path}/`)
+        const hasPermission = Object.values(userPermissions).some(
+          (permission) => permission === true
         );
 
-        if (userRole === "writer" && isAdminOnlyPage) {
-          router.replace("/admin/blogs");
+        if (!hasPermission) {
+          throw new Error("No active CMS permissions.");
         }
 
-        setCheckingAuth(false);
-      } catch (error) {
-        console.error("CMS authentication error:", error);
-
-        if (!active) return;
-
-        setAuthError(
-          "Unable to verify your account. Please check your connection and try again."
-        );
-
-        setCheckingAuth(false);
+        userRole = roleData.name?.toLowerCase() || "custom";
+      } else {
+        throw new Error("No valid role is assigned to your account.");
       }
-    });
 
-    return () => {
-      active = false;
-      unsubscribe();
-    };
-  }, [pathname, router]);
+      if (!active) return;
+
+      // Store the verified role and permissions.
+      setRole(userRole);
+      setPermissions(userPermissions);
+      setAuthError("");
+      setCheckingAuth(false);
+
+      console.log("CMS authentication successful:", userRole);
+    } catch (error) {
+      console.error("CMS authentication error:", error);
+
+      if (!active) return;
+
+      setAuthError(
+        error instanceof Error
+          ? error.message
+          : "Unable to verify your account."
+      );
+
+      setCheckingAuth(false);
+    }
+  });
+
+  return () => {
+    active = false;
+    unsubscribe();
+  };
+}, [router]);
+
+
+// Check page access using the already-loaded permissions.
+useEffect(() => {
+  if (
+    pathname === "/admin/login" ||
+    checkingAuth ||
+    authError ||
+    !role
+  ) {
+    return;
+  }
+
+  const isAdministrator =
+    role === "admin" || role === "administrator";
+
+  // Roles & Permissions is administrator-only.
+  if (
+    pathname === "/admin/roles" ||
+    pathname.startsWith("/admin/roles/")
+  ) {
+    if (!isAdministrator) {
+      router.replace("/admin/blogs");
+    }
+
+    return;
+  }
+
+  const routePermissions: {
+    path: string;
+    permission: PermissionKey;
+  }[] = [
+    { path: "/admin/dashboard", permission: "dashboard" },
+    { path: "/admin/blogs", permission: "blogs" },
+    { path: "/admin/case-studies", permission: "caseStudies" },
+    { path: "/admin/media", permission: "media" },
+    { path: "/admin/users", permission: "users" },
+    { path: "/admin/settings", permission: "settings" },
+    { path: "/admin/comments", permission: "comments" },
+  ];
+
+  const matchedRoute = routePermissions.find(
+    (item) =>
+      pathname === item.path ||
+      pathname.startsWith(`${item.path}/`)
+  );
+
+  if (!matchedRoute || isAdministrator) {
+    return;
+  }
+
+  if (!permissions[matchedRoute.permission]) {
+    const firstAllowedRoute = routePermissions.find(
+      (item) => permissions[item.permission]
+    );
+
+    router.replace(firstAllowedRoute?.path || "/admin/login");
+  }
+}, [pathname, checkingAuth, authError, role, permissions, router]);
 
   // Keep the login screen independent of the CMS navigation.
   if (pathname === "/admin/login") {
@@ -200,19 +337,33 @@ if (!role) {
     }
   }
 
-  const visibleNavigation =
-  role === "admin"
-    ? navigation
-    : navigation.filter(
-        (item) =>
-          ![
-            "/admin/case-studies",
-            "/admin/users",
-            "/admin/settings",
-            "/admin/comments",
-             "/admin/roles",
-          ].includes(item.href)
-      );
+const isAdministrator =
+  role === "admin" || role === "administrator";
+
+const visibleNavigation = navigation.filter((item) => {
+  if (isAdministrator) {
+    return true;
+  }
+
+  // Roles & Permissions is administrator-only.
+  if (item.href === "/admin/roles") {
+    return false;
+  }
+
+  const permissionMap: Record<string, PermissionKey> = {
+    "/admin/dashboard": "dashboard",
+    "/admin/blogs": "blogs",
+    "/admin/case-studies": "caseStudies",
+    "/admin/media": "media",
+    "/admin/users": "users",
+    "/admin/settings": "settings",
+    "/admin/comments": "comments",
+  };
+
+  const permission = permissionMap[item.href];
+
+  return permission ? permissions[permission] : false;
+});
 
   const sidebar = (
     <aside className="flex h-full flex-col bg-[#171717] text-white">

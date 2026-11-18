@@ -3,7 +3,6 @@ import {
   getDocs,
   doc,
   updateDoc,
-  deleteDoc,
   query,
   orderBy,
   serverTimestamp,
@@ -150,9 +149,34 @@ export async function updateUserStatus(
 }
 
 
-// Delete a user profile
-export async function deleteUserProfile(userId: string) {
-  return await deleteDoc(doc(db, "users", userId));
+export async function deleteCMSUser(userId: string) {
+  if (!userId) {
+    throw new Error("User ID is required.");
+  }
+
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) {
+    throw new Error("Please log in again.");
+  }
+
+  const idToken = await currentUser.getIdToken();
+  const response = await fetch(
+    `/api/admin/users/${encodeURIComponent(userId)}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    }
+  );
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.error || "Unable to delete the user.");
+  }
+
+  return result;
 }
 
 
@@ -199,4 +223,3 @@ export async function changeCMSUserPassword(
 
   return result;
 }
-

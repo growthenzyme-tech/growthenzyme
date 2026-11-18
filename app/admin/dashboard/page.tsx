@@ -32,14 +32,17 @@ export default function AdminDashboard() {
 
         const data = userSnap.data();
 
-        if (
-          data.isActive !== true ||
-          !["admin", "writer"].includes(data.role)
-        ) {
-          await logoutUser();
-          router.replace("/admin/login");
-          return;
-        }
+const hasLegacyRole = ["admin", "writer"].includes(data.role);
+
+const hasCustomRole =
+  typeof data.roleId === "string" && data.roleId.length > 0;
+
+if (data.isActive !== true || (!hasLegacyRole && !hasCustomRole)) {
+  await logoutUser();
+  router.replace("/admin/login");
+  return;
+}
+
 
         setProfile(data);
       } catch {
@@ -81,7 +84,7 @@ export default function AdminDashboard() {
               Welcome, {profile.name}
             </p>
             <p className="text-sm capitalize text-gray-500">
-              Role: {profile.role}
+              Role: {profile.role || "Custom Role"}
             </p>
           </div>
 

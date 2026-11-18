@@ -19,13 +19,15 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const { profile } = await loginUser(email, password);
+   await loginUser(email.trim(), password);
 
-      if (profile.role === "admin") {
-        router.push("/admin/dashboard");
-      } else if (profile.role === "writer") {
-        router.push("/admin/dashboard");
-      }
+// loginUser already validates:
+// 1. User profile exists
+// 2. User is active
+// 3. Assigned role exists and is active
+// 4. User has at least one permission
+
+router.replace("/admin/dashboard");
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Login failed. Please try again."
