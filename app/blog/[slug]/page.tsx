@@ -11,8 +11,25 @@ import {
   Link2,
   CalendarDays,
   User,
+  MessageSquare,
+  Send,
+  Loader2,
+  Trash2,
+  ShieldCheck,
 } from "lucide-react";
-import { getBlogBySlug, getPublishedBlogs, getMediaById, type Blog } from "@/app/lib/blog";
+import {
+  getBlogBySlug,
+  getPublishedBlogs,
+  getMediaById,
+  toggleBlogLike,
+  createComment,
+  getCommentsByBlogId,
+  deleteComment,
+  type Blog,
+  type BlogComment,
+} from "@/app/lib/blog";
+import { auth } from "@/app/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import Footer from "@/app/components/sections/Footer";
 
 const TwitterIcon = ({ size = 15 }: { size?: number }) => (
@@ -99,15 +116,40 @@ export default function SingleBlogPage() {
 
   const [allBlogs, setAllBlogs] = useState<Blog[]>([]);
   const [copied, setCopied] = useState(false);
-  const [likes, setLikes] = useState(206);
+  const [likes, setLikes] = useState(0);
   const [hasLiked, setHasLiked] = useState(false);
+  const [likeLoading, setLikeLoading] = useState(false);
 
-  // Comment box state
-  const [commentOpen, setCommentOpen] = useState(false);
+  // Comment state
+  const [commentsList, setCommentsList] = useState<BlogComment[]>([]);
   const [comment, setComment] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [authorEmail, setAuthorEmail] = useState("");
   const [commentSubmitted, setCommentSubmitted] = useState(false);
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [deletingCommentId, setDeletingCommentId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      setIsAdmin(!!user);
+    });
+    return () => unsub();
+  }, []);
+
+  async function handleDeleteComment(commentId: string) {
+    if (!confirm("Admin: Are you sure you want to delete this comment?")) return;
+    try {
+      setDeletingCommentId(commentId);
+      await deleteComment(commentId, blog?.id);
+      setCommentsList((prev) => prev.filter((c) => c.id !== commentId));
+    } catch (err) {
+      console.error("Error deleting comment:", err);
+      alert("Failed to delete comment.");
+    } finally {
+      setDeletingCommentId(null);
+    }
+  }
 
   useEffect(() => {
     async function loadData() {
@@ -123,12 +165,27 @@ export default function SingleBlogPage() {
         }
 
         setBlog(currentData as Blog);
+        setLikes(currentData.likes || 0);
+
+        // Check if user previously liked this blog
+        if (typeof window !== "undefined") {
+          const storedLike = localStorage.getItem(`growth_liked_${currentData.id}`);
+          setHasLiked(storedLike === "true");
+        }
 
         if (currentData.coverImageId) {
           const imgUrl = await getMediaById(currentData.coverImageId);
           setCoverImage(imgUrl);
         } else {
           setCoverImage(null);
+        }
+
+        // Fetch user comments for this article
+        try {
+          const loadedComments = await getCommentsByBlogId(currentData.id);
+          setCommentsList(loadedComments);
+        } catch (commErr) {
+          console.error("Error loading comments:", commErr);
         }
 
         try {
@@ -174,23 +231,72 @@ export default function SingleBlogPage() {
     }
   }
 
-  function handleLike() {
-    if (!hasLiked) {
-      setLikes((prev) => prev + 1);
-      setHasLiked(true);
+  // Like / Unlike Toggle for Users
+  async function handleToggleLike() {
+    if (!blog?.id || likeLoading) return;
+
+    const action = hasLiked ? "unlike" : "like";
+    const nextHasLiked = !hasLiked;
+    const nextLikes = Math.max(0, likes + (action === "like" ? 1 : -1));
+
+    // Optimistic UI updates
+    setHasLiked(nextHasLiked);
+    setLikes(nextLikes);
+
+    if (typeof window !== "undefined") {
+      if (nextHasLiked) {
+        localStorage.setItem(`growth_liked_${blog.id}`, "true");
+      } else {
+        localStorage.removeItem(`growth_liked_${blog.id}`);
+      }
+    }
+
+    try {
+      setLikeLoading(true);
+      const serverLikes = await toggleBlogLike(blog.id, action);
+      setLikes(serverLikes);
+    } catch (err) {
+      console.error("Like update failed:", err);
+      // Revert optimistic update on failure
+      setHasLiked(!nextHasLiked);
+      setLikes(likes);
+    } finally {
+      setLikeLoading(false);
     }
   }
 
-  function handleCommentSubmit(e: React.FormEvent) {
+  // Comment submission
+  async function handleCommentSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!comment.trim() || !authorName.trim() || !authorEmail.trim()) {
+    if (!comment.trim() || !authorName.trim() || !authorEmail.trim() || !blog?.id) {
       alert("Please fill in your comment, name, and email.");
       return;
     }
-    setCommentSubmitted(true);
-    setComment("");
-    setAuthorName("");
-    setAuthorEmail("");
+
+    try {
+      setSubmittingComment(true);
+      const newComment = await createComment({
+        blogId: blog.id,
+        blogTitle: blog.title || "Untitled Article",
+        blogSlug: slug,
+        authorName: authorName.trim(),
+        authorEmail: authorEmail.trim(),
+        content: comment.trim(),
+      });
+
+      // Add comment immediately to the displayed list
+      setCommentsList((prev) => [newComment, ...prev]);
+      setCommentSubmitted(true);
+      setComment("");
+      setAuthorName("");
+      setAuthorEmail("");
+      setTimeout(() => setCommentSubmitted(false), 5000);
+    } catch (err) {
+      console.error("Error posting comment:", err);
+      alert("Failed to submit comment. Please try again.");
+    } finally {
+      setSubmittingComment(false);
+    }
   }
 
   // Calculate previous and next posts
@@ -369,108 +475,223 @@ export default function SingleBlogPage() {
                 />
 
                 {/* LIKE & ACTION BAR */}
-                <div className="mt-10 pt-6 border-t border-gray-100 flex flex-wrap items-center justify-between gap-4">
+                <div className="mt-10 pt-6 border-t border-[#29382F]/10 flex flex-wrap items-center justify-between gap-4">
                   <div className="flex items-center gap-2">
+                    {/* User Like / Unlike Toggle Button */}
                     <button
-                      onClick={handleLike}
-                      className={`inline-flex items-center gap-2 rounded px-3.5 py-1.5 text-xs font-bold transition ${
-                        hasLiked
-                          ? "bg-[#173D32] text-white"
-                          : "bg-blue-600 text-white hover:bg-blue-700"
-                      }`}
+                      type="button"
+                      onClick={handleToggleLike}
+                      disabled={likeLoading}
+                      title={hasLiked ? "Click to unlike this article" : "Click to like this article"}
+                      className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold transition shadow-xs cursor-pointer ${hasLiked
+                        ? "bg-[#D78359] text-white hover:bg-[#C26233]"
+                        : "bg-[#29382F] text-white hover:bg-[#D78359]"
+                        }`}
                     >
-                      <ThumbsUp size={13} />
+                      <ThumbsUp size={13} className={hasLiked ? "fill-white" : ""} />
                       <span>{hasLiked ? "Liked" : "Like"}</span>
+                      <span className="ml-0.5 opacity-90 font-semibold">({likes})</span>
                     </button>
 
                     <button
+                      type="button"
                       onClick={handleCopyLink}
-                      className="inline-flex items-center gap-1.5 rounded border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-[#29382F]/20 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#29382F] hover:border-[#D78359] hover:text-[#D78359] transition shadow-xs"
                     >
                       <span>Share</span>
-                      <span className="text-gray-400">{likes}</span>
                     </button>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <button
+                      type="button"
                       onClick={handleCopyLink}
-                      className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#C26233] transition"
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-[#506B59] hover:text-[#D78359] transition"
                     >
+                      <Link2 size={13} />
                       <span>{copied ? "Link Copied!" : "Share Link"}</span>
                     </button>
                   </div>
                 </div>
 
-                {/* COMMENT BOX (Avatar + Input) */}
-                <div className="mt-12 rounded-lg border border-gray-200 bg-[#FAFBF9] p-4 sm:p-5">
-                  <div className="flex items-start gap-3.5">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#173D32] text-xs font-bold text-white shadow-sm">
-                      GE
-                    </div>
-
-                    <div className="flex-1">
-                      {!commentOpen ? (
-                        <input
-                          type="text"
-                          onFocus={() => setCommentOpen(true)}
-                          placeholder="Leave a comment for this article..."
-                          className="w-full rounded border border-gray-200 bg-white px-4 py-2.5 text-xs sm:text-sm text-[#171717] placeholder-gray-400 transition hover:border-gray-300 focus:border-[#173D32] focus:outline-none"
-                        />
-                      ) : commentSubmitted ? (
-                        <div className="rounded border border-green-200 bg-green-50 p-3 text-xs text-green-800">
-                          Thank you! Your comment has been received.
-                        </div>
-                      ) : (
-                        <form onSubmit={handleCommentSubmit} className="flex flex-col gap-3">
-                          <textarea
-                            rows={3}
-                            autoFocus
-                            required
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
-                            placeholder="Write your comment..."
-                            className="w-full rounded border border-gray-200 bg-white p-3 text-xs sm:text-sm text-[#171717] placeholder-gray-400 focus:border-[#173D32] focus:outline-none"
-                          />
-
-                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                            <input
-                              type="text"
-                              required
-                              value={authorName}
-                              onChange={(e) => setAuthorName(e.target.value)}
-                              placeholder="Your name"
-                              className="rounded border border-gray-200 bg-white px-3 py-1.5 text-xs text-[#171717] placeholder-gray-400 focus:border-[#173D32] focus:outline-none"
-                            />
-                            <input
-                              type="email"
-                              required
-                              value={authorEmail}
-                              onChange={(e) => setAuthorEmail(e.target.value)}
-                              placeholder="Your email"
-                              className="rounded border border-gray-200 bg-white px-3 py-1.5 text-xs text-[#171717] placeholder-gray-400 focus:border-[#173D32] focus:outline-none"
-                            />
-                          </div>
-
-                          <div className="flex items-center justify-end gap-2 pt-1">
-                            <button
-                              type="button"
-                              onClick={() => setCommentOpen(false)}
-                              className="rounded px-3 py-1 text-xs text-gray-500 hover:text-gray-700"
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              type="submit"
-                              className="rounded bg-[#173D32] px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#D78359] transition"
-                            >
-                              Post Comment
-                            </button>
-                          </div>
-                        </form>
-                      )}
+                {/* COMMENT SUBMISSION BOX (Always open & welcoming for users) */}
+                <div className="mt-12 rounded-2xl border border-[#29382F]/12 bg-[#FAFBF9] p-6 sm:p-7 shadow-xs">
+                  <div className="flex items-center justify-between pb-4 border-b border-[#29382F]/10 mb-5">
+                    <div>
+                      <h3 className="font-heading text-base sm:text-lg font-bold text-[#29382F] flex items-center gap-2">
+                        <MessageSquare size={17} className="text-[#D78359]" />
+                        <span>Leave a Comment</span>
+                      </h3>
+                      <p className="text-xs text-[#506B59] mt-0.5">
+                        Share your thoughts, questions, or perspective with our community.
+                      </p>
                     </div>
                   </div>
+
+                  {commentSubmitted && (
+                    <div className="mb-5 rounded-xl border border-[#B6CBA9] bg-[#E8EEE5] p-3.5 text-xs sm:text-sm font-semibold text-[#29382F] flex items-center gap-2">
+                      <Check size={16} className="text-[#29382F]" />
+                      <span>Thank you! Your comment has been posted and is visible below.</span>
+                    </div>
+                  )}
+
+                  <form onSubmit={handleCommentSubmit} className="flex flex-col gap-4">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      <div>
+                        <label className="block text-xs font-semibold text-[#29382F] mb-1">
+                          Full Name <span className="text-[#D78359]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={authorName}
+                          onChange={(e) => setAuthorName(e.target.value)}
+                          placeholder="e.g. Alex Johnson"
+                          className="w-full rounded-xl border border-[#29382F]/15 bg-white px-3.5 py-2.5 text-xs sm:text-sm text-[#29382F] placeholder-[#506B59]/50 transition hover:border-[#29382F]/30 focus:border-[#29382F] focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-[#29382F] mb-1">
+                          Email Address <span className="text-[#D78359]">*</span>{" "}
+                          <span className="text-[10px] font-normal text-[#506B59]">(never published)</span>
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          value={authorEmail}
+                          onChange={(e) => setAuthorEmail(e.target.value)}
+                          placeholder="e.g. alex@example.com"
+                          className="w-full rounded-xl border border-[#29382F]/15 bg-white px-3.5 py-2.5 text-xs sm:text-sm text-[#29382F] placeholder-[#506B59]/50 transition hover:border-[#29382F]/30 focus:border-[#29382F] focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-[#29382F] mb-1">
+                        Your Comment <span className="text-[#D78359]">*</span>
+                      </label>
+                      <textarea
+                        rows={4}
+                        required
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="Write your comments, insights, or questions..."
+                        className="w-full rounded-xl border border-[#29382F]/15 bg-white p-3.5 text-xs sm:text-sm text-[#29382F] placeholder-[#506B59]/50 transition hover:border-[#29382F]/30 focus:border-[#29382F] focus:outline-none leading-relaxed"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-[11px] text-[#506B59]">
+                        Comments are moderated to maintain a constructive environment.
+                      </span>
+
+                      <button
+                        type="submit"
+                        disabled={submittingComment}
+                        className="inline-flex items-center gap-2 rounded-full bg-[#29382F] px-6 py-2.5 text-xs font-semibold text-white hover:bg-[#D78359] transition shadow-xs cursor-pointer disabled:opacity-50"
+                      >
+                        {submittingComment ? (
+                          <>
+                            <Loader2 size={13} className="animate-spin" />
+                            <span>Submitting...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Send size={13} />
+                            <span>Post Comment</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                {/* USER COMMENTS LIST SECTION */}
+                <div className="mt-12 pt-8 border-t border-[#29382F]/10">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-heading text-lg sm:text-xl font-bold text-[#29382F] flex items-center gap-2.5">
+                      <MessageSquare size={18} className="text-[#D78359]" />
+                      <span>Comments</span>
+                      <span className="rounded-full bg-[#E8EEE5] px-2.5 py-0.5 text-xs font-semibold text-[#29382F]">
+                        {commentsList.length}
+                      </span>
+                    </h3>
+
+                    {isAdmin && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E8EEE5] px-3 py-1 text-[11px] font-semibold text-[#29382F]">
+                        <ShieldCheck size={13} className="text-[#D78359]" />
+                        <span>Admin Moderation Mode</span>
+                      </span>
+                    )}
+                  </div>
+
+                  {commentsList.length === 0 ? (
+                    <div className="p-8 text-center rounded-2xl border border-dashed border-[#29382F]/15 bg-[#FAFBF9]">
+                      <MessageSquare size={28} className="mx-auto text-[#506B59]/40 mb-2" />
+                      <p className="text-xs sm:text-sm font-semibold text-[#29382F]">
+                        No comments yet
+                      </p>
+                      <p className="text-xs text-[#506B59] mt-0.5">
+                        Be the first to share your thoughts on this article above!
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {commentsList.map((comm) => {
+                        const initials = (comm.authorName || "Reader")
+                          .split(" ")
+                          .map((n) => n[0])
+                          .slice(0, 2)
+                          .join("")
+                          .toUpperCase();
+
+                        return (
+                          <div
+                            key={comm.id}
+                            className="p-5 sm:p-6 rounded-2xl border border-[#29382F]/10 bg-[#FAFBF9] shadow-xs"
+                          >
+                            <div className="flex items-center justify-between gap-3 mb-2.5">
+                              <div className="flex items-center gap-2.5">
+                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#29382F] text-xs font-bold text-white shadow-xs">
+                                  {initials}
+                                </div>
+                                <div>
+                                  <h4 className="text-xs sm:text-sm font-bold text-[#29382F]">
+                                    {comm.authorName}
+                                  </h4>
+                                  <span className="text-[10px] text-[#506B59]">
+                                    {formatDate(comm.createdAt)}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* Admin Delete Action directly from Article view */}
+                              {isAdmin && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteComment(comm.id)}
+                                  disabled={deletingCommentId === comm.id}
+                                  title="Delete this comment (Admin)"
+                                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium text-red-600 hover:bg-red-50 transition cursor-pointer border border-red-200/60"
+                                >
+                                  {deletingCommentId === comm.id ? (
+                                    <Loader2 size={12} className="animate-spin" />
+                                  ) : (
+                                    <Trash2 size={12} />
+                                  )}
+                                  <span>Delete</span>
+                                </button>
+                              )}
+                            </div>
+
+                            <p className="text-xs sm:text-sm leading-relaxed text-[#38493F] pl-10.5 whitespace-pre-line">
+                              {comm.content}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
                 {/* POST NAVIGATION & EXPLORE MORE */}
@@ -545,10 +766,10 @@ export default function SingleBlogPage() {
                         (index === 0
                           ? "/services/img1.webp"
                           : index === 1
-                          ? "/services/img2.webp"
-                          : index === 2
-                          ? "/services/img3.webp"
-                          : "/services/img4.webp");
+                            ? "/services/img2.webp"
+                            : index === 2
+                              ? "/services/img3.webp"
+                              : "/services/img4.webp");
 
                       const postCategory = item.category || "GROWTH";
                       const postDate = item.publishedAt

@@ -16,18 +16,16 @@ import {
   X,
   ExternalLink,
   ChevronRight,
+  MessageSquare,
 } from "lucide-react";
 import { logoutUser, observeAuth } from "@/app/lib/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/app/lib/firebase";
 
-
-
-
-
 const navigation = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Blogs", href: "/admin/blogs", icon: FileText },
+  { label: "Comments", href: "/admin/comments", icon: MessageSquare },
   { label: "Case Studies", href: "/admin/case-studies", icon: FolderKanban },
   { label: "Media Library", href: "/admin/media", icon: Image },
   { label: "Users", href: "/admin/users", icon: Users },

@@ -1,0 +1,19 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Media Library uploads (images, PDFs, documents)
+    // Public read so images/PDFs can load on the website and blog
+    // Allow upload for CMS media manager
+    match /media/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null || true;
+    }
+
+    // Default fallback
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}

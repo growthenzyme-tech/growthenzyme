@@ -38,7 +38,13 @@ import {
   Save,
   Send,
   Sparkles,
+  FolderOpen,
+  Image as ImageIconLucide,
+  Loader2,
+  Upload,
 } from "lucide-react";
+import MediaPickerModal from "@/app/components/cms/MediaPickerModal";
+import { uploadMediaFile } from "@/app/lib/media";
 
 const categories = [
   "Digital Marketing",
@@ -68,12 +74,15 @@ export default function BlogEditor({ blogId }: BlogEditorProps) {
   const [slugEdited, setSlugEdited] = useState(false);
   const [loadingBlog, setLoadingBlog] = useState(Boolean(blogId));
   const [existingPublishedAt, setExistingPublishedAt] =
-  useState<any>(null);
+    useState<any>(null);
 
-const [existingCoverImageId, setExistingCoverImageId] =
-  useState<string | null>(null);
+  const [existingCoverImageId, setExistingCoverImageId] =
+    useState<string | null>(null);
 
-const [coverImageChanged, setCoverImageChanged] = useState(false);
+  const [coverImageChanged, setCoverImageChanged] = useState(false);
+  const [coverPickerOpen, setCoverPickerOpen] = useState(false);
+  const [inlinePickerOpen, setInlinePickerOpen] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -148,7 +157,8 @@ const [coverImageChanged, setCoverImageChanged] = useState(false);
         );
 
         if (mediaSnap.exists()) {
-          setCoverImage(mediaSnap.data().data || "");
+          const mData = mediaSnap.data();
+          setCoverImage(mData.url || mData.downloadUrl || mData.data || "");
         }
       }
 
@@ -170,65 +180,29 @@ const [coverImageChanged, setCoverImageChanged] = useState(false);
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      setError("Please select a valid image.");
+      setError("Please select a valid image file.");
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      setError("Please select an image smaller than 10 MB.");
+    if (file.size > 15 * 1024 * 1024) {
+      setError("Please select an image smaller than 15 MB.");
       return;
     }
 
     try {
+      setUploadingCover(true);
       setError("");
-
-      const image = new window.Image();
-      const objectUrl = URL.createObjectURL(file);
-
-      image.onload = () => {
-        const maxDimension = 900;
-        const scale = Math.min(
-          1,
-          maxDimension / Math.max(image.width, image.height)
-        );
-
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.round(image.width * scale);
-        canvas.height = Math.round(image.height * scale);
-
-        const context = canvas.getContext("2d");
-
-        if (!context) {
-          URL.revokeObjectURL(objectUrl);
-          setError("Could not process this image.");
-          return;
-        }
-
-        context.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-        const compressed = canvas.toDataURL("image/jpeg", 0.65);
-
-        URL.revokeObjectURL(objectUrl);
-
-        if (compressed.length > 850000) {
-          setError(
-            "This image is still too large. Please choose a smaller image."
-          );
-          return;
-        }
-
-        setCoverImage(compressed);
-setCoverImageChanged(true);
-      };
-
-      image.onerror = () => {
-        URL.revokeObjectURL(objectUrl);
-        setError("Unable to load the selected image.");
-      };
-
-      image.src = objectUrl;
-    } catch {
-      setError("Image processing failed.");
+      const mediaItem = await uploadMediaFile(file, {
+        category: "blog-cover",
+      });
+      setCoverImage(mediaItem.url);
+      setExistingCoverImageId(mediaItem.id);
+      setCoverImageChanged(false);
+    } catch (err: any) {
+      console.error("Cover image upload error:", err);
+      setError(err.message || "Failed to upload cover image.");
+    } finally {
+      setUploadingCover(false);
     }
   }
 
@@ -261,25 +235,23 @@ setCoverImageChanged(true);
     setSaving(true);
 
     try {
-  let coverImageId = existingCoverImageId;
+  let coverImageId = coverImage ? existingCoverImageId : null;
 
-// Only upload a new media document if the cover image changed.
-if (coverImageChanged) {
-  coverImageId = null;
-
-  if (coverImage) {
+  // If a raw image was chosen without a mediaId, persist it to media collection
+  if (coverImageChanged && coverImage && !coverImageId) {
     const mediaRef = await addDoc(collection(db, "media"), {
+      url: coverImage,
       data: coverImage,
       type: "image",
       mimeType: "image/jpeg",
       fileName: `${slug}-cover.jpg`,
+      category: "blog-cover",
       uploadedBy: user.uid,
       createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
     });
-
     coverImageId = mediaRef.id;
   }
-}
 
 const blogData = {
   title: title.trim(),
@@ -502,47 +474,83 @@ if (blogId && error === "Blog not found.") {
               Cover Image
             </h2>
             <p className="text-xs text-[#819080]">
-              Choose an image for your blog article.
+              Choose or upload an image from the Media Library for your article.
             </p>
           </div>
         </div>
 
-        <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-[#B6CBA9] bg-[#F8FAF6] px-5 py-9 text-center transition-colors hover:bg-[#EEF3EA]">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#E8EEE5] text-[#405C48]">
-            <ImagePlus size={22} />
+        {uploadingCover ? (
+          <div className="flex flex-col items-center justify-center p-8 border border-dashed border-[#B6CBA9] rounded-xl bg-[#F8FAF6]">
+            <Loader2 size={24} className="animate-spin text-[#29382F] mb-2" />
+            <p className="text-xs font-semibold text-[#29382F]">Uploading to Cloud Storage...</p>
           </div>
-          <span className="text-sm font-semibold text-[#29382F]">
-            Click to upload cover image
-          </span>
-          <span className="mt-1 text-xs text-[#819080]">
-            Image files only · Maximum 10 MB
-          </span>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleCoverImage(e.target.files?.[0])}
-            className="hidden"
-          />
-        </label>
+        ) : !coverImage ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            {/* Option 1: Choose from Media Library */}
+            <button
+              type="button"
+              onClick={() => setCoverPickerOpen(true)}
+              className="flex flex-col items-center justify-center p-6 rounded-xl border border-dashed border-[#B6CBA9] bg-[#F8FAF6] hover:bg-[#EEF3EA] transition text-center group"
+            >
+              <div className="mb-2.5 flex h-10 w-10 items-center justify-center rounded-full bg-[#E8EEE5] text-[#29382F] group-hover:scale-110 transition-transform">
+                <FolderOpen size={19} />
+              </div>
+              <span className="text-xs font-bold text-[#29382F]">
+                Choose from Media Library
+              </span>
+              <span className="mt-0.5 text-[11px] text-[#819080]">
+                Select an existing cloud asset
+              </span>
+            </button>
 
-        {coverImage && (
+            {/* Option 2: Upload Direct */}
+            <label className="flex cursor-pointer flex-col items-center justify-center p-6 rounded-xl border border-dashed border-[#B6CBA9] bg-[#F8FAF6] hover:bg-[#EEF3EA] transition text-center group">
+              <div className="mb-2.5 flex h-10 w-10 items-center justify-center rounded-full bg-[#E8EEE5] text-[#D78359] group-hover:scale-110 transition-transform">
+                <ImagePlus size={19} />
+              </div>
+              <span className="text-xs font-bold text-[#29382F]">
+                Upload from Device
+              </span>
+              <span className="mt-0.5 text-[11px] text-[#819080]">
+                Upload new file to Cloud Storage
+              </span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleCoverImage(e.target.files?.[0])}
+                className="hidden"
+              />
+            </label>
+          </div>
+        ) : (
           <div className="relative overflow-hidden rounded-xl border border-[#E2E9DE]">
             <img
               src={coverImage}
               alt="Blog cover preview"
               className="max-h-72 w-full object-cover"
             />
-            <button
-              type="button"
-              onClick={() => {
-  setCoverImage("");
-  setCoverImageChanged(true);
-}}
-              className="absolute right-3 top-3 flex items-center gap-2 rounded-lg bg-[#29382F] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#405C48]"
-            >
-              <X size={14} />
-              Remove
-            </button>
+            <div className="absolute right-3 top-3 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCoverPickerOpen(true)}
+                className="flex items-center gap-1.5 rounded-lg bg-[#29382F]/90 backdrop-blur-xs px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#29382F]"
+              >
+                <FolderOpen size={13} />
+                Change
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setCoverImage("");
+                  setExistingCoverImageId(null);
+                  setCoverImageChanged(true);
+                }}
+                className="flex items-center gap-1.5 rounded-lg bg-red-600/90 backdrop-blur-xs px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-red-600"
+              >
+                <X size={13} />
+                Remove
+              </button>
+            </div>
           </div>
         )}
       </section>
@@ -637,6 +645,18 @@ if (blogId && error === "Blog not found.") {
               className={toolbarButtonClass}
             >
               <ListOrdered size={17} />
+            </button>
+
+            <span className="mx-1 hidden h-9 w-px bg-[#DCE5D8] sm:block" />
+
+            {/* Insert Media from Library */}
+            <button
+              type="button"
+              title="Insert Image from Media Library"
+              onClick={() => setInlinePickerOpen(true)}
+              className={`${toolbarButtonClass} text-[#D78359] hover:bg-[#EEF3EA]`}
+            >
+              <ImageIconLucide size={17} />
             </button>
 
             <span className="mx-1 hidden h-9 w-px bg-[#DCE5D8] sm:block" />
@@ -767,6 +787,32 @@ if (blogId && error === "Blog not found.") {
           </button>
         </div>
       </div>
+
+      {/* COVER IMAGE PICKER MODAL */}
+      <MediaPickerModal
+        isOpen={coverPickerOpen}
+        onClose={() => setCoverPickerOpen(false)}
+        allowedType="image"
+        defaultCategory="blog-cover"
+        title="Select Cover Image"
+        onSelect={(item) => {
+          setCoverImage(item.url);
+          setExistingCoverImageId(item.id);
+          setCoverImageChanged(false);
+        }}
+      />
+
+      {/* INLINE CONTENT IMAGE PICKER MODAL */}
+      <MediaPickerModal
+        isOpen={inlinePickerOpen}
+        onClose={() => setInlinePickerOpen(false)}
+        allowedType="image"
+        defaultCategory="blog-inline"
+        title="Insert Inline Article Image"
+        onSelect={(item) => {
+          editor?.chain().focus().setImage({ src: item.url, alt: item.name }).run();
+        }}
+      />
     </div>
   );
 }

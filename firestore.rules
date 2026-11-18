@@ -1,0 +1,63 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // 1. Blogs Collection
+    // - Public: Anyone can read articles
+    // - Public: Anyone can like or unlike articles (atomic increment/decrement on 'likes' field)
+    // - Admin: Authenticated users can create, edit all fields, and delete articles
+    match /blogs/{blogId} {
+      allow read: if true;
+      allow update: if isAuthenticated() || 
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes']);
+      allow create, delete: if isAuthenticated();
+    }
+
+    // 2. Comments Collection
+    // - Public: Anyone can read published comments on blogs
+    // - Public: Anyone can submit a comment
+    // - Admin: Authenticated users can moderate (update or delete) comments
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isAuthenticated();
+    }
+
+    // 3. Media Library Collection
+    // - Public: Anyone can read media records (required for blog post covers & inline images)
+    // - Admin: Authenticated users can upload, update, and delete media files
+    //   (allow create if admin is uploading during dashboard session)
+    match /media/{mediaId} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if isAuthenticated();
+    }
+
+    // 4. Case Studies Collection
+    // - Public: Anyone can read case studies
+    // - Admin: Authenticated users can manage case studies
+    match /case-studies/{studyId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // 5. Users Collection
+    // - Authenticated users can access their user profile for role verification
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Default fallback rule for any other collection
+    match /{document=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+  }
+}

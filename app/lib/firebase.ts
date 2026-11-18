@@ -1,6 +1,7 @@
 import { initializeApp, getApps, getApp, deleteApp, type FirebaseApp } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
+import { getStorage, type FirebaseStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyB5OVrLYAR5zJAmm422lKgvGgbIS40U7w8",
@@ -47,5 +48,13 @@ try {
   db = {} as Firestore;
 }
 
-export { auth, db };
+let storage: FirebaseStorage;
+try {
+  storage = getStorage(app);
+} catch (e) {
+  console.warn("⚠️ [Firebase Storage Warning]:", e);
+  storage = {} as FirebaseStorage;
+}
+
+export { auth, db, storage };
 export default app;
