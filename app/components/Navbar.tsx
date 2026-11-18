@@ -16,15 +16,24 @@ const navLinks = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [websiteName, setWebsiteName] = useState("GrowthEnzyme");
+  const [announcementEnabled, setAnnouncementEnabled] = useState(false);
+const [announcementText, setAnnouncementText] = useState("");
+const [announcementLink, setAnnouncementLink] = useState("");
 
   useEffect(() => {
     let isMounted = true;
 
     getGeneralSettings()
       .then((settings) => {
-        if (isMounted && settings.websiteName?.trim()) {
-          setWebsiteName(settings.websiteName.trim());
-        }
+     if (!isMounted) return;
+
+if (settings.websiteName?.trim()) {
+  setWebsiteName(settings.websiteName.trim());
+}
+
+setAnnouncementEnabled(settings.announcementEnabled);
+setAnnouncementText(settings.announcementText?.trim() || "");
+setAnnouncementLink(settings.announcementLink?.trim() || "");
       })
       .catch((error) => {
         console.error("Failed to load website name:", error);
@@ -35,8 +44,26 @@ export default function Navbar() {
     };
   }, []);
 
-  return (
-    <header className="fixed top-0 z-50 w-full border-b border-[#29382F]/10 bg-white text-[#29382F] shadow-[0_3px_15px_rgba(41,56,47,0.05)]">
+return (
+  <>
+    <div className="fixed top-0 z-50 w-full">
+      {announcementEnabled && announcementText && (
+        <div className="flex min-h-9 items-center justify-center bg-[#173D32] px-4 py-2 text-center text-xs sm:text-sm font-medium text-white">
+          {announcementLink ? (
+            <Link
+              href={announcementLink}
+              className="transition-opacity hover:opacity-80"
+            >
+              {announcementText}
+              <span className="ml-2">↗</span>
+            </Link>
+          ) : (
+            <p>{announcementText}</p>
+          )}
+        </div>
+      )}
+
+      <header className="w-full border-b border-[#29382F]/10 bg-white text-[#29382F] shadow-[0_3px_15px_rgba(41,56,47,0.05)]">
       <nav className="mx-auto flex h-[82px] sm:h-[88px] max-w-[1320px] items-center justify-between px-5 sm:px-10 lg:px-14">
         {/* Logo */}
         <Link
@@ -113,6 +140,17 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </header>
+         </header>
+    </div>
+
+    {/* Spacer for fixed announcement and navbar */}
+    <div
+      aria-hidden="true"
+      className={announcementEnabled && announcementText
+        ? "h-[118px] sm:h-[124px]"
+        : "h-[82px] sm:h-[88px]"
+      }
+    />
+  </>
   );
 }
