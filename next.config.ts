@@ -20,6 +20,12 @@ const nextConfig: NextConfig = {
   },
 };
 
-initOpenNextCloudflareForDev();
+if (process.env.NODE_ENV === "development") {
+  try {
+    initOpenNextCloudflareForDev();
+  } catch {
+    // Ignored
+  }
+}
 
 export default nextConfig;

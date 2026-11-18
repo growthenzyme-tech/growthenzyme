@@ -1,0 +1,27 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "growthenzyme",
+	"main": ".open-next/worker.js",
+	"compatibility_date": "2026-11-11",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS"
+	},
+	"services": [
+		{
+			"binding": "WORKER_SELF_REFERENCE",
+			"service": "growthenzyme"
+		}
+	],
+	"vars": {
+		"NEXT_PUBLIC_FIREBASE_API_KEY": "AIzaSyB5OVrLYAR5zJAmm422lKgvGgbIS40U7w8",
+		"NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN": "growthenzyme-cms.firebaseapp.com",
+		"NEXT_PUBLIC_FIREBASE_PROJECT_ID": "growthenzyme-cms",
+		"NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET": "growthenzyme-cms.firebasestorage.app",
+		"NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "978032210326",
+		"NEXT_PUBLIC_FIREBASE_APP_ID": "1:978032210326:web:0efd042ec4e6bbcdfa6db7"
+	}
+}
