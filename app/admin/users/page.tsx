@@ -290,51 +290,58 @@ function closePasswordModal() {
   setPasswordError("");
   setShowNewPassword(false);
 }
+
   return (
-    <div className="mx-auto max-w-7xl space-y-8">
+     <div className="w-full max-w-none space-y-8">
 
       {/* Header */}
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#829080]">
-            Access Control
-          </p>
+       <section className="relative isolate w-full overflow-hidden rounded-[28px] border border-[#A5B59F]/40 bg-[#B6CBA9] px-6 py-8 sm:px-9 sm:py-10 lg:px-12 lg:py-12">
+      <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/15 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 left-1/3 h-56 w-56 rounded-full bg-[#D78359]/10 blur-3xl" />
 
-          <h1 className="mt-2 text-3xl font-semibold text-[#252B25]">
+      <div className="relative flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
+        <div className="max-w-2xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#29382F]/15 bg-white/40 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#29382F]">
+            <span className="h-2 w-2 rounded-full bg-[#D78359]" />
+            Access Control
+          </div>
+
+          <h1 className="mt-5 font-heading text-4xl font-bold leading-tight tracking-tight text-[#29382F] sm:text-5xl">
             User Management
           </h1>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-3 max-w-xl text-sm leading-7 text-[#29382F]/80 sm:text-base">
             View CMS users, their assigned roles and account status.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          <button
-            onClick={loadData}
-            disabled={loading}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-          >
-            <RefreshCw size={15} />
-            Refresh Users
-          </button>
+        <div className="relative flex flex-wrap gap-3">
+        <button
+  onClick={loadData}
+  disabled={loading}
+  className="group inline-flex items-center justify-center gap-2 rounded-xl border border-[#D5E1CC] bg-white px-5 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_4px_0_#D5E1CC,0_8px_16px_rgba(41,56,47,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_6px_0_#D5E1CC,0_11px_20px_rgba(41,56,47,0.12)] disabled:cursor-not-allowed disabled:opacity-50"
+>
+  <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
+  Refresh Users
+</button>
 
-          <button
-            onClick={() => {
-              setFormError("");
-              setShowCreateModal(true);
-            }}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#405C48] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#334A3A]"
-          >
-            <Plus size={17} />
-            Create User
-          </button>
+    <button
+  onClick={() => {
+    setFormError("");
+    setShowCreateModal(true);
+  }}
+  className="group inline-flex items-center justify-center gap-3 rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-5 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.13)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.18)]"
+>
+  <Plus size={17} />
+  Create User
+</button>
         </div>
       </div>
+    </section>
 
       {/* Statistics */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-gray-200 bg-white p-5">
+        <div className="rounded-2xl border border-[#DDE4D9] bg-[#FFFDF8] p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-500">Total Users</p>
             <Users size={19} className="text-[#405C48]" />
@@ -344,24 +351,30 @@ function closePasswordModal() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-sm text-gray-500">Active Users</p>
-          <p className="mt-3 text-3xl font-semibold text-green-700">
-            {activeCount}
-          </p>
-        </div>
+  <div className="rounded-2xl border border-[#DDE4D9] bg-[#FFFDF8] p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+  <div className="flex items-center justify-between">
+    <p className="text-sm text-[#6F7D70]">Active Users</p>
+    <Users size={19} className="text-green-700" />
+  </div>
+  <p className="mt-3 text-3xl font-semibold text-green-700">
+    {activeCount}
+  </p>
+</div>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-sm text-gray-500">Inactive Users</p>
-          <p className="mt-3 text-3xl font-semibold text-red-600">
-            {inactiveCount}
-          </p>
-        </div>
+       <div className="rounded-2xl border border-[#DDE4D9] bg-[#FFFDF8] p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+  <div className="flex items-center justify-between">
+    <p className="text-sm text-[#6F7D70]">Inactive Users</p>
+    <Users size={19} className="text-red-600" />
+  </div>
+  <p className="mt-3 text-3xl font-semibold text-red-600">
+    {inactiveCount}
+  </p>
+</div>
       </div>
 
       {/* User List */}
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <div className="flex flex-col justify-between gap-4 border-b border-gray-100 p-5 sm:flex-row sm:items-center">
+      <div className="overflow-hidden rounded-2xl border border-[#DDE4D9] bg-[#FFFDF8] shadow-sm">
+        <div className="flex flex-col justify-between gap-4 border-b border-[#E8EDE3] bg-[#F5F0E5]/60 p-5 sm:flex-row sm:items-center">
           <div>
             <h2 className="font-semibold text-gray-900">CMS Users</h2>
             <p className="mt-1 text-xs text-gray-500">
@@ -378,7 +391,7 @@ function closePasswordModal() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search users..."
-              className="w-full rounded-lg border border-gray-200 py-2.5 pl-9 pr-3 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-[#405C48]"
+             className="w-full rounded-xl border border-[#DDE4D9] bg-[#FFFDF8] py-2.5 pl-9 pr-3 text-sm text-[#29382F] outline-none placeholder:text-[#92998F] transition focus:border-[#506B59] focus:ring-4 focus:ring-[#B6CBA9]/20"
             />
           </div>
         </div>
@@ -408,7 +421,7 @@ function closePasswordModal() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[650px] text-left">
-              <thead className="bg-[#FAFBF9]">
+             <thead className="bg-[#E8EDE3]/70">
                 <tr className="text-xs uppercase tracking-wider text-gray-500">
                   <th className="px-5 py-4 font-semibold">User</th>
                   <th className="px-5 py-4 font-semibold">Assigned Role</th>
@@ -419,10 +432,10 @@ function closePasswordModal() {
 
               <tbody className="divide-y divide-gray-100">
                 {filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
+                  <tr key={user.id} className="transition-colors hover:bg-[#F5F0E5]/60">
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#EDF2EC] text-sm font-semibold text-[#405C48]">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#B6CBA9]/40 text-sm font-semibold text-[#29382F]">
                           {(user.name || user.email || "U")
                             .charAt(0)
                             .toUpperCase()}
@@ -471,7 +484,7 @@ function closePasswordModal() {
           setPasswordError("");
           setShowNewPassword(false);
         }}
-        className="inline-flex items-center gap-2 rounded-lg border border-[#405C48]/20 px-3 py-2 text-xs font-medium text-[#405C48] hover:bg-[#EDF2EC]"
+       className="inline-flex items-center gap-2 rounded-lg border border-[#DDE4D9] bg-[#FFFDF8] px-3 py-2 text-xs font-medium text-[#29382F] transition hover:border-[#A5B59F] hover:bg-[#E8EDE3]"
       >
         <KeyRound size={14} />
         Change Password
@@ -526,7 +539,7 @@ function closePasswordModal() {
       {/* Create User Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4">
-          <div className="my-auto w-full max-w-lg rounded-2xl bg-white shadow-xl">
+          <div className="my-auto w-full max-w-lg rounded-2xl border border-[#DDE4D9] bg-[#FFFDF8] shadow-2xl">
 
             <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
               <div className="flex items-center gap-3">
@@ -574,7 +587,7 @@ function closePasswordModal() {
                     setForm({ ...form, name: e.target.value })
                   }
                   placeholder="Enter full name"
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-[#405C48]"
+                  className="w-full rounded-lg border border-[#DDE4D9] bg-[#FFFDF8] px-4 py-3 text-sm text-[#29382F] outline-none placeholder:text-[#92998F] transition focus:border-[#506B59] focus:ring-4 focus:ring-[#B6CBA9]/20"
                 />
               </div>
 
@@ -590,7 +603,7 @@ function closePasswordModal() {
                     setForm({ ...form, email: e.target.value })
                   }
                   placeholder="Enter email address"
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-[#405C48]"
+                  className="w-full rounded-lg border border-[#DDE4D9] bg-[#FFFDF8] px-4 py-3 text-sm text-[#29382F] outline-none placeholder:text-[#92998F] transition focus:border-[#506B59] focus:ring-4 focus:ring-[#B6CBA9]/20"
                 />
               </div>
 
@@ -928,7 +941,7 @@ function closePasswordModal() {
           className={`rounded-lg px-5 py-2.5 text-sm font-medium text-white disabled:opacity-50 ${
             statusUser.isActive
               ? "bg-red-600 hover:bg-red-700"
-              : "bg-[#405C48] hover:bg-[#334A3A]"
+              : "bg-[#29382F] hover:bg-[#506B59]"
           }`}
         >
           {updatingStatus
