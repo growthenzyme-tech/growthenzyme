@@ -86,7 +86,7 @@ export default function AdminLogin() {
   }
 
   return (
-    <main className="min-h-screen bg-[#EFF4EB] flex flex-col justify-between selection:bg-[#3F5738]/20 selection:text-[#223624]">
+    <main className="min-h-screen bg-[#EFF4EB] flex flex-col justify-between selection:bg-[#29382F]/20 selection:text-[#1B2921]">
       {/* ========================================================= */}
       {/* TOP BANNER HERO (4K Marketing Agency Green Theme)         */}
       {/* ========================================================= */}
@@ -112,7 +112,7 @@ export default function AdminLogin() {
                 alt="GrowthEnzyme Logo"
                 className="h-6 w-6 sm:h-7 sm:w-7 object-contain drop-shadow-xs"
               />
-              <span className="font-heading text-xs sm:text-sm font-extrabold tracking-[0.2em] text-[#223624] uppercase">
+              <span className="font-heading text-xs sm:text-sm font-extrabold tracking-[0.2em] text-[#1B2921] uppercase">
                 GrowthEnzyme
               </span>
             </div>
@@ -121,17 +121,17 @@ export default function AdminLogin() {
       </section>
 
       {/* ========================================================= */}
-      {/* MAIN CONTENT & EXPANDED SAGE GREEN LOGIN CARD             */}
+      {/* MAIN CONTENT & EXPANDED BRAND GREEN LOGIN CARD (#B6CBA9)  */}
       {/* ========================================================= */}
       <div className="relative -mt-6 sm:-mt-8 mx-auto w-full max-w-[620px] px-5 z-10 pb-12 flex-1 flex flex-col justify-center">
-        {/* SAGE GREEN FLOATING CARD (Wider layout with generous padding) */}
-        <div className="rounded-[28px] border border-[#7F9876]/40 bg-[#9EB891] p-7 sm:p-10 md:p-11 shadow-[0_20px_50px_rgba(41,56,47,0.12)]">
+        {/* BRAND GREEN FLOATING CARD (#B6CBA9 from user swatch) */}
+        <div className="rounded-[28px] border border-[#9BB58D]/60 bg-[#B6CBA9] p-7 sm:p-10 md:p-11 shadow-[0_20px_50px_rgba(41,56,47,0.15)]">
           {/* CENTERED HEADLINE & SUBTITLE */}
           <div className="text-center mb-7">
-            <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#223624]">
+            <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#1B2921]">
               {mode === "signin" ? "Welcome Back" : "Create Admin Account"}
             </h1>
-            <p className="mt-2 text-xs sm:text-sm text-[#385135] max-w-lg mx-auto leading-relaxed">
+            <p className="mt-2 text-xs sm:text-sm text-[#324939] max-w-lg mx-auto leading-relaxed">
               {mode === "signin"
                 ? "Sign in to access your dashboard and continue where you left off."
                 : "Set up your admin credentials to manage GrowthEnzyme articles & assets."}
@@ -139,7 +139,7 @@ export default function AdminLogin() {
           </div>
 
           {/* MODE SELECTOR TABS (Sign In vs Create Admin) */}
-          <div className="flex rounded-2xl bg-[#DEE7D6] p-1.5 border border-[#7F9876] mb-6 shadow-2xs">
+          <div className="flex rounded-2xl bg-[#EAF1E4] p-1.5 border border-[#8FA881] mb-6 shadow-2xs">
             <button
               type="button"
               onClick={() => {
@@ -149,8 +149,8 @@ export default function AdminLogin() {
               }}
               className={`flex-1 inline-flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs sm:text-sm font-semibold transition cursor-pointer ${
                 mode === "signin"
-                  ? "bg-[#3F5738] text-white shadow-xs"
-                  : "text-[#385135] hover:text-[#223624]"
+                  ? "bg-[#29382F] text-white shadow-xs"
+                  : "text-[#324939] hover:text-[#1B2921]"
               }`}
             >
               <LogIn size={14} />
@@ -166,13 +166,13 @@ export default function AdminLogin() {
               }}
               className={`flex-1 inline-flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs sm:text-sm font-semibold transition cursor-pointer ${
                 mode === "register"
-                  ? "bg-[#3F5738] text-white shadow-xs"
-                  : "text-[#385135] hover:text-[#223624]"
+                  ? "bg-[#29382F] text-white shadow-xs"
+                  : "text-[#324939] hover:text-[#1B2921]"
               }`}
             >
               <Sparkles
                 size={14}
-                className={mode === "register" ? "text-white" : "text-[#385135]"}
+                className={mode === "register" ? "text-white" : "text-[#324939]"}
               />
               <span>Create Admin</span>
             </button>
@@ -192,7 +192,7 @@ export default function AdminLogin() {
                       setMode("register");
                       setError("");
                     }}
-                    className="mt-2 block text-xs font-bold text-[#223624] underline hover:text-black cursor-pointer"
+                    className="mt-2 block text-xs font-bold text-[#1B2921] underline hover:text-black cursor-pointer"
                   >
                     Need to create this admin account? Click here →
                   </button>
@@ -202,8 +202,8 @@ export default function AdminLogin() {
           )}
 
           {resetSuccess && (
-            <div className="mb-5 rounded-2xl border border-[#7F9876] bg-[#DEE7D6] p-4 text-xs sm:text-sm font-semibold text-[#223624] flex items-center gap-2 shadow-2xs">
-              <Check size={16} className="text-[#223624]" />
+            <div className="mb-5 rounded-2xl border border-[#8FA881] bg-[#EAF1E4] p-4 text-xs sm:text-sm font-semibold text-[#1B2921] flex items-center gap-2 shadow-2xs">
+              <Check size={16} className="text-[#1B2921]" />
               <span>{resetSuccess}</span>
             </div>
           )}
@@ -213,17 +213,17 @@ export default function AdminLogin() {
             {/* FULL NAME (Only in Register Mode) */}
             {mode === "register" && (
               <div>
-                <label className="mb-1.5 block text-xs sm:text-sm font-semibold text-[#223624]">
+                <label className="mb-1.5 block text-xs sm:text-sm font-semibold text-[#1B2921]">
                   Full Name
                 </label>
-                <div className="relative flex items-center rounded-2xl bg-[#DEE7D6] border border-[#7F9876] px-4 py-3 transition focus-within:border-[#223624] focus-within:ring-2 focus-within:ring-[#223624]/20 shadow-2xs">
-                  <User size={17} className="text-[#4A6546] shrink-0 mr-3" />
+                <div className="relative flex items-center rounded-2xl bg-[#EAF1E4] border border-[#8FA881] px-4 py-3 transition focus-within:border-[#1B2921] focus-within:ring-2 focus-within:ring-[#1B2921]/20 shadow-2xs">
+                  <User size={17} className="text-[#415C47] shrink-0 mr-3" />
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Administrator"
-                    className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#1C2C1D] placeholder-[#6C8466]"
+                    className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#142318] placeholder-[#5A7750]"
                   />
                 </div>
               </div>
@@ -231,11 +231,11 @@ export default function AdminLogin() {
 
             {/* EMAIL ADDRESS */}
             <div>
-              <label className="mb-1.5 block text-xs sm:text-sm font-semibold text-[#223624]">
+              <label className="mb-1.5 block text-xs sm:text-sm font-semibold text-[#1B2921]">
                 Email Address
               </label>
-              <div className="relative flex items-center rounded-2xl bg-[#DEE7D6] border border-[#7F9876] px-4 py-3 transition focus-within:border-[#223624] focus-within:ring-2 focus-within:ring-[#223624]/20 shadow-2xs">
-                <Mail size={17} className="text-[#4A6546] shrink-0 mr-3" />
+              <div className="relative flex items-center rounded-2xl bg-[#EAF1E4] border border-[#8FA881] px-4 py-3 transition focus-within:border-[#1B2921] focus-within:ring-2 focus-within:ring-[#1B2921]/20 shadow-2xs">
+                <Mail size={17} className="text-[#415C47] shrink-0 mr-3" />
                 <input
                   type="email"
                   required
@@ -243,7 +243,7 @@ export default function AdminLogin() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@company.com"
-                  className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#1C2C1D] placeholder-[#6C8466]"
+                  className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#142318] placeholder-[#5A7750]"
                 />
               </div>
             </div>
@@ -251,10 +251,10 @@ export default function AdminLogin() {
             {/* PASSWORD */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs sm:text-sm font-semibold text-[#223624]">
+                <label className="block text-xs sm:text-sm font-semibold text-[#1B2921]">
                   Password{" "}
                   {mode === "register" && (
-                    <span className="text-[11px] font-normal text-[#385135]">
+                    <span className="text-[11px] font-normal text-[#324939]">
                       (min 6 chars)
                     </span>
                   )}
@@ -264,15 +264,15 @@ export default function AdminLogin() {
                     type="button"
                     onClick={handleForgotPassword}
                     disabled={sendingReset}
-                    className="text-xs font-semibold text-[#223624] hover:underline cursor-pointer"
+                    className="text-xs font-semibold text-[#1B2921] hover:underline cursor-pointer"
                   >
                     {sendingReset ? "Sending..." : "Forgot?"}
                   </button>
                 )}
               </div>
 
-              <div className="relative flex items-center rounded-2xl bg-[#DEE7D6] border border-[#7F9876] px-4 py-3 transition focus-within:border-[#223624] focus-within:ring-2 focus-within:ring-[#223624]/20 shadow-2xs">
-                <Lock size={17} className="text-[#4A6546] shrink-0 mr-3" />
+              <div className="relative flex items-center rounded-2xl bg-[#EAF1E4] border border-[#8FA881] px-4 py-3 transition focus-within:border-[#1B2921] focus-within:ring-2 focus-within:ring-[#1B2921]/20 shadow-2xs">
+                <Lock size={17} className="text-[#415C47] shrink-0 mr-3" />
                 <input
                   type={showPassword ? "text" : "password"}
                   required
@@ -280,12 +280,12 @@ export default function AdminLogin() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#1C2C1D] placeholder-[#6C8466]"
+                  className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#142318] placeholder-[#5A7750]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-[#4A6546] hover:text-[#223624] transition cursor-pointer ml-2"
+                  className="text-[#415C47] hover:text-[#1B2921] transition cursor-pointer ml-2"
                   aria-label="Toggle password visibility"
                 >
                   {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
@@ -298,7 +298,7 @@ export default function AdminLogin() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-full py-3.5 sm:py-4 px-6 font-semibold text-xs sm:text-sm text-white bg-[#3F5738] hover:bg-[#32482C] active:scale-[0.99] transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 group"
+                className="w-full rounded-full py-3.5 sm:py-4 px-6 font-semibold text-xs sm:text-sm text-white bg-[#29382F] hover:bg-[#1D2821] active:scale-[0.99] transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 group"
               >
                 {loading ? (
                   <>
@@ -325,14 +325,14 @@ export default function AdminLogin() {
           </form>
 
           {/* EXPANDABLE TROUBLESHOOTING HINT */}
-          <div className="mt-7 pt-5 border-t border-[#7F9876]/40">
+          <div className="mt-7 pt-5 border-t border-[#8FA881]/50">
             <button
               type="button"
               onClick={() => setShowHelp(!showHelp)}
-              className="w-full inline-flex items-center justify-between text-xs sm:text-sm text-[#385135] hover:text-[#223624] transition cursor-pointer"
+              className="w-full inline-flex items-center justify-between text-xs sm:text-sm text-[#324939] hover:text-[#1B2921] transition cursor-pointer"
             >
               <span className="inline-flex items-center gap-1.5 font-medium">
-                <HelpCircle size={14} className="text-[#223624]" />
+                <HelpCircle size={14} className="text-[#1B2921]" />
                 Troubleshooting sign-in issues
               </span>
               <span className="text-xs font-bold">
@@ -341,8 +341,8 @@ export default function AdminLogin() {
             </button>
 
             {showHelp && (
-              <div className="mt-3.5 p-4 rounded-2xl border border-[#7F9876] bg-[#8EA982]/35 text-xs sm:text-sm text-[#223624] space-y-2 leading-relaxed">
-                <p className="font-semibold text-[#1C2C1D]">Quick Solutions:</p>
+              <div className="mt-3.5 p-4 rounded-2xl border border-[#8FA881] bg-[#A5BE97]/30 text-xs sm:text-sm text-[#1B2921] space-y-2 leading-relaxed">
+                <p className="font-semibold text-[#142318]">Quick Solutions:</p>
                 <ul className="list-disc pl-4 space-y-1.5 text-xs">
                   <li>
                     <strong>First-time setup?</strong> Switch to the{" "}
@@ -360,7 +360,7 @@ export default function AdminLogin() {
                       href="https://console.firebase.google.com/project/growthenzyme-cms/authentication/providers"
                       target="_blank"
                       rel="noreferrer"
-                      className="underline font-bold text-[#1C2C1D]"
+                      className="underline font-bold text-[#142318]"
                     >
                       Firebase Console &gt; Authentication &gt; Sign-in method
                     </a>
@@ -374,7 +374,7 @@ export default function AdminLogin() {
       </div>
 
       {/* FOOTER NOTE */}
-      <footer className="text-center py-4 text-xs text-[#4A6546]">
+      <footer className="text-center py-4 text-xs text-[#415C47]">
         &copy; {new Date().getFullYear()} GrowthEnzyme. All rights reserved.
       </footer>
     </main>
