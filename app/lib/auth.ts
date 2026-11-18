@@ -5,6 +5,8 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail,
   updateProfile,
+  signInWithPopup,
+  GoogleAuthProvider,
   type User,
 } from "firebase/auth";
 
@@ -261,6 +263,63 @@ export async function registerInitialAdmin(
       );
     }
 
+    throw err;
+  }
+}
+
+export async function loginWithGoogle() {
+  try {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: "select_account" });
+    const result = await signInWithPopup(auth, provider);
+
+    const userRef = doc(db, "users", result.user.uid);
+    let userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      const autoProfile = {
+        email: result.user.email || "",
+        name: result.user.displayName || "Admin",
+        role: "admin",
+        roleId: "system-admin",
+        isActive: true,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      };
+      await setDoc(userRef, autoProfile);
+      return {
+        user: result.user,
+        profile: {
+          ...autoProfile,
+          roleName: "Administrator",
+          permissions: {
+            dashboard: true,
+            blogs: true,
+            comments: true,
+            media: true,
+            caseStudies: true,
+            users: true,
+            settings: true,
+          },
+        },
+      };
+    }
+
+    const profile = userSnap.data();
+    if (profile.isActive !== true) {
+      await signOut(auth);
+      throw new Error("Your account has been deactivated. Please contact an administrator.");
+    }
+
+    return { user: result.user, profile };
+  } catch (err: any) {
+    console.warn("Google Sign-In Error:", err?.code || err?.message || err);
+    if (err?.code === "auth/popup-closed-by-user") {
+      throw new Error("Sign-in popup was closed before completing.");
+    }
+    if (err?.code === "auth/operation-not-allowed") {
+      throw new Error("Google sign-in is not enabled in Firebase Console > Authentication > Sign-in method.");
+    }
     throw err;
   }
 }
