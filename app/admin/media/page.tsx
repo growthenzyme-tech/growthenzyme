@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import AdminShell from "@/app/components/cms/AdminShell";
 import {
   Upload,
   Search,
@@ -209,37 +208,82 @@ export default function MediaLibraryPage() {
   const docAssets = mediaList.filter((m) => m.type === "document").length;
   const totalBytes = mediaList.reduce((acc, curr) => acc + (curr.size || 0), 0);
 
-  return (
-    <AdminShell>
-      <div className="space-y-7">
+return (
+  <div className="w-full max-w-none space-y-8">
         
         {/* HEADER SECTION */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[#29382F]/10">
-          <div>
-            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#D78359]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
-              Cloud Storage Assets
-            </div>
-            <h1 className="mt-1 font-heading text-2xl sm:text-3xl font-bold tracking-tight text-[#29382F]">
-              Media Library
-            </h1>
-            <p className="mt-1 text-xs sm:text-sm text-[#506B59]">
-              Centralized cloud storage for blog covers, inline media, case studies, and documents.
-            </p>
-          </div>
+      
+{/* HERO SECTION */}
+<section className="relative isolate w-full overflow-hidden rounded-[28px] border border-[#A5B59F]/40 bg-[#B6CBA9] px-6 py-8 sm:px-9 sm:py-10 lg:px-12 lg:py-12">
+  {/* Decorative elements */}
+  <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/15 blur-3xl" />
+  <div className="pointer-events-none absolute -bottom-24 left-1/3 h-56 w-56 rounded-full bg-[#D78359]/10 blur-3xl" />
 
-          <button
-            onClick={() => {
-              setUploadError("");
-              setUploadFiles([]);
-              setUploadModalOpen(true);
-            }}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#29382F] px-5 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-xs transition hover:bg-[#D78359]"
-          >
-            <Upload size={16} />
-            <span>Upload Assets</span>
-          </button>
+  <div className="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+    <div className="max-w-3xl">
+      <div className="inline-flex items-center gap-2 rounded-full border border-[#29382F]/15 bg-white/40 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#29382F]">
+        <span className="h-2 w-2 rounded-full bg-[#D78359]" />
+        Cloud Storage Assets
+      </div>
+
+      <h1 className="mt-5 font-heading text-4xl font-bold leading-tight tracking-tight text-[#29382F] sm:text-5xl lg:text-6xl">
+        Media
+        <span className="block text-[#506B59]">Library</span>
+      </h1>
+
+      <p className="mt-4 max-w-2xl text-sm leading-7 text-[#29382F]/80 sm:text-base">
+        Organize and manage your digital assets in one place. Access blog
+        covers, inline images, case study media, and documents from your
+        centralized cloud library.
+      </p>
+
+      <div className="mt-6 flex flex-wrap gap-3">
+        <div className="rounded-xl border border-white/50 bg-white/40 px-4 py-3">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-[#506B59]">
+            Total Assets
+          </p>
+          <p className="mt-1 text-2xl font-bold text-[#29382F]">
+            {totalAssets}
+          </p>
         </div>
+
+        <div className="rounded-xl border border-white/50 bg-white/40 px-4 py-3">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-[#506B59]">
+            Images
+          </p>
+          <p className="mt-1 text-2xl font-bold text-[#29382F]">
+            {imageAssets}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-white/50 bg-white/40 px-4 py-3">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-[#506B59]">
+            Documents
+          </p>
+          <p className="mt-1 text-2xl font-bold text-[#29382F]">
+            {docAssets}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div className="relative shrink-0">
+<button
+  type="button"
+  onClick={() => {
+    setUploadError("");
+    setUploadFiles([]);
+    setUploadModalOpen(true);
+  }}
+  className="group inline-flex items-center justify-center gap-3 rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-5 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.13)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.18)]"
+>
+  <Upload size={16} />
+  Upload Assets
+</button>
+    </div>
+  </div>
+</section>
+
 
         {/* FEEDBACK BANNERS */}
         {error && (
@@ -572,7 +616,7 @@ export default function MediaLibraryPage() {
           </div>
         )}
 
-      </div>
+      
 
       {/* ========================================================= */}
       {/* PREVIEW & METADATA MODAL                                  */}
@@ -917,8 +961,7 @@ export default function MediaLibraryPage() {
             </div>
           </div>
         </div>
-      )}
-
-    </AdminShell>
-  );
+    )}
+  </div>
+);
 }

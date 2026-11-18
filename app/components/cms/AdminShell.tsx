@@ -104,6 +104,13 @@ useEffect(() => {
       }
 
       const profile = userSnap.data();
+      console.log("CMS USER DEBUG:", {
+  email: user.email,
+  uid: user.uid,
+  role: profile.role,
+  roleId: profile.roleId,
+  isActive: profile.isActive,
+});
 
       if (profile.isActive !== true) {
         throw new Error("Your account is inactive.");
@@ -546,7 +553,13 @@ const sidebar = (
           </div>
         </header>
 
-        <main className="min-h-[calc(100vh-76px)] px-5 py-8 md:px-9 md:py-10">
+   <main
+  className={`min-h-[calc(100vh-76px)] px-5 py-8 md:py-10 ${
+    pathname === "/admin/comments"
+      ? "md:px-5"
+      : "md:px-9"
+  }`}
+>
           {children}
         </main>
       </div>
