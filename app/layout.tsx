@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import {
+  getDefaultSeoDescription,
+  getDefaultSocialImage,
+} from "@/app/lib/settings-server";
 import localFont from "next/font/local";
 import "./globals.css";
 import SiteNavbar from "./components/SiteNavbar";
@@ -16,20 +20,54 @@ const instrumentSans = localFont({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "GrowthEnzyme | Engineered for Growth",
-  description:
-    "We combine strategy, creativity and technology to accelerate business growth.",
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/images/logo-tab-32.png", type: "image/png", sizes: "32x32" },
-      { url: "/images/logo-tab.png", type: "image/png", sizes: "512x512" },
-    ],
-    apple: "/images/logo-tab.png",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const [defaultDescription, socialImage] = await Promise.all([
+    getDefaultSeoDescription(),
+    getDefaultSocialImage(),
+  ]);
 
+  const title = "GrowthEnzyme | Engineered for Growth";
+
+  const description =
+    defaultDescription ||
+    "We combine strategy, creativity and technology to accelerate business growth.";
+
+  return {
+    title,
+    description,
+
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: socialImage ? [{ url: socialImage }] : undefined,
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: socialImage ? [socialImage] : undefined,
+    },
+
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        {
+          url: "/images/logo-tab-32.png",
+          type: "image/png",
+          sizes: "32x32",
+        },
+        {
+          url: "/images/logo-tab.png",
+          type: "image/png",
+          sizes: "512x512",
+        },
+      ],
+      apple: "/images/logo-tab.png",
+    },
+  };
+}
 export default function RootLayout({
   children,
 }: {

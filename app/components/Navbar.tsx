@@ -3,8 +3,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { getGeneralSettings } from "@/app/lib/settings";
 
 const navLinks = [
   { name: "Services", href: "#services" },
@@ -14,16 +15,38 @@ const navLinks = [
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [websiteName, setWebsiteName] = useState("GrowthEnzyme");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    getGeneralSettings()
+      .then((settings) => {
+        if (isMounted && settings.websiteName?.trim()) {
+          setWebsiteName(settings.websiteName.trim());
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to load website name:", error);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-[#29382F]/10 bg-white text-[#29382F] shadow-[0_3px_15px_rgba(41,56,47,0.05)]">
       <nav className="mx-auto flex h-[82px] sm:h-[88px] max-w-[1320px] items-center justify-between px-5 sm:px-10 lg:px-14">
-
         {/* Logo */}
-        <Link href="/" className="relative z-50 flex items-center py-1">
+        <Link
+          href="/"
+          aria-label={`${websiteName} home`}
+          className="relative z-50 flex items-center py-1"
+        >
           <Image
             src="/images/logo.png"
-            alt="GrowthEnzyme Logo"
+            alt={`${websiteName} Logo`}
             width={80}
             height={80}
             priority
@@ -50,7 +73,6 @@ export default function Navbar() {
           >
             Let's Talk
           </Link>
-
         </div>
 
         {/* Mobile Menu Button */}

@@ -247,11 +247,17 @@ useEffect(() => {
   const isAdministrator =
     role === "admin" || role === "administrator";
 
-  // Roles & Permissions is administrator-only.
-  if (
-    pathname === "/admin/roles" ||
-    pathname.startsWith("/admin/roles/")
-  ) {
+  // Roles & Permissions and Settings are administrator-only.
+  const adminOnlyPaths = [
+    "/admin/roles",
+    "/admin/settings",
+  ];
+
+  const isAdminOnlyPage = adminOnlyPaths.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`)
+  );
+
+  if (isAdminOnlyPage) {
     if (!isAdministrator) {
       router.replace("/admin/blogs");
     }
