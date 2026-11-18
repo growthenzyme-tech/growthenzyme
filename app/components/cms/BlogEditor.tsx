@@ -15,9 +15,11 @@ import {
   serverTimestamp,
   doc,
   getDoc,
+  getDocs,
+  query,
+  where,
   updateDoc,
 } from "firebase/firestore";
-
 
 import {
   ArrowLeft,
@@ -206,6 +208,7 @@ export default function BlogEditor({ blogId }: BlogEditorProps) {
     }
   }
 
+
   async function handleSubmit(status: "draft" | "published") {
     setError("");
 
@@ -227,7 +230,9 @@ export default function BlogEditor({ blogId }: BlogEditorProps) {
       return;
     }
 
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+    const cleanSlug = slug.trim();
+
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(cleanSlug)) {
       setError("Please use a valid URL slug.");
       return;
     }
@@ -235,60 +240,82 @@ export default function BlogEditor({ blogId }: BlogEditorProps) {
     setSaving(true);
 
     try {
-  let coverImageId = coverImage ? existingCoverImageId : null;
+      // 1. Check duplicate slug
+      const slugQuery = query(
+        collection(db, "blogs"),
+        where("slug", "==", cleanSlug)
+      );
 
-  // If a raw image was chosen without a mediaId, persist it to media collection
-  if (coverImageChanged && coverImage && !coverImageId) {
-    const mediaRef = await addDoc(collection(db, "media"), {
-      url: coverImage,
-      data: coverImage,
-      type: "image",
-      mimeType: "image/jpeg",
-      fileName: `${slug}-cover.jpg`,
-      category: "blog-cover",
-      uploadedBy: user.uid,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    });
-    coverImageId = mediaRef.id;
-  }
+      const slugSnapshot = await getDocs(slugQuery);
 
-const blogData = {
-  title: title.trim(),
-  slug: slug.trim(),
-  excerpt: excerpt.trim(),
-  category,
-  content: editor.getHTML(),
-  coverImageId,
-  seoTitle: seoTitle.trim() || title.trim(),
-  metaDescription: metaDescription.trim() || excerpt.trim(),
-  status,
-  updatedAt: serverTimestamp(),
- publishedAt:
-  status === "published"
-    ? existingPublishedAt || serverTimestamp()
-    : null,
-};
+      const duplicateSlug = slugSnapshot.docs.some(
+        (item) => item.id !== blogId
+      );
 
-if (blogId) {
-  // EDIT EXISTING BLOG
-  await updateDoc(doc(db, "blogs", blogId), blogData);
-} else {
-  // CREATE NEW BLOG
-  await addDoc(collection(db, "blogs"), {
-    ...blogData,
-    authorId: user.uid,
-    authorName:
-      user.displayName || user.email || "GrowthEnzyme Team",
-    createdAt: serverTimestamp(),
-  });
-}
+      if (duplicateSlug) {
+        setError(
+          "This URL slug is already in use. Please choose another slug."
+        );
+        return;
+      }
 
-router.push("/admin/blogs");
-router.refresh();
+      // 2. Handle cover image
+      let coverImageId = coverImage ? existingCoverImageId : null;
+
+      if (coverImageChanged && coverImage && !coverImageId) {
+        const mediaRef = await addDoc(collection(db, "media"), {
+          data: coverImage,
+          url: coverImage,
+          type: "image",
+          mimeType: "image/jpeg",
+          fileName: `${cleanSlug}-cover.jpg`,
+          category: "blog-cover",
+          uploadedBy: user.uid,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+
+        coverImageId = mediaRef.id;
+      }
+
+      // 3. Prepare blog data
+      const blogData = {
+        title: title.trim(),
+        slug: cleanSlug,
+        excerpt: excerpt.trim(),
+        category,
+        content: editor.getHTML(),
+        coverImageId,
+        seoTitle: seoTitle.trim() || title.trim(),
+        metaDescription: metaDescription.trim() || excerpt.trim(),
+        status,
+        updatedAt: serverTimestamp(),
+        publishedAt:
+          status === "published"
+            ? existingPublishedAt || serverTimestamp()
+            : null,
+      };
+
+      // 4. Create or update blog
+      if (blogId) {
+        await updateDoc(doc(db, "blogs", blogId), blogData);
+      } else {
+        await addDoc(collection(db, "blogs"), {
+          ...blogData,
+          authorId: user.uid,
+          authorName:
+            user.displayName || user.email || "GrowthEnzyme Team",
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      // 5. Redirect after successful save
+      router.push("/admin/blogs");
+      router.refresh();
 
     } catch (err) {
       console.error("Blog save error:", err);
+
       setError(
         err instanceof Error
           ? err.message
@@ -298,6 +325,7 @@ router.refresh();
       setSaving(false);
     }
   }
+
 
   const inputClass =
     "w-full rounded-xl border border-[#DCE5D8] bg-[#FCFDFB] px-4 py-3.5 text-sm text-[#29382F] outline-none transition-all placeholder:text-[#91A092] hover:border-[#B6CBA9] focus:border-[#405C48] focus:ring-2 focus:ring-[#B6CBA9]/30";
@@ -409,15 +437,16 @@ if (blogId && error === "Blog not found.") {
           <label className={labelClass}>URL Slug *</label>
           <input
             value={slug}
-            onChange={(e) => {
-              setSlugEdited(true);
-              setSlug(
-                e.target.value
-                  .toLowerCase()
-                  .replace(/[^a-z0-9-]/g, "")
-                  .replace(/--+/g, "-")
-              );
-            }}
+        onChange={(e) => {
+  setSlugEdited(true);
+  setSlug(
+    e.target.value
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+  );
+}}
             placeholder="your-blog-url"
             className={inputClass}
           />

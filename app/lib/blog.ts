@@ -104,7 +104,11 @@ export async function getBlogBySlug(
   slug: string
 ): Promise<Blog | null> {
   try {
-    const q = query(blogsRef, where("slug", "==", slug));
+    const q = query(
+      blogsRef,
+      where("slug", "==", slug),
+      where("status", "==", "published")
+    );
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) return null;
