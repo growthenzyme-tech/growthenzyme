@@ -43,14 +43,26 @@ const commentsRef = collection(db, "comments");
 
 // 1. Get all comments for Admin moderation
 export async function getAllComments(): Promise<BlogComment[]> {
-  const q = query(commentsRef, orderBy("createdAt", "desc"));
+  try {
+    const q = query(commentsRef, orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
 
-  const snapshot = await getDocs(q);
-
-  return snapshot.docs.map((item) => ({
-    id: item.id,
-    ...item.data(),
-  })) as BlogComment[];
+    return snapshot.docs.map((item) => ({
+      id: item.id,
+      ...item.data(),
+    })) as BlogComment[];
+  } catch (err: any) {
+    console.warn("Notice fetching comments (check Firestore rules if unauthenticated):", err?.message || err);
+    try {
+      const snap = await getDocs(commentsRef);
+      return snap.docs.map((item) => ({
+        id: item.id,
+        ...item.data(),
+      })) as BlogComment[];
+    } catch {
+      return [];
+    }
+  }
 }
 
 // 2. Approve or reject a comment
@@ -66,24 +78,46 @@ export async function updateCommentStatus(
 
 // 3. Delete a comment
 export async function deleteComment(id: string) {
-  return await deleteDoc(doc(db, "comments", id));
+  try {
+    return await deleteDoc(doc(db, "comments", id));
+  } catch (err: any) {
+    console.warn("Notice deleting comment:", err?.message || err);
+  }
 }
 
 // 4. Get approved comments for public blog pages
 export async function getApprovedComments(
   blogId: string
 ): Promise<PublicComment[]> {
-  const q = query(
-    commentsRef,
-    where("blogId", "==", blogId),
-    where("status", "==", "approved"),
-    orderBy("createdAt", "desc")
-  );
+  try {
+    const q = query(
+      commentsRef,
+      where("blogId", "==", blogId),
+      where("status", "==", "approved"),
+      orderBy("createdAt", "desc")
+    );
 
-  const snapshot = await getDocs(q);
+    const snapshot = await getDocs(q);
 
-  return snapshot.docs.map((item) => ({
-    id: item.id,
-    ...item.data(),
-  })) as PublicComment[];
+    return snapshot.docs.map((item) => ({
+      id: item.id,
+      ...item.data(),
+    })) as PublicComment[];
+  } catch (err: any) {
+    console.warn("Notice fetching approved comments (falling back to simple query):", err?.message || err);
+    try {
+      const fallbackQ = query(
+        commentsRef,
+        where("blogId", "==", blogId),
+        where("status", "==", "approved")
+      );
+      const snapshot = await getDocs(fallbackQ);
+      return snapshot.docs.map((item) => ({
+        id: item.id,
+        ...item.data(),
+      })) as PublicComment[];
+    } catch {
+      return [];
+    }
+  }
 }

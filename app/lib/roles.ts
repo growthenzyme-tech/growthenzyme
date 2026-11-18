@@ -50,27 +50,45 @@ export const defaultPermissions: RolePermissions = {
 
 // Get all custom roles
 export async function getAllRoles(): Promise<CMSRole[]> {
-  const q = query(rolesRef, orderBy("createdAt", "desc"));
-  const snapshot = await getDocs(q);
+  try {
+    const q = query(rolesRef, orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
 
-  return snapshot.docs.map((item) => ({
-    id: item.id,
-    ...item.data(),
-  })) as CMSRole[];
+    return snapshot.docs.map((item) => ({
+      id: item.id,
+      ...item.data(),
+    })) as CMSRole[];
+  } catch (err: any) {
+    console.warn("Notice fetching roles (check Firestore rules if unauthenticated):", err?.message || err);
+    try {
+      const snap = await getDocs(rolesRef);
+      return snap.docs.map((item) => ({
+        id: item.id,
+        ...item.data(),
+      })) as CMSRole[];
+    } catch {
+      return [];
+    }
+  }
 }
 
 // Get one role
 export async function getRoleById(
   id: string
 ): Promise<CMSRole | null> {
-  const roleSnap = await getDoc(doc(db, "roles", id));
+  try {
+    const roleSnap = await getDoc(doc(db, "roles", id));
 
-  if (!roleSnap.exists()) return null;
+    if (!roleSnap.exists()) return null;
 
-  return {
-    id: roleSnap.id,
-    ...roleSnap.data(),
-  } as CMSRole;
+    return {
+      id: roleSnap.id,
+      ...roleSnap.data(),
+    } as CMSRole;
+  } catch (err: any) {
+    console.warn("Notice fetching role by ID:", err?.message || err);
+    return null;
+  }
 }
 
 // Create a custom role

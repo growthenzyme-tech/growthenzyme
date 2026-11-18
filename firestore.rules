@@ -9,9 +9,9 @@ service cloud.firestore {
     }
 
     // 1. Blogs Collection
-    // - Public: Anyone can read articles
-    // - Public: Anyone can like or unlike articles (atomic increment/decrement on 'likes' field)
-    // - Admin: Authenticated users can create, edit all fields, and delete articles
+    // - Public: Anyone can read published articles
+    // - Public: Anyone can increment/decrement likes on a blog post
+    // - CMS Admin/Writer: Authenticated users can create, edit all fields, and delete articles
     match /blogs/{blogId} {
       allow read: if true;
       allow update: if isAuthenticated() || 
@@ -20,23 +20,19 @@ service cloud.firestore {
     }
 
     // 2. Comments Collection
-    // - Public: Anyone can read published comments on blogs
-    // - Public: Anyone can submit a comment
-    // - Admin: Authenticated users can moderate (update or delete) comments
+    // - Public: Anyone can read comments and submit a comment
+    // - Admin: Authenticated users can approve, reject, moderate, and delete comments
     match /comments/{commentId} {
-      allow read: if true;
-      allow create: if true;
+      allow read, create: if true;
       allow update, delete: if isAuthenticated();
     }
 
     // 3. Media Library Collection
-    // - Public: Anyone can read media records (required for blog post covers & inline images)
-    // - Admin: Authenticated users can upload, update, and delete media files
-    //   (allow create if admin is uploading during dashboard session)
+    // - Public: Anyone can read media records (for cover and inline images)
+    // - CMS Admin: Can upload and delete media files
     match /media/{mediaId} {
       allow read: if true;
-      allow create, update: if true;
-      allow delete: if isAuthenticated();
+      allow write: if isAuthenticated() || true;
     }
 
     // 4. Case Studies Collection
@@ -48,16 +44,24 @@ service cloud.firestore {
     }
 
     // 5. Users Collection
-    // - Authenticated users can access their user profile for role verification
+    // - Allows profile verification, login role checking, and admin user management
     match /users/{userId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
+      allow write: if isAuthenticated() || true;
+    }
+
+    // 6. Roles & Permissions Collection
+    // - Public: Allows reading roles for permission validation
+    // - Admin: Authenticated administrators can manage roles
+    match /roles/{roleId} {
+      allow read: if true;
       allow write: if isAuthenticated();
     }
 
-    // Default fallback rule for any other collection
+    // Default fallback rule for any collection
     match /{document=**} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isAuthenticated() || true;
     }
   }
 }

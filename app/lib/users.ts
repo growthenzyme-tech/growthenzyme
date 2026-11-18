@@ -26,13 +26,26 @@ const usersRef = collection(db, "users");
 
 // Get all CMS users
 export async function getAllUsers(): Promise<CMSUser[]> {
-  const q = query(usersRef, orderBy("createdAt", "desc"));
-  const snapshot = await getDocs(q);
+  try {
+    const q = query(usersRef, orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
 
-  return snapshot.docs.map((item) => ({
-    id: item.id,
-    ...item.data(),
-  })) as CMSUser[];
+    return snapshot.docs.map((item) => ({
+      id: item.id,
+      ...item.data(),
+    })) as CMSUser[];
+  } catch (err: any) {
+    console.warn("Notice fetching users (check Firestore rules if unauthenticated):", err?.message || err);
+    try {
+      const snap = await getDocs(usersRef);
+      return snap.docs.map((item) => ({
+        id: item.id,
+        ...item.data(),
+      })) as CMSUser[];
+    } catch {
+      return [];
+    }
+  }
 }
 
 // Create a CMS user using a separate Firebase Auth instance
