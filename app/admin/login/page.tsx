@@ -141,21 +141,21 @@ export default function AdminLogin() {
   }
 
   return (
-    <main className="min-h-screen bg-white flex flex-col justify-between selection:bg-[#D78359]/20 selection:text-[#29382F]">
+    <main className="min-h-screen bg-[#EFF4EB] flex flex-col justify-between selection:bg-[#3F5738]/20 selection:text-[#223624]">
       {/* ========================================================= */}
       {/* TOP BANNER HERO (Cropped login.jpg, coffee cup removed)    */}
       {/* ========================================================= */}
-      <section className="relative w-full h-52 sm:h-60 md:h-64 overflow-hidden">
+      <section className="relative w-full h-48 sm:h-56 md:h-60 overflow-hidden">
         <img
           src="/images/login.jpg"
           alt="GrowthEnzyme Workspace Banner"
           className="w-full h-full object-cover object-top"
         />
 
-        {/* Seamless linear gradient fade into clean white background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/30 to-white" />
+        {/* Seamless linear gradient fade into pale sage page background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#EFF4EB]/35 to-[#EFF4EB]" />
 
-        {/* Top Right Brand Logo (matching reference Aurora Tech placement) */}
+        {/* Top Right Brand Logo */}
         <div className="absolute top-5 right-5 sm:top-7 sm:right-10 z-20">
           <Link
             href="/"
@@ -165,9 +165,9 @@ export default function AdminLogin() {
               <img
                 src="/images/logo-tab.png"
                 alt="GrowthEnzyme Logo"
-                className="h-6 w-6 sm:h-7 sm:w-7 object-contain"
+                className="h-6 w-6 sm:h-7 sm:w-7 object-contain drop-shadow-xs"
               />
-              <span className="font-heading text-xs sm:text-sm font-extrabold tracking-[0.2em] text-[#1B2921] uppercase">
+              <span className="font-heading text-xs sm:text-sm font-extrabold tracking-[0.2em] text-[#223624] uppercase">
                 GrowthEnzyme
               </span>
             </div>
@@ -176,30 +176,30 @@ export default function AdminLogin() {
       </section>
 
       {/* ========================================================= */}
-      {/* MAIN CONTENT & LOGIN CARD CONTAINER                       */}
+      {/* MAIN CONTENT & SAGE GREEN LOGIN CARD                      */}
       {/* ========================================================= */}
       <div className="relative -mt-6 sm:-mt-8 mx-auto w-full max-w-[430px] px-5 z-10 pb-12 flex-1 flex flex-col justify-center">
-        {/* CENTERED HEADLINE & SUBTITLE (Matching Reference Layout) */}
-        <div className="text-center mb-6">
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-[#1B2921]">
-            {mode === "signin" ? "Welcome Back" : "Create Admin Account"}
-          </h1>
-          <p className="mt-2 text-xs sm:text-sm text-[#506B59] max-w-sm mx-auto leading-relaxed">
-            {mode === "signin"
-              ? "Sign in to access your dashboard and continue where you left off."
-              : "Set up your admin credentials to manage GrowthEnzyme articles & assets."}
-          </p>
-        </div>
+        {/* SAGE GREEN CARD (Colors Extracted From User Reference Mockup) */}
+        <div className="rounded-[28px] border border-[#7F9876]/40 bg-[#9EB891] p-6 sm:p-8 shadow-[0_20px_50px_rgba(41,56,47,0.12)]">
+          {/* CENTERED HEADLINE & SUBTITLE */}
+          <div className="text-center mb-6">
+            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-[#223624]">
+              {mode === "signin" ? "Hello!" : "Create Admin"}
+            </h1>
+            <p className="mt-1 text-xs sm:text-sm text-[#385135] max-w-sm mx-auto leading-relaxed">
+              {mode === "signin"
+                ? "Welcome back to GrowthEnzyme"
+                : "Set up your admin credentials to manage articles & assets"}
+            </p>
+          </div>
 
-        {/* FLOATING CARD CONTAINER */}
-        <div className="rounded-[28px] border border-[#29382F]/10 bg-[#F4F6F1] p-6 sm:p-8 shadow-[0_20px_50px_rgba(41,56,47,0.06)]">
           {/* FEEDBACK BANNERS */}
           {error && (
-            <div className="mb-5 rounded-2xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-700 flex items-start gap-2.5">
-              <AlertCircle size={15} className="shrink-0 text-red-600 mt-0.5" />
+            <div className="mb-5 rounded-2xl border border-red-300 bg-red-100/90 p-3.5 text-xs text-red-900 flex items-start gap-2.5 shadow-2xs">
+              <AlertCircle size={15} className="shrink-0 text-red-700 mt-0.5" />
               <div className="flex-1">
-                <p className="font-semibold">Authentication Notice</p>
-                <p className="mt-0.5 text-red-600 leading-relaxed">{error}</p>
+                <p className="font-semibold text-red-950">Authentication Notice</p>
+                <p className="mt-0.5 text-red-800 leading-relaxed">{error}</p>
                 {mode === "signin" && error.includes("invalid-credential") && (
                   <button
                     type="button"
@@ -207,7 +207,7 @@ export default function AdminLogin() {
                       setMode("register");
                       setError("");
                     }}
-                    className="mt-2 block text-xs font-bold text-[#D78359] underline hover:text-[#C26233] cursor-pointer"
+                    className="mt-2 block text-xs font-bold text-[#223624] underline hover:text-black cursor-pointer"
                   >
                     Need to create this admin account? Click here →
                   </button>
@@ -217,8 +217,8 @@ export default function AdminLogin() {
           )}
 
           {resetSuccess && (
-            <div className="mb-5 rounded-2xl border border-[#B6CBA9] bg-[#E8EEE5] p-3.5 text-xs font-semibold text-[#29382F] flex items-center gap-2">
-              <Check size={15} className="text-[#29382F]" />
+            <div className="mb-5 rounded-2xl border border-[#7F9876] bg-[#DEE7D6] p-3.5 text-xs font-semibold text-[#223624] flex items-center gap-2 shadow-2xs">
+              <Check size={15} className="text-[#223624]" />
               <span>{resetSuccess}</span>
             </div>
           )}
@@ -228,17 +228,17 @@ export default function AdminLogin() {
             {/* FULL NAME (Only in Register Mode) */}
             {mode === "register" && (
               <div>
-                <label className="mb-1.5 block text-xs font-semibold text-[#29382F]">
+                <label className="mb-1.5 block text-xs font-semibold text-[#223624]">
                   Full Name
                 </label>
-                <div className="relative flex items-center rounded-2xl bg-white border border-[#29382F]/15 px-3.5 py-2.5 transition hover:border-[#29382F]/30 focus-within:border-[#29382F] focus-within:ring-2 focus-within:ring-[#29382F]/10 shadow-2xs">
-                  <User size={16} className="text-[#506B59]/70 shrink-0 mr-2.5" />
+                <div className="relative flex items-center rounded-2xl bg-[#DEE7D6] border border-[#7F9876] px-3.5 py-2.5 transition focus-within:border-[#223624] focus-within:ring-2 focus-within:ring-[#223624]/20 shadow-2xs">
+                  <User size={16} className="text-[#4A6546] shrink-0 mr-2.5" />
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Administrator"
-                    className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#29382F] placeholder-gray-400"
+                    className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#1C2C1D] placeholder-[#6C8466]"
                   />
                 </div>
               </div>
@@ -246,19 +246,19 @@ export default function AdminLogin() {
 
             {/* EMAIL ADDRESS */}
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-[#29382F]">
+              <label className="mb-1.5 block text-xs font-semibold text-[#223624]">
                 Email Address
               </label>
-              <div className="relative flex items-center rounded-2xl bg-white border border-[#29382F]/15 px-3.5 py-2.5 transition hover:border-[#29382F]/30 focus-within:border-[#29382F] focus-within:ring-2 focus-within:ring-[#29382F]/10 shadow-2xs">
-                <Mail size={16} className="text-[#506B59]/70 shrink-0 mr-2.5" />
+              <div className="relative flex items-center rounded-2xl bg-[#DEE7D6] border border-[#7F9876] px-3.5 py-2.5 transition focus-within:border-[#223624] focus-within:ring-2 focus-within:ring-[#223624]/20 shadow-2xs">
+                <Mail size={16} className="text-[#4A6546] shrink-0 mr-2.5" />
                 <input
                   type="email"
                   required
                   autoFocus
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@company.com"
-                  className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#29382F] placeholder-gray-400"
+                  placeholder="example@growthenzyme.org"
+                  className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#1C2C1D] placeholder-[#6C8466]"
                 />
               </div>
             </div>
@@ -266,10 +266,10 @@ export default function AdminLogin() {
             {/* PASSWORD */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-semibold text-[#29382F]">
+                <label className="block text-xs font-semibold text-[#223624]">
                   Password{" "}
                   {mode === "register" && (
-                    <span className="text-[10px] font-normal text-gray-500">
+                    <span className="text-[10px] font-normal text-[#385135]">
                       (min 6 chars)
                     </span>
                   )}
@@ -279,15 +279,15 @@ export default function AdminLogin() {
                     type="button"
                     onClick={handleForgotPassword}
                     disabled={sendingReset}
-                    className="text-[11px] font-semibold text-[#D78359] hover:underline cursor-pointer"
+                    className="text-[11px] font-semibold text-[#223624] hover:underline cursor-pointer italic"
                   >
-                    {sendingReset ? "Sending..." : "Forgot?"}
+                    {sendingReset ? "Sending..." : "Forgot password?"}
                   </button>
                 )}
               </div>
 
-              <div className="relative flex items-center rounded-2xl bg-white border border-[#29382F]/15 px-3.5 py-2.5 transition hover:border-[#29382F]/30 focus-within:border-[#29382F] focus-within:ring-2 focus-within:ring-[#29382F]/10 shadow-2xs">
-                <Lock size={16} className="text-[#506B59]/70 shrink-0 mr-2.5" />
+              <div className="relative flex items-center rounded-2xl bg-[#DEE7D6] border border-[#7F9876] px-3.5 py-2.5 transition focus-within:border-[#223624] focus-within:ring-2 focus-within:ring-[#223624]/20 shadow-2xs">
+                <Lock size={16} className="text-[#4A6546] shrink-0 mr-2.5" />
                 <input
                   type={showPassword ? "text" : "password"}
                   required
@@ -295,12 +295,12 @@ export default function AdminLogin() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#29382F] placeholder-gray-400"
+                  className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#1C2C1D] placeholder-[#6C8466]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-gray-400 hover:text-[#29382F] transition cursor-pointer ml-2"
+                  className="text-[#4A6546] hover:text-[#223624] transition cursor-pointer ml-2"
                   aria-label="Toggle password visibility"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -308,26 +308,26 @@ export default function AdminLogin() {
               </div>
             </div>
 
-            {/* SUBMIT BUTTON (Gradient Pill Button matching reference) */}
+            {/* SUBMIT BUTTON (Dark Forest Green Pill matching user reference) */}
             <div className="pt-2">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-full py-3 sm:py-3.5 px-6 font-semibold text-xs sm:text-sm text-white bg-gradient-to-r from-[#173D32] via-[#29382F] to-[#D78359] hover:from-[#133027] hover:to-[#C26233] transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 group"
+                className="w-full rounded-full py-3 sm:py-3.5 px-6 font-semibold text-xs sm:text-sm text-white bg-[#3F5738] hover:bg-[#32482C] active:scale-[0.99] transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 group"
               >
                 {loading ? (
                   <>
                     <Loader2 size={16} className="animate-spin" />
                     <span>
                       {mode === "signin"
-                        ? "Signing In..."
+                        ? "Logging in..."
                         : "Creating Account..."}
                     </span>
                   </>
                 ) : (
                   <>
                     <span>
-                      {mode === "signin" ? "Sign In" : "Create Admin & Sign In"}
+                      {mode === "signin" ? "Log in" : "Create Admin & Log in"}
                     </span>
                     <ArrowRight
                       size={15}
@@ -339,23 +339,23 @@ export default function AdminLogin() {
             </div>
           </form>
 
-          {/* OR CONTINUE WITH DIVIDER (Matching Reference Mockup) */}
+          {/* CONTINUE WITH DIVIDER (Sage Green Theme) */}
           <div className="relative my-6 text-center">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#29382F]/10" />
+              <div className="w-full border-t border-[#7F9876]/40" />
             </div>
-            <span className="relative bg-[#F4F6F1] px-3 text-[10px] sm:text-[11px] font-semibold tracking-wider text-[#506B59]/75 uppercase">
-              OR CONTINUE WITH
+            <span className="relative bg-[#9EB891] px-3 text-[10px] sm:text-[11px] font-semibold tracking-wider text-[#385135] uppercase">
+              Continue with
             </span>
           </div>
 
-          {/* SOCIAL SSO BUTTONS (Google & Apple) */}
+          {/* SOCIAL SSO BUTTONS (Google & Apple with Pale Mint Fill) */}
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               onClick={handleGoogleSignIn}
               disabled={socialLoading}
-              className="flex items-center justify-center gap-2 rounded-2xl border border-[#29382F]/12 bg-white py-2.5 px-3 text-xs font-semibold text-[#29382F] shadow-2xs hover:bg-[#FAFBF9] hover:border-[#29382F]/25 transition cursor-pointer disabled:opacity-60"
+              className="flex items-center justify-center gap-2 rounded-2xl border border-[#7F9876] bg-[#DEE7D6] hover:bg-[#E5EEE0] py-2.5 px-3 text-xs font-semibold text-[#223624] shadow-2xs transition cursor-pointer disabled:opacity-60"
             >
               {socialLoading ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -368,9 +368,9 @@ export default function AdminLogin() {
             <button
               type="button"
               onClick={handleAppleSignIn}
-              className="flex items-center justify-center gap-2 rounded-2xl border border-[#29382F]/12 bg-white py-2.5 px-3 text-xs font-semibold text-[#29382F] shadow-2xs hover:bg-[#FAFBF9] hover:border-[#29382F]/25 transition cursor-pointer"
+              className="flex items-center justify-center gap-2 rounded-2xl border border-[#7F9876] bg-[#DEE7D6] hover:bg-[#E5EEE0] py-2.5 px-3 text-xs font-semibold text-[#223624] shadow-2xs transition cursor-pointer"
             >
-              <AppleIcon className="h-4 w-4 shrink-0 text-black" />
+              <AppleIcon className="h-4 w-4 shrink-0 text-[#223624]" />
               <span>Apple</span>
             </button>
           </div>
@@ -378,8 +378,8 @@ export default function AdminLogin() {
           {/* MODE TOGGLE LINK (Sign In <-> Create Admin) */}
           <div className="mt-6 text-center pt-1">
             {mode === "signin" ? (
-              <p className="text-xs text-[#506B59]">
-                First-time setup?{" "}
+              <p className="text-xs text-[#385135]">
+                Don&apos;t have an account?{" "}
                 <button
                   type="button"
                   onClick={() => {
@@ -387,13 +387,13 @@ export default function AdminLogin() {
                     setError("");
                     setResetSuccess("");
                   }}
-                  className="font-bold text-[#D78359] hover:underline cursor-pointer"
+                  className="font-bold text-[#223624] underline hover:text-black cursor-pointer ml-1"
                 >
-                  Create Admin Account
+                  Sign Up
                 </button>
               </p>
             ) : (
-              <p className="text-xs text-[#506B59]">
+              <p className="text-xs text-[#385135]">
                 Already have an account?{" "}
                 <button
                   type="button"
@@ -402,40 +402,40 @@ export default function AdminLogin() {
                     setError("");
                     setResetSuccess("");
                   }}
-                  className="font-bold text-[#29382F] hover:underline cursor-pointer"
+                  className="font-bold text-[#223624] underline hover:text-black cursor-pointer ml-1"
                 >
-                  Sign In
+                  Log in
                 </button>
               </p>
             )}
           </div>
 
           {/* EXPANDABLE TROUBLESHOOTING HINT */}
-          <div className="mt-5 pt-4 border-t border-[#29382F]/10">
+          <div className="mt-5 pt-4 border-t border-[#7F9876]/40">
             <button
               type="button"
               onClick={() => setShowHelp(!showHelp)}
-              className="w-full inline-flex items-center justify-between text-[11px] text-[#506B59] hover:text-[#29382F] transition cursor-pointer"
+              className="w-full inline-flex items-center justify-between text-[11px] text-[#385135] hover:text-[#223624] transition cursor-pointer"
             >
               <span className="inline-flex items-center gap-1.5 font-medium">
-                <HelpCircle size={12} className="text-[#D78359]" />
+                <HelpCircle size={12} className="text-[#223624]" />
                 Troubleshooting sign-in issues
               </span>
               <span className="font-bold">{showHelp ? "Hide" : "Show"}</span>
             </button>
 
             {showHelp && (
-              <div className="mt-3 p-3.5 rounded-2xl border border-amber-200 bg-amber-50/70 text-xs text-[#38493F] space-y-2 leading-relaxed">
-                <p className="font-semibold text-amber-950">Quick Solutions:</p>
+              <div className="mt-3 p-3.5 rounded-2xl border border-[#7F9876] bg-[#8EA982]/35 text-xs text-[#223624] space-y-2 leading-relaxed">
+                <p className="font-semibold text-[#1C2C1D]">Quick Solutions:</p>
                 <ul className="list-disc pl-4 space-y-1.5 text-[11px]">
                   <li>
                     <strong>First-time setup?</strong> Click{" "}
-                    <strong>&ldquo;Create Admin Account&rdquo;</strong> above to
-                    register your administrator credentials.
+                    <strong>&ldquo;Sign Up&rdquo;</strong> above to
+                    register your initial administrator credentials.
                   </li>
                   <li>
                     <strong>Already registered?</strong> Double check for typos
-                    or click <strong>Forgot?</strong> next to password.
+                    or click <strong>Forgot password?</strong> next to password.
                   </li>
                   <li>
                     <strong>Firebase Console:</strong> Ensure{" "}
@@ -444,7 +444,7 @@ export default function AdminLogin() {
                       href="https://console.firebase.google.com/project/growthenzyme-cms/authentication/providers"
                       target="_blank"
                       rel="noreferrer"
-                      className="underline font-bold text-[#29382F]"
+                      className="underline font-bold text-[#1C2C1D]"
                     >
                       Firebase Console &gt; Authentication &gt; Sign-in method
                     </a>
@@ -458,7 +458,7 @@ export default function AdminLogin() {
       </div>
 
       {/* FOOTER NOTE */}
-      <footer className="text-center py-4 text-xs text-[#506B59]/70">
+      <footer className="text-center py-4 text-xs text-[#4A6546]">
         &copy; {new Date().getFullYear()} GrowthEnzyme. All rights reserved.
       </footer>
     </main>
