@@ -54,6 +54,33 @@ function getPrivateKeyBytes(
   return bytes;
 }
 
+export function hasFirebaseServiceAccount(): boolean {
+  try {
+    let encodedCredentials: string | undefined;
+    let rawCredentials: string | undefined;
+
+    try {
+      const env = getCloudflareContext().env as CloudflareSecrets;
+      encodedCredentials = env?.FIREBASE_SERVICE_ACCOUNT_JSON_BASE64;
+      rawCredentials = env?.FIREBASE_SERVICE_ACCOUNT_JSON;
+    } catch {
+      // Not in Cloudflare context
+    }
+
+    encodedCredentials =
+      encodedCredentials || process.env.FIREBASE_SERVICE_ACCOUNT_JSON_BASE64;
+    rawCredentials =
+      rawCredentials || process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+
+    return Boolean(
+      (encodedCredentials && encodedCredentials.trim().length > 0) ||
+      (rawCredentials && rawCredentials.trim().length > 0)
+    );
+  } catch {
+    return false;
+  }
+}
+
 function getServiceAccount(): FirebaseServiceAccount {
   const env = getCloudflareContext().env as CloudflareSecrets;
 

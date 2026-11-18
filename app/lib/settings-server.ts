@@ -1,13 +1,20 @@
 
 import "server-only";
 
-import { getFirebaseAccessToken } from "@/app/lib/firebase-admin";
+import {
+  getFirebaseAccessToken,
+  hasFirebaseServiceAccount,
+} from "@/app/lib/firebase-admin";
 
 type FirestoreStringValue = {
   stringValue?: string;
 };
 
 export async function getDefaultSeoDescription(): Promise<string> {
+  if (!hasFirebaseServiceAccount()) {
+    return "";
+  }
+
   const projectId =
     process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "growthenzyme-cms";
 
@@ -26,10 +33,6 @@ export async function getDefaultSeoDescription(): Promise<string> {
     });
 
     if (!response.ok) {
-      console.error(
-        "Unable to fetch general settings for SEO:",
-        response.status
-      );
       return "";
     }
 
@@ -42,13 +45,16 @@ export async function getDefaultSeoDescription(): Promise<string> {
     )?.stringValue;
 
     return description?.trim() || "";
-  } catch (error) {
-    console.error("SEO settings error:", error);
+  } catch {
     return "";
   }
 }
 
 export async function getDefaultSocialImage(): Promise<string> {
+  if (!hasFirebaseServiceAccount()) {
+    return "";
+  }
+
   const projectId =
     process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "growthenzyme-cms";
 
@@ -67,10 +73,6 @@ export async function getDefaultSocialImage(): Promise<string> {
     });
 
     if (!response.ok) {
-      console.error(
-        "Unable to fetch social share image:",
-        response.status
-      );
       return "";
     }
 
@@ -79,8 +81,7 @@ export async function getDefaultSocialImage(): Promise<string> {
     return (
       document.fields?.defaultSocialImage?.stringValue?.trim() || ""
     );
-  } catch (error) {
-    console.error("Social image settings error:", error);
+  } catch {
     return "";
   }
 }

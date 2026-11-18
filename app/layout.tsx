@@ -21,10 +21,19 @@ const instrumentSans = localFont({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const [defaultDescription, socialImage] = await Promise.all([
-    getDefaultSeoDescription(),
-    getDefaultSocialImage(),
-  ]);
+  let defaultDescription = "";
+  let socialImage = "";
+
+  try {
+    const results = await Promise.all([
+      getDefaultSeoDescription(),
+      getDefaultSocialImage(),
+    ]);
+    defaultDescription = results[0] || "";
+    socialImage = results[1] || "";
+  } catch {
+    // Graceful fallback to default SEO metadata
+  }
 
   const title = "GrowthEnzyme | Engineered for Growth";
 
