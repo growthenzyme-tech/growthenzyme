@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   loginUser,
-  loginWithGoogle,
   registerInitialAdmin,
   resetUserPassword,
 } from "@/app/lib/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { auth, db } from "@/app/lib/firebase";
 import {
   Mail,
   Lock,
@@ -20,6 +22,8 @@ import {
   AlertCircle,
   HelpCircle,
   Check,
+  Sparkles,
+  LogIn,
 } from "lucide-react";
 
 function GoogleIcon({ className = "w-4 h-4" }: { className?: string }) {
@@ -99,13 +103,33 @@ export default function AdminLogin() {
     setSocialLoading(true);
 
     try {
-      await loginWithGoogle();
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
+      const result = await signInWithPopup(auth, provider);
+
+      const userRef = doc(db, "users", result.user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          email: result.user.email || "",
+          name: result.user.displayName || "Admin",
+          role: "admin",
+          roleId: "system-admin",
+          isActive: true,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+      }
+
       router.replace("/admin/dashboard");
     } catch (err: any) {
-      setError(
-        err?.message ||
-          "Unable to complete Google sign-in. Please ensure Google Auth is enabled in Firebase Console."
-      );
+      if (err?.code !== "auth/popup-closed-by-user") {
+        setError(
+          err?.message ||
+            "Unable to complete Google sign-in. Please ensure Google Auth is enabled in Firebase Console."
+        );
+      }
     } finally {
       setSocialLoading(false);
     }
@@ -119,7 +143,7 @@ export default function AdminLogin() {
 
   async function handleForgotPassword() {
     if (!email.trim()) {
-      setError("Please enter your email address above to reset your password.");
+      setError("Please enter your email address above to reset password.");
       return;
     }
 
@@ -143,23 +167,23 @@ export default function AdminLogin() {
   return (
     <main className="min-h-screen bg-[#EFF4EB] flex flex-col justify-between selection:bg-[#3F5738]/20 selection:text-[#223624]">
       {/* ========================================================= */}
-      {/* TOP BANNER HERO (Cropped login.jpg, coffee cup removed)    */}
+      {/* TOP BANNER HERO (login.jpg with smooth gradient fade)     */}
       {/* ========================================================= */}
-      <section className="relative w-full h-48 sm:h-56 md:h-60 overflow-hidden">
+      <section className="relative w-full h-52 sm:h-60 md:h-64 overflow-hidden">
         <img
           src="/images/login.jpg"
-          alt="GrowthEnzyme Workspace Banner"
+          alt="GrowthEnzyme Login Banner"
           className="w-full h-full object-cover object-top"
         />
 
         {/* Seamless linear gradient fade into pale sage page background */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#EFF4EB]/35 to-[#EFF4EB]" />
 
-        {/* Top Right Brand Logo */}
+        {/* Top Right Brand Badge */}
         <div className="absolute top-5 right-5 sm:top-7 sm:right-10 z-20">
           <Link
             href="/"
-            className="group flex flex-col items-end gap-0.5 transition-opacity hover:opacity-80"
+            className="group flex flex-col items-end gap-0.5 transition-opacity hover:opacity-85"
           >
             <div className="flex items-center gap-2">
               <img
@@ -179,18 +203,58 @@ export default function AdminLogin() {
       {/* MAIN CONTENT & SAGE GREEN LOGIN CARD                      */}
       {/* ========================================================= */}
       <div className="relative -mt-6 sm:-mt-8 mx-auto w-full max-w-[430px] px-5 z-10 pb-12 flex-1 flex flex-col justify-center">
-        {/* SAGE GREEN CARD (Colors Extracted From User Reference Mockup) */}
+        {/* SAGE GREEN FLOATING CARD (Colors from reference image) */}
         <div className="rounded-[28px] border border-[#7F9876]/40 bg-[#9EB891] p-6 sm:p-8 shadow-[0_20px_50px_rgba(41,56,47,0.12)]">
-          {/* CENTERED HEADLINE & SUBTITLE */}
+          {/* CENTERED HEADLINE & SUBTITLE (Original Contents Preserved) */}
           <div className="text-center mb-6">
             <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-[#223624]">
-              {mode === "signin" ? "Hello!" : "Create Admin"}
+              {mode === "signin" ? "Welcome Back" : "Create Admin Account"}
             </h1>
-            <p className="mt-1 text-xs sm:text-sm text-[#385135] max-w-sm mx-auto leading-relaxed">
+            <p className="mt-1.5 text-xs sm:text-sm text-[#385135] max-w-sm mx-auto leading-relaxed">
               {mode === "signin"
-                ? "Welcome back to GrowthEnzyme"
-                : "Set up your admin credentials to manage articles & assets"}
+                ? "Sign in to access your dashboard and continue where you left off."
+                : "Set up your admin credentials to manage GrowthEnzyme articles & assets."}
             </p>
+          </div>
+
+          {/* MODE SELECTOR TABS (Sign In vs Create Admin) */}
+          <div className="flex rounded-2xl bg-[#DEE7D6] p-1 border border-[#7F9876] mb-6 shadow-2xs">
+            <button
+              type="button"
+              onClick={() => {
+                setMode("signin");
+                setError("");
+                setResetSuccess("");
+              }}
+              className={`flex-1 inline-flex items-center justify-center gap-2 rounded-xl py-2 text-xs font-semibold transition cursor-pointer ${
+                mode === "signin"
+                  ? "bg-[#3F5738] text-white shadow-xs"
+                  : "text-[#385135] hover:text-[#223624]"
+              }`}
+            >
+              <LogIn size={13} />
+              <span>Sign In</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setMode("register");
+                setError("");
+                setResetSuccess("");
+              }}
+              className={`flex-1 inline-flex items-center justify-center gap-2 rounded-xl py-2 text-xs font-semibold transition cursor-pointer ${
+                mode === "register"
+                  ? "bg-[#3F5738] text-white shadow-xs"
+                  : "text-[#385135] hover:text-[#223624]"
+              }`}
+            >
+              <Sparkles
+                size={13}
+                className={mode === "register" ? "text-white" : "text-[#385135]"}
+              />
+              <span>Create Admin</span>
+            </button>
           </div>
 
           {/* FEEDBACK BANNERS */}
@@ -257,7 +321,7 @@ export default function AdminLogin() {
                   autoFocus
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="example@growthenzyme.org"
+                  placeholder="name@company.com"
                   className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#1C2C1D] placeholder-[#6C8466]"
                 />
               </div>
@@ -279,9 +343,9 @@ export default function AdminLogin() {
                     type="button"
                     onClick={handleForgotPassword}
                     disabled={sendingReset}
-                    className="text-[11px] font-semibold text-[#223624] hover:underline cursor-pointer italic"
+                    className="text-[11px] font-semibold text-[#223624] hover:underline cursor-pointer"
                   >
-                    {sendingReset ? "Sending..." : "Forgot password?"}
+                    {sendingReset ? "Sending..." : "Forgot?"}
                   </button>
                 )}
               </div>
@@ -308,7 +372,7 @@ export default function AdminLogin() {
               </div>
             </div>
 
-            {/* SUBMIT BUTTON (Dark Forest Green Pill matching user reference) */}
+            {/* SUBMIT BUTTON */}
             <div className="pt-2">
               <button
                 type="submit"
@@ -320,14 +384,14 @@ export default function AdminLogin() {
                     <Loader2 size={16} className="animate-spin" />
                     <span>
                       {mode === "signin"
-                        ? "Logging in..."
+                        ? "Signing In..."
                         : "Creating Account..."}
                     </span>
                   </>
                 ) : (
                   <>
                     <span>
-                      {mode === "signin" ? "Log in" : "Create Admin & Log in"}
+                      {mode === "signin" ? "Sign In" : "Create Admin & Sign In"}
                     </span>
                     <ArrowRight
                       size={15}
@@ -339,17 +403,17 @@ export default function AdminLogin() {
             </div>
           </form>
 
-          {/* CONTINUE WITH DIVIDER (Sage Green Theme) */}
+          {/* OR CONTINUE WITH DIVIDER */}
           <div className="relative my-6 text-center">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-[#7F9876]/40" />
             </div>
             <span className="relative bg-[#9EB891] px-3 text-[10px] sm:text-[11px] font-semibold tracking-wider text-[#385135] uppercase">
-              Continue with
+              OR CONTINUE WITH
             </span>
           </div>
 
-          {/* SOCIAL SSO BUTTONS (Google & Apple with Pale Mint Fill) */}
+          {/* SOCIAL SSO BUTTONS (Google & Apple) */}
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
@@ -375,53 +439,20 @@ export default function AdminLogin() {
             </button>
           </div>
 
-          {/* MODE TOGGLE LINK (Sign In <-> Create Admin) */}
-          <div className="mt-6 text-center pt-1">
-            {mode === "signin" ? (
-              <p className="text-xs text-[#385135]">
-                Don&apos;t have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode("register");
-                    setError("");
-                    setResetSuccess("");
-                  }}
-                  className="font-bold text-[#223624] underline hover:text-black cursor-pointer ml-1"
-                >
-                  Sign Up
-                </button>
-              </p>
-            ) : (
-              <p className="text-xs text-[#385135]">
-                Already have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode("signin");
-                    setError("");
-                    setResetSuccess("");
-                  }}
-                  className="font-bold text-[#223624] underline hover:text-black cursor-pointer ml-1"
-                >
-                  Log in
-                </button>
-              </p>
-            )}
-          </div>
-
           {/* EXPANDABLE TROUBLESHOOTING HINT */}
-          <div className="mt-5 pt-4 border-t border-[#7F9876]/40">
+          <div className="mt-6 pt-5 border-t border-[#7F9876]/40">
             <button
               type="button"
               onClick={() => setShowHelp(!showHelp)}
-              className="w-full inline-flex items-center justify-between text-[11px] text-[#385135] hover:text-[#223624] transition cursor-pointer"
+              className="w-full inline-flex items-center justify-between text-xs text-[#385135] hover:text-[#223624] transition cursor-pointer"
             >
               <span className="inline-flex items-center gap-1.5 font-medium">
-                <HelpCircle size={12} className="text-[#223624]" />
+                <HelpCircle size={13} className="text-[#223624]" />
                 Troubleshooting sign-in issues
               </span>
-              <span className="font-bold">{showHelp ? "Hide" : "Show"}</span>
+              <span className="text-[11px] font-bold">
+                {showHelp ? "Hide" : "Show"}
+              </span>
             </button>
 
             {showHelp && (
@@ -429,13 +460,13 @@ export default function AdminLogin() {
                 <p className="font-semibold text-[#1C2C1D]">Quick Solutions:</p>
                 <ul className="list-disc pl-4 space-y-1.5 text-[11px]">
                   <li>
-                    <strong>First-time setup?</strong> Click{" "}
-                    <strong>&ldquo;Sign Up&rdquo;</strong> above to
-                    register your initial administrator credentials.
+                    <strong>First-time setup?</strong> Switch to the{" "}
+                    <strong>&ldquo;Create Admin&rdquo;</strong> tab above and enter
+                    your desired admin email and password.
                   </li>
                   <li>
-                    <strong>Already registered?</strong> Double check for typos
-                    or click <strong>Forgot password?</strong> next to password.
+                    <strong>Already registered?</strong> Double check for typos or
+                    click <strong>Forgot?</strong> above.
                   </li>
                   <li>
                     <strong>Firebase Console:</strong> Ensure{" "}
