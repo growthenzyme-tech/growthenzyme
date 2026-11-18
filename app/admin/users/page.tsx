@@ -15,6 +15,7 @@ import {
   Copy,
   Check,
 KeyRound,
+Power,
 } from "lucide-react";
 
 import {
@@ -22,6 +23,7 @@ import {
   createCMSUser,
   changeCMSUserPassword,
   type CMSUser,
+  updateUserStatus,
 } from "@/app/lib/users";
 
 import {
@@ -44,6 +46,9 @@ const [newPassword, setNewPassword] = useState("");
 const [savingPassword, setSavingPassword] = useState(false);
 const [passwordError, setPasswordError] = useState("");
 const [showNewPassword, setShowNewPassword] = useState(false);
+const [statusUser, setStatusUser] = useState<CMSUser | null>(null);
+const [updatingStatus, setUpdatingStatus] = useState(false);
+const [statusError, setStatusError] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -108,6 +113,38 @@ async function handleChangePassword(
     );
   } finally {
     setSavingPassword(false);
+  }
+}
+
+async function handleToggleUserStatus() {
+  if (!statusUser) return;
+
+  const newStatus = !statusUser.isActive;
+
+  try {
+    setUpdatingStatus(true);
+    setStatusError("");
+
+    await updateUserStatus(statusUser.id, newStatus);
+
+    setUsers((previousUsers) =>
+      previousUsers.map((user) =>
+        user.id === statusUser.id
+          ? { ...user, isActive: newStatus }
+          : user
+      )
+    );
+
+    setStatusUser(null);
+
+  } catch (err) {
+    setStatusError(
+      err instanceof Error
+        ? err.message
+        : "Unable to update user status."
+    );
+  } finally {
+    setUpdatingStatus(false);
   }
 }
 
@@ -395,22 +432,44 @@ function closePasswordModal() {
                       </span>
                     </td>
 
-                    <td className="px-5 py-4">
-{!isProtectedAdmin(user) && (
-  <button
-    type="button"
-    onClick={() => {
-      setSelectedUser(user);
-      setNewPassword("");
-      setPasswordError("");
-      setShowNewPassword(false);
-    }}
-    className="inline-flex items-center gap-2 rounded-lg border border-[#405C48]/20 px-3 py-2 text-xs font-medium text-[#405C48] hover:bg-[#EDF2EC]"
-  >
-    <KeyRound size={14} />
-    Change Password
-  </button>
-)}
+<td className="px-5 py-4">
+  {!isProtectedAdmin(user) && (
+    <div className="flex flex-wrap items-center gap-2">
+
+      {/* Change Password */}
+      <button
+        type="button"
+        onClick={() => {
+          setSelectedUser(user);
+          setNewPassword("");
+          setPasswordError("");
+          setShowNewPassword(false);
+        }}
+        className="inline-flex items-center gap-2 rounded-lg border border-[#405C48]/20 px-3 py-2 text-xs font-medium text-[#405C48] hover:bg-[#EDF2EC]"
+      >
+        <KeyRound size={14} />
+        Change Password
+      </button>
+
+      {/* Activate / Deactivate */}
+      <button
+        type="button"
+        onClick={() => {
+          setStatusUser(user);
+          setStatusError("");
+        }}
+        className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium ${
+          user.isActive
+            ? "border-red-200 text-red-600 hover:bg-red-50"
+            : "border-green-200 text-green-700 hover:bg-green-50"
+        }`}
+      >
+        <Power size={14} />
+        {user.isActive ? "Deactivate" : "Activate"}
+      </button>
+
+    </div>
+  )}
 </td>
                   </tr>
                 ))}
@@ -664,7 +723,7 @@ function closePasswordModal() {
         </div>
       )}
 
-      
+
 {selectedUser && !isProtectedAdmin(selectedUser) && (
     <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 p-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
@@ -758,6 +817,94 @@ function closePasswordModal() {
     </div>
   )}
 
+{/* Activate / Deactivate Confirmation Modal */}
+{statusUser && !isProtectedAdmin(statusUser) && (
+  <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/40 p-4">
+
+    <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+
+      <div className="flex items-center justify-between">
+
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900">
+            {statusUser.isActive
+              ? "Deactivate User?"
+              : "Activate User?"}
+          </h2>
+
+          <p className="mt-1 text-sm text-gray-500">
+            Confirm this account status change.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setStatusUser(null)}
+          disabled={updatingStatus}
+          className="rounded-lg p-2 text-gray-400 hover:bg-gray-100"
+        >
+          <X size={19} />
+        </button>
+
+      </div>
+
+      <div className="mt-5 rounded-lg bg-[#F7F9F6] p-4">
+
+        <p className="text-sm font-medium text-gray-900">
+          {statusUser.name}
+        </p>
+
+        <p className="mt-1 text-xs text-gray-500">
+          {statusUser.email}
+        </p>
+
+      </div>
+
+      <p className="mt-4 text-sm leading-6 text-gray-600">
+        {statusUser.isActive
+          ? "This user will no longer be able to sign in to the CMS after deactivation."
+          : "This user will regain access to the CMS according to their assigned role permissions."}
+      </p>
+
+      {statusError && (
+        <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          {statusError}
+        </div>
+      )}
+
+      <div className="mt-6 flex justify-end gap-3 border-t border-gray-100 pt-4">
+
+        <button
+          type="button"
+          disabled={updatingStatus}
+          onClick={() => setStatusUser(null)}
+          className="rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          onClick={handleToggleUserStatus}
+          disabled={updatingStatus}
+          className={`rounded-lg px-5 py-2.5 text-sm font-medium text-white disabled:opacity-50 ${
+            statusUser.isActive
+              ? "bg-red-600 hover:bg-red-700"
+              : "bg-[#405C48] hover:bg-[#334A3A]"
+          }`}
+        >
+          {updatingStatus
+            ? "Updating..."
+            : statusUser.isActive
+              ? "Deactivate User"
+              : "Activate User"}
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+)}
 
     </div>
   );

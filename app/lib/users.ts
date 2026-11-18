@@ -109,15 +109,46 @@ export async function assignUserRole(userId: string, roleId: string) {
 }
 
 // Activate or deactivate a user
+
 export async function updateUserStatus(
   userId: string,
   isActive: boolean
 ) {
-  return await updateDoc(doc(db, "users", userId), {
-    isActive,
-    updatedAt: serverTimestamp(),
-  });
+  if (!userId) {
+    throw new Error("User ID is required.");
+  }
+
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) {
+    throw new Error("Please log in again.");
+  }
+
+  const idToken = await currentUser.getIdToken();
+
+  const response = await fetch(
+    `/api/admin/users/${encodeURIComponent(userId)}/status`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: JSON.stringify({ isActive }),
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      result.error || "Unable to update user status."
+    );
+  }
+
+  return result;
 }
+
 
 // Delete a user profile
 export async function deleteUserProfile(userId: string) {
