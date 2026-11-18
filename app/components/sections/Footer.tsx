@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getGeneralSettings } from "@/app/lib/settings";
 
 const services = [
   { id: "01", name: "Performance Marketing", href: "#services" },
@@ -12,15 +14,78 @@ const services = [
   { id: "06", name: "Video", href: "#services" },
 ];
 
-const socials = [
-  { name: "LinkedIn", href: "https://www.linkedin.com/company/growth-enzyme/posts/" },
-  { name: "Instagram", href: "https://www.instagram.com/growthenzyme/" },
-  { name: "Facebook", href: "https://www.facebook.com/growthenzyme/" },
-  { name: "Threads", href: "https://www.threads.net" },
-  { name: "X (Twitter)", href: "https://x.com" },
-];
+// const socials = [
+//   { name: "LinkedIn", href: "https://www.linkedin.com/company/growth-enzyme/posts/" },
+//   { name: "Instagram", href: "https://www.instagram.com/growthenzyme/" },
+//   { name: "Facebook", href: "https://www.facebook.com/growthenzyme/" },
+//   { name: "Threads", href: "https://www.threads.net" },
+//   { name: "X (Twitter)", href: "https://x.com" },
+// ];
 
 export default function Footer() {
+  const [websiteName, setWebsiteName] = useState("Growth Enzyme");
+  const [footerCopyright, setFooterCopyright] = useState("");
+
+  const [contactEmail, setContactEmail] = useState("contact@growthenzyme.com");
+const [phone, setPhone] = useState("+91 88074 57959");
+const [address, setAddress] = useState("");
+
+const [socialLinks, setSocialLinks] = useState({
+  linkedin: "",
+  instagram: "",
+  facebook: "",
+  threads: "",
+  x: "",
+});
+
+  useEffect(() => {
+    let isMounted = true;
+
+    getGeneralSettings()
+      .then((settings) => {
+        if (!isMounted) return;
+
+        if (settings.websiteName?.trim()) {
+          setWebsiteName(settings.websiteName.trim());
+        }
+
+        setFooterCopyright(settings.footerCopyright?.trim() || "");
+
+        setContactEmail(
+  settings.contactEmail?.trim() || "contact@growthenzyme.com"
+);
+
+setPhone(settings.phone?.trim() || "+91 88074 57959");
+
+setAddress(settings.address?.trim() || "");
+
+setSocialLinks({
+  linkedin: settings.socialLinks?.linkedin?.trim() || "",
+  instagram: settings.socialLinks?.instagram?.trim() || "",
+  facebook: settings.socialLinks?.facebook?.trim() || "",
+  threads: settings.socialLinks?.threads?.trim() || "",
+  x: settings.socialLinks?.x?.trim() || "",
+});
+      })
+      .catch((error) => {
+        console.error("Failed to load footer settings:", error);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const socials = [
+  { name: "LinkedIn", href: socialLinks.linkedin },
+  { name: "Instagram", href: socialLinks.instagram },
+  { name: "Facebook", href: socialLinks.facebook },
+  { name: "Threads", href: socialLinks.threads },
+  { name: "X (Twitter)", href: socialLinks.x },
+].filter((social) => social.href);
+
+const phoneHref = phone.replace(/[^\d+]/g, "");
+
   return (
     <footer className="w-full bg-white text-[#173D32] px-6 pt-8 pb-6 sm:px-10 sm:pt-10 sm:pb-7 md:px-14 lg:px-20 lg:pt-11 lg:pb-8 xl:px-24">
       <div className="mx-auto max-w-[1480px]">
@@ -53,7 +118,7 @@ export default function Footer() {
                     color: "#173D32",
                   }}
                 >
-                  Growth Enzyme
+                 {websiteName}
                 </span>
               </Link>
 
@@ -84,54 +149,71 @@ export default function Footer() {
               <div className="mt-3.5 sm:mt-4 border-t border-[#173D32]/15 max-w-xl" />
 
               {/* CONTACT DETAILS */}
-              <div className="mt-3.5 sm:mt-4">
-                <h3 className="font-heading inline-flex items-center gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#55695C]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
-                  CONTACT
-                </h3>
-                <a
-                  href="mailto:contact@growthenzyme.com"
-                  className="mt-1.5 text-sm sm:text-base font-semibold tracking-tight text-[#173D32] hover:text-[#D78359] transition-colors block"
-                >
-                  contact@growthenzyme.com
-                </a>
-                <a
-                  href="tel:+918807457959"
-                  className="mt-0.5 text-sm sm:text-base font-medium text-[#4E6255] hover:text-[#D78359] transition-colors block"
-                >
-                  +91 88074 57959
-                </a>
-              </div>
+          {/* CONTACT DETAILS */}
+<div className="mt-3.5 sm:mt-4">
+  <h3 className="font-heading inline-flex items-center gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#55695C]">
+    <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+    CONTACT
+  </h3>
+
+  {contactEmail && (
+    <a
+      href={`mailto:${contactEmail}`}
+      className="mt-1.5 text-sm sm:text-base font-semibold tracking-tight text-[#173D32] hover:text-[#D78359] transition-colors block"
+    >
+      {contactEmail}
+    </a>
+  )}
+
+  {phone && (
+    <a
+      href={`tel:${phoneHref}`}
+      className="mt-0.5 text-sm sm:text-base font-medium text-[#4E6255] hover:text-[#D78359] transition-colors block"
+    >
+      {phone}
+    </a>
+  )}
+
+  {address && (
+    <p className="mt-1 text-sm sm:text-base font-medium text-[#4E6255]">
+      {address}
+    </p>
+  )}
+</div>
 
               {/* SOCIALS */}
-              <div className="mt-4 sm:mt-4.5">
-                <h3 className="font-heading inline-flex items-center gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#55695C]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
-                  SOCIALS
-                </h3>
-                <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1.5">
-                  {socials.map((social) => (
-                    <a
-                      key={social.name}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-1 text-sm font-medium text-[#173D32] hover:text-[#D78359] transition-colors"
-                    >
-                      <span>{social.name}</span>
-                      <span className="text-xs transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#D78359]">
-                        ↗
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </div>
+            {/* SOCIALS */}
+{socials.length > 0 && (
+  <div className="mt-4 sm:mt-4.5">
+    <h3 className="font-heading inline-flex items-center gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#55695C]">
+      <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+      SOCIALS
+    </h3>
+
+    <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1.5">
+      {socials.map((social) => (
+        <a
+          key={social.name}
+          href={social.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group inline-flex items-center gap-1 text-sm font-medium text-[#173D32] hover:text-[#D78359] transition-colors"
+        >
+          <span>{social.name}</span>
+          <span className="text-xs transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#D78359]">
+            ↗
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+)}
             </div>
 
             {/* ACTION ROW: PILL BUTTON */}
             <div className="mt-6 sm:mt-7 flex flex-wrap items-center gap-4 sm:gap-6">
               <a
-                href="mailto:contact@growthenzyme.com"
+                href={`mailto:${contactEmail}`}
                 className="font-instrument group inline-flex items-center gap-2 rounded-full bg-[#173D32] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:bg-[#D78359] hover:shadow-[0_8px_20px_rgba(215,131,89,0.3)] hover:-translate-y-0.5"
               >
                 <span>Let&apos;s grow together</span>
@@ -207,7 +289,10 @@ export default function Footer() {
 
         {/* BOTTOM COPYRIGHT LINE */}
         <div className="mt-8 sm:mt-10 pt-4 sm:pt-5 border-t border-[#173D32]/10 text-xs text-[#55695C]">
-          <p>© {new Date().getFullYear()} Growth Enzyme. All rights reserved.</p>
+         <p>
+  © {new Date().getFullYear()}{" "}
+  {footerCopyright || `${websiteName}. All rights reserved.`}
+</p>
         </div>
       </div>
     </footer>

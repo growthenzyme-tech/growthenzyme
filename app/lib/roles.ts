@@ -1,20 +1,16 @@
 
 import {
   collection,
-  addDoc,
   getDocs,
   doc,
   getDoc,
-  updateDoc,
-  deleteDoc,
   query,
   orderBy,
-  where,
-  serverTimestamp,
 } from "firebase/firestore";
 
-import { db } from "./firebase";
+import { db, auth } from "./firebase";
 
+// Role permissions
 export type RolePermissions = {
   dashboard: boolean;
   blogs: boolean;
@@ -25,6 +21,7 @@ export type RolePermissions = {
   settings: boolean;
 };
 
+// Role structure
 export type CMSRole = {
   id: string;
   name: string;
@@ -35,9 +32,10 @@ export type CMSRole = {
   updatedAt?: any;
 };
 
+// Firestore roles collection
 const rolesRef = collection(db, "roles");
 
-// Default permissions for a new role
+// Default permissions
 export const defaultPermissions: RolePermissions = {
   dashboard: true,
   blogs: false,
@@ -48,94 +46,106 @@ export const defaultPermissions: RolePermissions = {
   settings: false,
 };
 
-// Get all custom roles
-export async function getAllRoles(): Promise<CMSRole[]> {
-  try {
-    const q = query(rolesRef, orderBy("createdAt", "desc"));
-    const snapshot = await getDocs(q);
+// Get authentication headers for API requests
+async function getAuthHeaders() {
+  const currentUser = auth.currentUser;
 
-    return snapshot.docs.map((item) => ({
-      id: item.id,
-      ...item.data(),
-    })) as CMSRole[];
-  } catch (err: any) {
-    console.warn("Notice fetching roles (check Firestore rules if unauthenticated):", err?.message || err);
-    try {
-      const snap = await getDocs(rolesRef);
-      return snap.docs.map((item) => ({
-        id: item.id,
-        ...item.data(),
-      })) as CMSRole[];
-    } catch {
-      return [];
-    }
+  if (!currentUser) {
+    throw new Error("You must be logged in.");
   }
+
+  const token = await currentUser.getIdToken();
+
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
 }
 
-// Get one role
+// Handle API responses
+async function handleResponse(response: Response) {
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.error || "Something went wrong.");
+  }
+
+  return result;
+}
+
+// GET: Fetch all roles
+export async function getAllRoles(): Promise<CMSRole[]> {
+  const q = query(rolesRef, orderBy("createdAt", "desc"));
+
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((item) => ({
+    id: item.id,
+    ...item.data(),
+  })) as CMSRole[];
+}
+
+// GET: Fetch a single role
 export async function getRoleById(
   id: string
 ): Promise<CMSRole | null> {
-  try {
-    const roleSnap = await getDoc(doc(db, "roles", id));
+  const roleSnap = await getDoc(doc(db, "roles", id));
 
-    if (!roleSnap.exists()) return null;
-
-    return {
-      id: roleSnap.id,
-      ...roleSnap.data(),
-    } as CMSRole;
-  } catch (err: any) {
-    console.warn("Notice fetching role by ID:", err?.message || err);
+  if (!roleSnap.exists()) {
     return null;
   }
+
+  return {
+    id: roleSnap.id,
+    ...roleSnap.data(),
+  } as CMSRole;
 }
 
-// Create a custom role
+// POST: Create a role through the API
 export async function createRole(
   data: Omit<CMSRole, "id" | "createdAt" | "updatedAt">
 ) {
-  return await addDoc(rolesRef, {
-    ...data,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
+  const headers = await getAuthHeaders();
+
+  const response = await fetch("/api/admin/roles", {
+    method: "POST",
+    headers,
+    body: JSON.stringify(data),
   });
+
+  return handleResponse(response);
 }
 
-// Update a custom role
+// PATCH: Update a role through the API
 export async function updateRole(
   id: string,
   data: Partial<Omit<CMSRole, "id" | "createdAt">>
 ) {
-  if (id === "system-admin") {
-    throw new Error("The System Admin role cannot be modified.");
-  }
+  const headers = await getAuthHeaders();
 
-  return await updateDoc(doc(db, "roles", id), {
-    ...data,
-    updatedAt: serverTimestamp(),
-  });
-}
-
-// Delete a custom role
-export async function deleteRole(id: string) {
-  if (id === "system-admin") {
-    throw new Error("The System Admin role cannot be deleted.");
-  }
-
-  // Prevent deleting a role assigned to existing users
-  const assignedUsersQuery = query(
-    collection(db, "users"),
-    where("roleId", "==", id)
+  const response = await fetch(
+    `/api/admin/roles/${encodeURIComponent(id)}`,
+    {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify(data),
+    }
   );
 
-  const assignedUsers = await getDocs(assignedUsersQuery);
+  return handleResponse(response);
+}
 
-  if (!assignedUsers.empty) {
-    throw new Error(
-      "This role is assigned to users. Reassign those users before deleting it."
-    );
-  }
+// DELETE: Delete a role through the API
+export async function deleteRole(id: string) {
+  const headers = await getAuthHeaders();
 
-  return await deleteDoc(doc(db, "roles", id));
+  const response = await fetch(
+    `/api/admin/roles/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+      headers,
+    }
+  );
+
+  return handleResponse(response);
 }
