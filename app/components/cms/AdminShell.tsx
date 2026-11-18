@@ -375,87 +375,120 @@ const visibleNavigation = navigation.filter((item) => {
   return permission ? permissions[permission] : false;
 });
 
-  const sidebar = (
-    <aside className="flex h-full flex-col bg-[#171717] text-white">
-      <div className="flex h-[82px] items-center justify-between border-b border-white/10 px-7">
-        <Link href="/admin/dashboard" className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white text-lg font-bold text-black">
-            G
-          </div>
-          <div>
-            <p className="text-[15px] font-semibold tracking-wide">
-              GrowthEnzyme
-            </p>
-            <p className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-white/45">
-              Content Studio
-            </p>
-          </div>
-        </Link>
 
-        <button
-          onClick={() => setMobileOpen(false)}
-          className="rounded-lg p-2 text-white/60 hover:bg-white/10 lg:hidden"
-          aria-label="Close navigation"
-        >
-          <X size={20} />
-        </button>
-      </div>
+const sidebar = (
+  <aside className="flex h-full flex-col bg-[#29382F] text-white">
 
-      <div className="px-5 pt-8">
-        <p className="mb-4 px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/35">
+    {/* Brand Header */}
+    <div className="flex h-[82px] items-center justify-between border-b border-white/15 px-7">
+      <Link href="/admin/dashboard" className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-[#B6CBA9] text-xl font-bold text-[#29382F] shadow-sm">
+          G
+        </div>
+
+        <div>
+          <p className="text-[15px] font-bold tracking-wide text-white">
+            GrowthEnzyme
+          </p>
+          <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/75">
+            Content Studio
+          </p>
+        </div>
+      </Link>
+
+      <button
+        onClick={() => setMobileOpen(false)}
+        className="rounded-lg p-2 text-white/80 transition hover:bg-white/15 hover:text-white lg:hidden"
+        aria-label="Close navigation"
+      >
+        <X size={20} />
+      </button>
+    </div>
+
+    {/* Navigation */}
+    <div className="px-5 pt-8">
+      <div className="mb-5 flex items-center gap-3 px-3">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70">
           Workspace
         </p>
-
-        <nav className="space-y-1">
-          {visibleNavigation.map((item) => {
-            const active = pathname.startsWith(item.href);
-            const Icon = item.icon;
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 rounded-lg px-3 py-3 text-[13px] transition ${
-                  active
-                    ? "bg-white text-[#171717] font-semibold"
-                    : "text-white/65 hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                <Icon size={17} strokeWidth={1.8} />
-                <span>{item.label}</span>
-                {active && <ChevronRight size={15} className="ml-auto" />}
-              </Link>
-            );
-          })}
-        </nav>
       </div>
 
-      <div className="mt-auto space-y-2 border-t border-white/10 p-5">
-        <Link
-          href="/"
-          target="_blank"
-          className="flex items-center gap-3 rounded-lg px-3 py-3 text-[12px] text-white/55 transition hover:bg-white/10 hover:text-white"
-        >
-          <ExternalLink size={16} />
-          View Website
-        </Link>
+      <nav className="space-y-1.5">
+        {visibleNavigation.map((item) => {
+          const active = pathname.startsWith(item.href);
+          const Icon = item.icon;
 
-        <button
-          onClick={handleLogout}
-          disabled={loggingOut}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-[12px] text-white/55 transition hover:bg-red-500/10 hover:text-red-300 disabled:opacity-50"
-        >
-          <LogOut size={16} />
-          {loggingOut ? "Signing out..." : "Sign Out"}
-        </button>
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileOpen(false)}
+              className={`group relative flex items-center gap-3 overflow-hidden rounded-xl px-3.5 py-3 text-[13px] transition-all duration-200 ${
+                active
+                  ? "bg-[#B6CBA9] font-bold text-[#29382F] shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
+                  : "font-medium text-white/90 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              {active && (
+                <span className="absolute bottom-2 left-0 top-2 w-1 rounded-r-full bg-[#D78359]" />
+              )}
 
-        <p className="px-3 pt-2 text-[10px] text-white/25">
+              <Icon
+                size={18}
+                strokeWidth={active ? 2.2 : 1.9}
+                className={`shrink-0 transition-colors ${
+                  active
+                    ? "text-[#29382F]"
+                    : "text-white/85 group-hover:text-[#B6CBA9]"
+                }`}
+              />
+
+              <span>{item.label}</span>
+
+              {active && (
+                <ChevronRight
+                  size={16}
+                  strokeWidth={2.5}
+                  className="ml-auto text-[#29382F]"
+                />
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
+
+    {/* Bottom Actions */}
+    <div className="mt-auto space-y-2 border-t border-white/15 p-5">
+
+      <Link
+        href="/"
+        target="_blank"
+        className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-[12px] font-semibold text-white/90 transition hover:bg-white/10 hover:text-[#B6CBA9]"
+      >
+        <ExternalLink size={17} />
+        View Website
+      </Link>
+
+      <button
+        onClick={handleLogout}
+        disabled={loggingOut}
+        className="flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-[12px] font-semibold text-white/90 transition hover:bg-[#D78359]/15 hover:text-[#F2B18F] disabled:opacity-50"
+      >
+        <LogOut size={17} />
+        {loggingOut ? "Signing out..." : "Sign Out"}
+      </button>
+
+      <div className="mt-3 border-t border-white/10 px-3 pt-4">
+        <p className="text-[10px] font-medium tracking-wide text-white/65">
           GrowthEnzyme CMS · 2026
         </p>
       </div>
-    </aside>
-  );
+    </div>
+  </aside>
+);
+
 
   return (
     <div className="min-h-screen bg-[#f7f7f5]">
