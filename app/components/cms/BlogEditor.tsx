@@ -9,7 +9,16 @@ import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
 import { auth, db } from "@/app/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
+
+
 import {
   ArrowLeft,
   ArrowRight,
@@ -40,7 +49,11 @@ const categories = [
   "Insights",
 ];
 
-export default function BlogEditor() {
+type BlogEditorProps = {
+  blogId?: string;
+};
+
+export default function BlogEditor({ blogId }: BlogEditorProps) {
   const router = useRouter();
 
   const [title, setTitle] = useState("");
@@ -53,6 +66,14 @@ export default function BlogEditor() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [slugEdited, setSlugEdited] = useState(false);
+  const [loadingBlog, setLoadingBlog] = useState(Boolean(blogId));
+  const [existingPublishedAt, setExistingPublishedAt] =
+  useState<any>(null);
+
+const [existingCoverImageId, setExistingCoverImageId] =
+  useState<string | null>(null);
+
+const [coverImageChanged, setCoverImageChanged] = useState(false);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -68,7 +89,7 @@ export default function BlogEditor() {
       }),
       Image,
     ],
-    content: "<p>Start writing your blog article...</p>",
+    content: "<p></p>",
     editorProps: {
       attributes: {
         class:
@@ -88,6 +109,62 @@ export default function BlogEditor() {
       );
     }
   }, [title, slugEdited]);
+
+
+
+  useEffect(() => {
+  if (!blogId || !editor) return;
+
+  async function loadBlog() {
+    try {
+      setLoadingBlog(true);
+
+      const blogRef = doc(db, "blogs", blogId!);
+      const blogSnap = await getDoc(blogRef);
+
+      if (!blogSnap.exists()) {
+        setError("Blog not found.");
+        return;
+      }
+
+      const data = blogSnap.data();
+      setExistingPublishedAt(data.publishedAt || null);
+
+      setTitle(data.title || "");
+      setSlug(data.slug || "");
+      setSlugEdited(true);
+
+      setExcerpt(data.excerpt || "");
+      setCategory(data.category || categories[0]);
+
+      setSeoTitle(data.seoTitle || "");
+      setMetaDescription(data.metaDescription || "");
+
+      setExistingCoverImageId(data.coverImageId || null);
+
+      if (data.coverImageId) {
+        const mediaSnap = await getDoc(
+          doc(db, "media", data.coverImageId)
+        );
+
+        if (mediaSnap.exists()) {
+          setCoverImage(mediaSnap.data().data || "");
+        }
+      }
+
+      editor?.commands.setContent(
+  data.content || "<p></p>"
+);
+    } catch (err) {
+      console.error("Error loading blog:", err);
+      setError("Unable to load this blog.");
+    } finally {
+      setLoadingBlog(false);
+    }
+  }
+
+  loadBlog();
+}, [blogId, editor]);
 
   async function handleCoverImage(file?: File) {
     if (!file) return;
@@ -141,6 +218,7 @@ export default function BlogEditor() {
         }
 
         setCoverImage(compressed);
+setCoverImageChanged(true);
       };
 
       image.onerror = () => {
@@ -183,40 +261,60 @@ export default function BlogEditor() {
     setSaving(true);
 
     try {
-      let coverImageId: string | null = null;
+  let coverImageId = existingCoverImageId;
 
-      if (coverImage) {
-        const mediaRef = await addDoc(collection(db, "media"), {
-          data: coverImage,
-          type: "image",
-          mimeType: "image/jpeg",
-          fileName: `${slug}-cover.jpg`,
-          uploadedBy: user.uid,
-          createdAt: serverTimestamp(),
-        });
+// Only upload a new media document if the cover image changed.
+if (coverImageChanged) {
+  coverImageId = null;
 
-        coverImageId = mediaRef.id;
-      }
+  if (coverImage) {
+    const mediaRef = await addDoc(collection(db, "media"), {
+      data: coverImage,
+      type: "image",
+      mimeType: "image/jpeg",
+      fileName: `${slug}-cover.jpg`,
+      uploadedBy: user.uid,
+      createdAt: serverTimestamp(),
+    });
 
-      await addDoc(collection(db, "blogs"), {
-        title: title.trim(),
-        slug: slug.trim(),
-        excerpt: excerpt.trim(),
-        category,
-        content: editor.getHTML(),
-        coverImageId,
-        seoTitle: seoTitle.trim() || title.trim(),
-        metaDescription: metaDescription.trim() || excerpt.trim(),
-        authorId: user.uid,
-        authorName: user.displayName || user.email || "GrowthEnzyme Team",
-        status,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        publishedAt: status === "published" ? serverTimestamp() : null,
-      });
+    coverImageId = mediaRef.id;
+  }
+}
 
-      router.push("/admin/blogs");
-      router.refresh();
+const blogData = {
+  title: title.trim(),
+  slug: slug.trim(),
+  excerpt: excerpt.trim(),
+  category,
+  content: editor.getHTML(),
+  coverImageId,
+  seoTitle: seoTitle.trim() || title.trim(),
+  metaDescription: metaDescription.trim() || excerpt.trim(),
+  status,
+  updatedAt: serverTimestamp(),
+ publishedAt:
+  status === "published"
+    ? existingPublishedAt || serverTimestamp()
+    : null,
+};
+
+if (blogId) {
+  // EDIT EXISTING BLOG
+  await updateDoc(doc(db, "blogs", blogId), blogData);
+} else {
+  // CREATE NEW BLOG
+  await addDoc(collection(db, "blogs"), {
+    ...blogData,
+    authorId: user.uid,
+    authorName:
+      user.displayName || user.email || "GrowthEnzyme Team",
+    createdAt: serverTimestamp(),
+  });
+}
+
+router.push("/admin/blogs");
+router.refresh();
+
     } catch (err) {
       console.error("Blog save error:", err);
       setError(
@@ -237,7 +335,32 @@ export default function BlogEditor() {
 
   const toolbarButtonClass =
     "flex h-9 w-9 items-center justify-center rounded-lg border border-[#E3E9DF] bg-white text-[#405C48] transition-all duration-200 hover:border-[#B6CBA9] hover:bg-[#EEF3EA] hover:text-[#29382F]";
+if (loadingBlog) {
+  return (
+    <div className="flex min-h-[60vh] items-center justify-center">
+      <p className="text-sm text-[#405C48]">
+        Loading blog details...
+      </p>
+    </div>
+  );
+}
 
+if (blogId && error === "Blog not found.") {
+  return (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
+      <p className="text-lg font-semibold text-[#29382F]">
+        Blog not found
+      </p>
+
+      <button
+        onClick={() => router.push("/admin/blogs")}
+        className="rounded-xl bg-[#29382F] px-5 py-3 text-sm text-white"
+      >
+        Back to Blogs
+      </button>
+    </div>
+  );
+}
   return (
     <div
       className="mx-auto max-w-5xl space-y-7 pb-14 pt-8 sm:pt-15 "
@@ -265,17 +388,19 @@ export default function BlogEditor() {
             className="text-4xl font-semibold leading-tight tracking-tight text-[#29382F] sm:text-5xl"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
-            Create New Blog
+            {blogId ? "Edit Blog" : "Create New Blog"}
           </h1>
 
           <p className="mt-2 text-sm text-[#657365]">
-            Create, manage and publish your articles.
+            {blogId
+  ? "Update your article and save your changes."
+  : "Create, manage and publish your articles."}
           </p>
         </div>
 
         <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#E1E9DC] bg-[#EEF3EA] px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#405C48]">
           <Sparkles size={14} />
-          Blog Workspace
+          {blogId ? "Editing Workspace" : "Blog Workspace"}
         </div>
       </div>
 
@@ -409,7 +534,10 @@ export default function BlogEditor() {
             />
             <button
               type="button"
-              onClick={() => setCoverImage("")}
+              onClick={() => {
+  setCoverImage("");
+  setCoverImageChanged(true);
+}}
               className="absolute right-3 top-3 flex items-center gap-2 rounded-lg bg-[#29382F] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#405C48]"
             >
               <X size={14} />

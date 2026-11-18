@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   FileText,
@@ -17,7 +17,13 @@ import {
   ExternalLink,
   ChevronRight,
 } from "lucide-react";
-import { logoutUser } from "@/app/lib/auth";
+import { logoutUser, observeAuth } from "@/app/lib/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/app/lib/firebase";
+
+
+
+
 
 const navigation = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -35,14 +41,144 @@ export default function AdminShell({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+
+  // Authentication states
+  const [role, setRole] = useState<"admin" | "writer" | null>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [authError, setAuthError] = useState("");
+
+  // Authentication check
+  useEffect(() => {
+    if (pathname === "/admin/login") {
+      setCheckingAuth(false);
+      return;
+    }
+
+    let active = true;
+
+    setCheckingAuth(true);
+
+    const unsubscribe = observeAuth(async (user) => {
+      if (!active) return;
+
+      if (!user) {
+        setRole(null);
+        setCheckingAuth(false);
+        router.replace("/admin/login");
+        return;
+      }
+
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!active) return;
+
+        if (!userSnap.exists()) {
+          await logoutUser();
+
+          if (active) {
+            setRole(null);
+            router.replace("/admin/login");
+          }
+
+          return;
+        }
+
+        const profile = userSnap.data();
+
+        if (
+          profile.isActive !== true ||
+          !["admin", "writer"].includes(profile.role)
+        ) {
+          await logoutUser();
+
+          if (active) {
+            setRole(null);
+            router.replace("/admin/login");
+          }
+
+          return;
+        }
+
+        const userRole = profile.role as "admin" | "writer";
+
+        setRole(userRole);
+        setAuthError("");
+
+        const adminOnlyPaths = [
+          "/admin/users",
+          "/admin/settings",
+          "/admin/case-studies",
+        ];
+
+        const isAdminOnlyPage = adminOnlyPaths.some(
+          (path) =>
+            pathname === path || pathname.startsWith(`${path}/`)
+        );
+
+        if (userRole === "writer" && isAdminOnlyPage) {
+          router.replace("/admin/blogs");
+        }
+
+        setCheckingAuth(false);
+      } catch (error) {
+        console.error("CMS authentication error:", error);
+
+        if (!active) return;
+
+        setAuthError(
+          "Unable to verify your account. Please check your connection and try again."
+        );
+
+        setCheckingAuth(false);
+      }
+    });
+
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, [pathname, router]);
 
   // Keep the login screen independent of the CMS navigation.
   if (pathname === "/admin/login") {
     return <>{children}</>;
   }
 
+  if (checkingAuth) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#f7f7f5]">
+      <div className="text-center">
+        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-[#405C48]" />
+        <p className="mt-4 text-sm text-gray-500">
+          Verifying your account...
+        </p>
+      </div>
+    </div>
+  );
+}
+
+if (authError) {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#f7f7f5] px-5 text-center">
+      <p className="text-sm text-red-600">{authError}</p>
+      <button
+        onClick={() => window.location.reload()}
+        className="mt-4 rounded-lg bg-[#405C48] px-5 py-2 text-sm text-white"
+      >
+        Try Again
+      </button>
+    </div>
+  );
+}
+
+if (!role) {
+  return null;
+}
   const currentPage =
     navigation.find((item) => pathname.startsWith(item.href))?.label ||
     (pathname.includes("/edit/") ? "Edit Blog" :
@@ -57,6 +193,18 @@ export default function AdminShell({
       setLoggingOut(false);
     }
   }
+
+  const visibleNavigation =
+  role === "admin"
+    ? navigation
+    : navigation.filter(
+        (item) =>
+          ![
+            "/admin/case-studies",
+            "/admin/users",
+            "/admin/settings",
+          ].includes(item.href)
+      );
 
   const sidebar = (
     <aside className="flex h-full flex-col bg-[#171717] text-white">
@@ -90,7 +238,7 @@ export default function AdminShell({
         </p>
 
         <nav className="space-y-1">
-          {navigation.map((item) => {
+          {visibleNavigation.map((item) => {
             const active = pathname.startsWith(item.href);
             const Icon = item.icon;
 
