@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import DOMPurify from "isomorphic-dompurify";
 import {
   ArrowLeft,
   ArrowRight,
@@ -241,7 +242,46 @@ export default function SingleBlogPage() {
   const categoryName = blog.category || "Technology";
   const authorDisplay = blog.authorName || "growthenzymetech@gmail.com";
   const publishedDateDisplay = formatDate(blog.publishedAt);
-
+const sanitizedContent = DOMPurify.sanitize(
+  blog.content || "",
+  {
+    ALLOWED_TAGS: [
+      "p",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "strong",
+      "b",
+      "em",
+      "i",
+      "u",
+      "s",
+      "ul",
+      "ol",
+      "li",
+      "blockquote",
+      "code",
+      "pre",
+      "a",
+      "img",
+      "br",
+      "hr",
+    ],
+    ALLOWED_ATTR: [
+      "href",
+      "target",
+      "rel",
+      "src",
+      "alt",
+      "title",
+      "width",
+      "height",
+    ],
+  }
+);
   return (
     <div className="min-h-screen bg-white text-[#171717] flex flex-col justify-between">
       <div>
@@ -359,14 +399,13 @@ export default function SingleBlogPage() {
                 )}
 
                 {/* Article Body */}
-                <div
-                  className="blog-article-content mt-8"
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      blog.content ||
-                      "<p>oke i understand wht i need to do this , this i my first blog and please read the details</p>",
-                  }}
-                />
+             {/* Article Body */}
+<div
+  className="blog-article-content mt-8"
+  dangerouslySetInnerHTML={{
+    __html: sanitizedContent,
+  }}
+/>
 
                 {/* LIKE & ACTION BAR */}
                 <div className="mt-10 pt-6 border-t border-gray-100 flex flex-wrap items-center justify-between gap-4">

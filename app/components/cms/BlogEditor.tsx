@@ -15,9 +15,11 @@ import {
   serverTimestamp,
   doc,
   getDoc,
+  getDocs,
+  query,
+  where,
   updateDoc,
 } from "firebase/firestore";
-
 
 import {
   ArrowLeft,
@@ -232,100 +234,125 @@ setCoverImageChanged(true);
     }
   }
 
-  async function handleSubmit(status: "draft" | "published") {
-    setError("");
 
-    const user = auth.currentUser;
+async function handleSubmit(status: "draft" | "published") {
+  setError("");
 
-    if (!user) {
-      setError("Your session has expired. Please log in again.");
-      router.replace("/admin/login");
-      return;
-    }
+  const user = auth.currentUser;
 
-    if (!title.trim() || !slug.trim() || !excerpt.trim()) {
-      setError("Please complete the title, slug and short description.");
-      return;
-    }
-
-    if (!editor || editor.isEmpty) {
-      setError("Please write your blog content.");
-      return;
-    }
-
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
-      setError("Please use a valid URL slug.");
-      return;
-    }
-
-    setSaving(true);
-
-    try {
-  let coverImageId = existingCoverImageId;
-
-// Only upload a new media document if the cover image changed.
-if (coverImageChanged) {
-  coverImageId = null;
-
-  if (coverImage) {
-    const mediaRef = await addDoc(collection(db, "media"), {
-      data: coverImage,
-      type: "image",
-      mimeType: "image/jpeg",
-      fileName: `${slug}-cover.jpg`,
-      uploadedBy: user.uid,
-      createdAt: serverTimestamp(),
-    });
-
-    coverImageId = mediaRef.id;
+  if (!user) {
+    setError("Your session has expired. Please log in again.");
+    router.replace("/admin/login");
+    return;
   }
-}
 
-const blogData = {
-  title: title.trim(),
-  slug: slug.trim(),
-  excerpt: excerpt.trim(),
-  category,
-  content: editor.getHTML(),
-  coverImageId,
-  seoTitle: seoTitle.trim() || title.trim(),
-  metaDescription: metaDescription.trim() || excerpt.trim(),
-  status,
-  updatedAt: serverTimestamp(),
- publishedAt:
-  status === "published"
-    ? existingPublishedAt || serverTimestamp()
-    : null,
-};
+  if (!title.trim() || !slug.trim() || !excerpt.trim()) {
+    setError("Please complete the title, slug and short description.");
+    return;
+  }
 
-if (blogId) {
-  // EDIT EXISTING BLOG
-  await updateDoc(doc(db, "blogs", blogId), blogData);
-} else {
-  // CREATE NEW BLOG
-  await addDoc(collection(db, "blogs"), {
-    ...blogData,
-    authorId: user.uid,
-    authorName:
-      user.displayName || user.email || "GrowthEnzyme Team",
-    createdAt: serverTimestamp(),
-  });
-}
+  if (!editor || editor.isEmpty) {
+    setError("Please write your blog content.");
+    return;
+  }
 
-router.push("/admin/blogs");
-router.refresh();
+  const cleanSlug = slug.trim();
 
-    } catch (err) {
-      console.error("Blog save error:", err);
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(cleanSlug)) {
+    setError("Please use a valid URL slug.");
+    return;
+  }
+
+  setSaving(true);
+
+  try {
+    // 1. Check duplicate slug
+    const slugQuery = query(
+      collection(db, "blogs"),
+      where("slug", "==", cleanSlug)
+    );
+
+    const slugSnapshot = await getDocs(slugQuery);
+
+    const duplicateSlug = slugSnapshot.docs.some(
+      (item) => item.id !== blogId
+    );
+
+    if (duplicateSlug) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Unable to save the blog. Please try again."
+        "This URL slug is already in use. Please choose another slug."
       );
-    } finally {
-      setSaving(false);
+      return;
     }
+
+    // 2. Handle cover image
+    let coverImageId = existingCoverImageId;
+
+    if (coverImageChanged) {
+      coverImageId = null;
+
+      if (coverImage) {
+        const mediaRef = await addDoc(collection(db, "media"), {
+          data: coverImage,
+          type: "image",
+          mimeType: "image/jpeg",
+          fileName: `${cleanSlug}-cover.jpg`,
+          uploadedBy: user.uid,
+          createdAt: serverTimestamp(),
+        });
+
+        coverImageId = mediaRef.id;
+      }
+    }
+
+    // 3. Prepare blog data
+    const blogData = {
+      title: title.trim(),
+      slug: cleanSlug,
+      excerpt: excerpt.trim(),
+      category,
+      content: editor.getHTML(),
+      coverImageId,
+      seoTitle: seoTitle.trim() || title.trim(),
+      metaDescription: metaDescription.trim() || excerpt.trim(),
+      status,
+      updatedAt: serverTimestamp(),
+      publishedAt:
+        status === "published"
+          ? existingPublishedAt || serverTimestamp()
+          : null,
+    };
+
+    // 4. Create or update blog
+    if (blogId) {
+      await updateDoc(doc(db, "blogs", blogId), blogData);
+    } else {
+      await addDoc(collection(db, "blogs"), {
+        ...blogData,
+        authorId: user.uid,
+        authorName:
+          user.displayName || user.email || "GrowthEnzyme Team",
+        createdAt: serverTimestamp(),
+      });
+    }
+
+    // 5. Redirect after successful save
+    router.push("/admin/blogs");
+    router.refresh();
+
+  } catch (err) {
+    console.error("Blog save error:", err);
+
+    setError(
+      err instanceof Error
+        ? err.message
+        : "Unable to save the blog. Please try again."
+    );
+  } finally {
+    setSaving(false);
   }
+}
+
 
   const inputClass =
     "w-full rounded-xl border border-[#DCE5D8] bg-[#FCFDFB] px-4 py-3.5 text-sm text-[#29382F] outline-none transition-all placeholder:text-[#91A092] hover:border-[#B6CBA9] focus:border-[#405C48] focus:ring-2 focus:ring-[#B6CBA9]/30";
@@ -437,15 +464,16 @@ if (blogId && error === "Blog not found.") {
           <label className={labelClass}>URL Slug *</label>
           <input
             value={slug}
-            onChange={(e) => {
-              setSlugEdited(true);
-              setSlug(
-                e.target.value
-                  .toLowerCase()
-                  .replace(/[^a-z0-9-]/g, "")
-                  .replace(/--+/g, "-")
-              );
-            }}
+        onChange={(e) => {
+  setSlugEdited(true);
+  setSlug(
+    e.target.value
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+  );
+}}
             placeholder="your-blog-url"
             className={inputClass}
           />

@@ -92,20 +92,29 @@ export default function BlogPage() {
 
   const featuredBlog = blogs[0];
 
-  const filteredBlogs = useMemo(() => {
-    return blogs.filter((blog, index) => {
-      if (blog.id === featuredBlog?.id) return false;
+const filteredBlogs = useMemo(() => {
+  const hasActiveFilter =
+    activeCategory !== "All" || search.trim() !== "";
 
-      const matchesCategory =
-        activeCategory === "All" || blog.category === activeCategory;
+  return blogs.filter((blog) => {
+    if (!hasActiveFilter && blog.id === featuredBlog?.id) {
+      return false;
+    }
 
-      const matchesSearch =
-        blog.title?.toLowerCase().includes(search.toLowerCase()) ||
-        blog.excerpt?.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory =
+      activeCategory === "All" ||
+      blog.category === activeCategory;
 
-      return matchesCategory && matchesSearch;
-    });
-  }, [blogs, activeCategory, search, featuredBlog]);
+    const searchTerm = search.trim().toLowerCase();
+
+    const matchesSearch =
+      !searchTerm ||
+      blog.title?.toLowerCase().includes(searchTerm) ||
+      blog.excerpt?.toLowerCase().includes(searchTerm);
+
+    return matchesCategory && matchesSearch;
+  });
+}, [blogs, activeCategory, search, featuredBlog]);
 
   return (
     <main className="min-h-screen bg-[#F8F8F5]">
