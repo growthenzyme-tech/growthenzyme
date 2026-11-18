@@ -17,6 +17,7 @@ import {
   ExternalLink,
   ChevronRight,
   MessageSquare,
+  ShieldCheck,
 } from "lucide-react";
 import { logoutUser, observeAuth } from "@/app/lib/auth";
 import { doc, getDoc } from "firebase/firestore";
@@ -34,6 +35,7 @@ const navigation = [
   { label: "Users", href: "/admin/users", icon: Users },
   { label: "Settings", href: "/admin/settings", icon: Settings },
   { label: "Comments", href: "/admin/comments", icon: MessageSquare },
+  { label: "Roles & Permissions", href: "/admin/roles", icon: ShieldCheck },
 ];
 
 export default function AdminShell({
@@ -116,6 +118,7 @@ export default function AdminShell({
           "/admin/settings",
           "/admin/case-studies",
           "/admin/comments",
+           "/admin/roles",
         ];
 
         const isAdminOnlyPage = adminOnlyPaths.some(
@@ -207,6 +210,7 @@ if (!role) {
             "/admin/users",
             "/admin/settings",
             "/admin/comments",
+             "/admin/roles",
           ].includes(item.href)
       );
 
