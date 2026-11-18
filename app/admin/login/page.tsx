@@ -88,17 +88,17 @@ export default function AdminLogin() {
   return (
     <main className="min-h-screen bg-[#EFF4EB] flex flex-col justify-between selection:bg-[#29382F]/20 selection:text-[#1B2921]">
       {/* ========================================================= */}
-      {/* TOP BANNER HERO (4K Marketing Agency Green Theme)         */}
+      {/* TOP BANNER HERO (4K Growth Metaphor Arrow Illustration)   */}
       {/* ========================================================= */}
-      <section className="relative w-full h-56 sm:h-64 md:h-72 overflow-hidden">
+      <section className="relative w-full h-60 sm:h-72 md:h-80 overflow-hidden bg-[#B6CBA9]">
         <img
-          src="/images/marketing-agency-green.jpg"
-          alt="GrowthEnzyme Growth Marketing Agency"
-          className="w-full h-full object-cover object-[center_35%]"
+          src="/images/growth-arrow-4k.jpg"
+          alt="GrowthEnzyme Growth Metaphor"
+          className="w-full h-full object-cover object-center"
         />
 
         {/* Seamless linear gradient fade into pale sage page background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#EFF4EB]/30 to-[#EFF4EB]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#EFF4EB]/20 to-[#EFF4EB]" />
 
         {/* Top Right Brand Badge */}
         <div className="absolute top-5 right-5 sm:top-7 sm:right-10 z-20">
