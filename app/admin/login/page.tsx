@@ -167,17 +167,17 @@ export default function AdminLogin() {
   return (
     <main className="min-h-screen bg-[#EFF4EB] flex flex-col justify-between selection:bg-[#3F5738]/20 selection:text-[#223624]">
       {/* ========================================================= */}
-      {/* TOP BANNER HERO (4K Marketing Agency Green Theme)         */}
+      {/* TOP BANNER HERO (login.jpg with smooth gradient fade)     */}
       {/* ========================================================= */}
-      <section className="relative w-full h-56 sm:h-64 md:h-72 overflow-hidden">
+      <section className="relative w-full h-52 sm:h-60 md:h-64 overflow-hidden">
         <img
-          src="/images/marketing-agency-green.jpg"
-          alt="GrowthEnzyme Growth Marketing Agency"
-          className="w-full h-full object-cover object-[center_35%]"
+          src="/images/login.jpg"
+          alt="GrowthEnzyme Login Banner"
+          className="w-full h-full object-cover object-top"
         />
 
         {/* Seamless linear gradient fade into pale sage page background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#EFF4EB]/30 to-[#EFF4EB]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#EFF4EB]/35 to-[#EFF4EB]" />
 
         {/* Top Right Brand Badge */}
         <div className="absolute top-5 right-5 sm:top-7 sm:right-10 z-20">
@@ -202,15 +202,15 @@ export default function AdminLogin() {
       {/* ========================================================= */}
       {/* MAIN CONTENT & SAGE GREEN LOGIN CARD                      */}
       {/* ========================================================= */}
-      <div className="relative -mt-6 sm:-mt-8 mx-auto w-full max-w-[430px] px-5 z-10 pb-12 flex-1 flex flex-col justify-center">
+      <div className="relative -mt-6 sm:-mt-8 mx-auto w-full max-w-[520px] px-5 z-10 pb-12 flex-1 flex flex-col justify-center">
         {/* SAGE GREEN FLOATING CARD (Colors from reference image) */}
-        <div className="rounded-[28px] border border-[#7F9876]/40 bg-[#9EB891] p-6 sm:p-8 shadow-[0_20px_50px_rgba(41,56,47,0.12)]">
+        <div className="rounded-[28px] border border-[#7F9876]/40 bg-[#9EB891] p-7 sm:p-9 shadow-[0_20px_50px_rgba(41,56,47,0.12)]">
           {/* CENTERED HEADLINE & SUBTITLE (Original Contents Preserved) */}
           <div className="text-center mb-6">
             <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-[#223624]">
               {mode === "signin" ? "Welcome Back" : "Create Admin Account"}
             </h1>
-            <p className="mt-1.5 text-xs sm:text-sm text-[#385135] max-w-sm mx-auto leading-relaxed">
+            <p className="mt-1.5 text-xs sm:text-sm text-[#385135] max-w-md mx-auto leading-relaxed">
               {mode === "signin"
                 ? "Sign in to access your dashboard and continue where you left off."
                 : "Set up your admin credentials to manage GrowthEnzyme articles & assets."}
