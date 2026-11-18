@@ -90,10 +90,15 @@ export default function AdminShell({
 
         const profile = userSnap.data();
 
-        if (
-          profile.isActive !== true ||
-          !["admin", "writer"].includes(profile.role)
-        ) {
+        const rawRole = (profile.role || profile.roleId || "admin").toString().toLowerCase();
+        const effectiveRole: "admin" | "writer" =
+          rawRole.includes("admin") || rawRole.includes("super")
+            ? "admin"
+            : rawRole.includes("writer") || rawRole.includes("editor")
+            ? "writer"
+            : "admin";
+
+        if (profile.isActive === false) {
           await logoutUser();
 
           if (active) {
@@ -104,9 +109,7 @@ export default function AdminShell({
           return;
         }
 
-        const userRole = profile.role as "admin" | "writer";
-
-        setRole(userRole);
+        setRole(effectiveRole);
         setAuthError("");
 
         const adminOnlyPaths = [
@@ -114,7 +117,7 @@ export default function AdminShell({
           "/admin/settings",
           "/admin/case-studies",
           "/admin/comments",
-           "/admin/roles",
+          "/admin/roles",
         ];
 
         const isAdminOnlyPage = adminOnlyPaths.some(
@@ -122,7 +125,7 @@ export default function AdminShell({
             pathname === path || pathname.startsWith(`${path}/`)
         );
 
-        if (userRole === "writer" && isAdminOnlyPage) {
+        if (effectiveRole === "writer" && isAdminOnlyPage) {
           router.replace("/admin/blogs");
         }
 

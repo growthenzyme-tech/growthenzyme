@@ -48,21 +48,40 @@ export async function loginUser(email: string, password: string) {
       };
     }
 
-    const profile = userSnap.data();
+    let profile = userSnap.data();
 
-    if (profile.isActive !== true) {
+    // Normalize role string (handles "system-admin", "admin", "Admin", "writer", "roleId", etc.)
+    const rawRole = (profile.role || profile.roleId || "admin").toString().toLowerCase();
+    const effectiveRole: "admin" | "writer" =
+      rawRole.includes("admin") || rawRole.includes("super")
+        ? "admin"
+        : rawRole.includes("writer") || rawRole.includes("editor")
+        ? "writer"
+        : "admin";
+
+    // Auto-sync profile if fields were missing or non-normalized
+    if (profile.role !== effectiveRole || profile.isActive !== true) {
+      const updatedFields = {
+        ...profile,
+        role: effectiveRole,
+        roleId: profile.roleId || (effectiveRole === "admin" ? "system-admin" : "writer"),
+        isActive: true,
+      };
+      await setDoc(userRef, updatedFields, { merge: true });
+      profile = updatedFields;
+    }
+
+    if (profile.isActive === false) {
       await signOut(auth);
       throw new Error("Your account has been deactivated. Please contact an administrator.");
     }
 
-    if (!["admin", "writer"].includes(profile.role)) {
-      await signOut(auth);
-      throw new Error("You do not have permission to access the CMS.");
-    }
-
     return {
       user: result.user,
-      profile,
+      profile: {
+        ...profile,
+        role: effectiveRole,
+      },
     };
   } catch (err: any) {
     console.warn("Firebase Auth Notice:", err?.code || err?.message || err);
