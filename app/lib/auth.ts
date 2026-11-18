@@ -1,4 +1,3 @@
-
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -19,8 +18,9 @@ import {
 import { auth, db } from "./firebase";
 
 export async function loginUser(email: string, password: string) {
+  const cleanEmail = email.trim();
+
   try {
-    const cleanEmail = email.trim();
     const result = await signInWithEmailAndPassword(
       auth,
       cleanEmail,
@@ -44,45 +44,121 @@ export async function loginUser(email: string, password: string) {
       await setDoc(userRef, autoProfile);
       return {
         user: result.user,
-        profile: autoProfile,
+        profile: {
+          ...autoProfile,
+          roleName: "Administrator",
+          permissions: {
+            dashboard: true,
+            blogs: true,
+            comments: true,
+            media: true,
+            caseStudies: true,
+            users: true,
+            settings: true,
+          },
+        },
       };
     }
 
-    let profile = userSnap.data();
+    const profile = userSnap.data();
 
-    // Normalize role string (handles "system-admin", "admin", "Admin", "writer", "roleId", etc.)
-    const rawRole = (profile.role || profile.roleId || "admin").toString().toLowerCase();
-    const effectiveRole: "admin" | "writer" =
-      rawRole.includes("admin") || rawRole.includes("super")
-        ? "admin"
-        : rawRole.includes("writer") || rawRole.includes("editor")
-        ? "writer"
-        : "admin";
-
-    // Auto-sync profile if fields were missing or non-normalized
-    if (profile.role !== effectiveRole || profile.isActive !== true) {
-      const updatedFields = {
-        ...profile,
-        role: effectiveRole,
-        roleId: profile.roleId || (effectiveRole === "admin" ? "system-admin" : "writer"),
-        isActive: true,
-      };
-      await setDoc(userRef, updatedFields, { merge: true });
-      profile = updatedFields;
-    }
-
-    if (profile.isActive === false) {
+    // Check account status
+    if (profile.isActive !== true) {
       await signOut(auth);
       throw new Error("Your account has been deactivated. Please contact an administrator.");
+    }
+
+    // Support Administrator accounts (legacy role or system-admin roleId)
+    const rawRole = (profile.role || profile.roleId || "").toString().toLowerCase();
+    const isSystemAdmin =
+      profile.role === "admin" ||
+      profile.role === "administrator" ||
+      profile.roleId === "system-admin" ||
+      rawRole.includes("admin") ||
+      rawRole.includes("super");
+
+    if (isSystemAdmin) {
+      return {
+        user: result.user,
+        profile: {
+          ...profile,
+          role: "admin",
+          roleId: profile.roleId || "system-admin",
+          roleName: "Administrator",
+          permissions: {
+            dashboard: true,
+            blogs: true,
+            comments: true,
+            media: true,
+            caseStudies: true,
+            users: true,
+            settings: true,
+          },
+        },
+      };
+    }
+
+    // Support legacy writer accounts without custom roleId
+    if (profile.role === "writer" && !profile.roleId) {
+      return {
+        user: result.user,
+        profile: {
+          ...profile,
+          role: "writer",
+          roleName: "Writer",
+          permissions: {
+            dashboard: true,
+            blogs: true,
+            comments: false,
+            media: true,
+            caseStudies: false,
+            users: false,
+            settings: false,
+          },
+        },
+      };
+    }
+
+    // Validate custom role
+    if (!profile.roleId) {
+      await signOut(auth);
+      throw new Error("No valid role is assigned to your account.");
+    }
+
+    const roleRef = doc(db, "roles", profile.roleId);
+    const roleSnap = await getDoc(roleRef);
+
+    if (!roleSnap.exists()) {
+      await signOut(auth);
+      throw new Error("Your assigned role was not found.");
+    }
+
+    const roleData = roleSnap.data();
+
+    if (roleData.isActive !== true) {
+      await signOut(auth);
+      throw new Error("Your assigned role is inactive. Contact the administrator.");
+    }
+
+    const permissions = roleData.permissions || {};
+    const hasPermission = Object.values(permissions).some(
+      (permission) => permission === true
+    );
+
+    if (!hasPermission) {
+      await signOut(auth);
+      throw new Error("You do not have permission to access the CMS.");
     }
 
     return {
       user: result.user,
       profile: {
         ...profile,
-        role: effectiveRole,
+        roleName: roleData.name,
+        permissions,
       },
     };
+
   } catch (err: any) {
     console.warn("Firebase Auth Notice:", err?.code || err?.message || err);
 
@@ -92,11 +168,11 @@ export async function loginUser(email: string, password: string) {
       err?.message?.includes("auth/invalid-credential")
     ) {
       throw new Error(
-        "Invalid email or password. If you haven't created your admin account yet, switch to the 'Create Admin Account' tab below."
+        "Invalid email or password. If you haven't created your admin account yet, switch to the 'Create Admin' tab below."
       );
     }
     if (err?.code === "auth/user-not-found") {
-      throw new Error("No account found with this email. Please register on the 'Create Admin Account' tab.");
+      throw new Error("No account found with this email. Please register on the 'Create Admin' tab.");
     }
     if (err?.code === "auth/wrong-password") {
       throw new Error("Incorrect password. Please verify and try again.");

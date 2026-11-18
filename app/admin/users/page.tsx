@@ -16,12 +16,14 @@ import {
   Check,
 KeyRound,
 Power,
+Trash2,
 } from "lucide-react";
 
 import {
   getAllUsers,
   createCMSUser,
   changeCMSUserPassword,
+  deleteCMSUser,
   type CMSUser,
   updateUserStatus,
 } from "@/app/lib/users";
@@ -49,6 +51,9 @@ const [showNewPassword, setShowNewPassword] = useState(false);
 const [statusUser, setStatusUser] = useState<CMSUser | null>(null);
 const [updatingStatus, setUpdatingStatus] = useState(false);
 const [statusError, setStatusError] = useState("");
+const [deleteUser, setDeleteUser] = useState<CMSUser | null>(null);
+const [deletingUser, setDeletingUser] = useState(false);
+const [deleteError, setDeleteError] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -145,6 +150,27 @@ async function handleToggleUserStatus() {
     );
   } finally {
     setUpdatingStatus(false);
+  }
+}
+
+async function handleDeleteUser() {
+  if (!deleteUser) return;
+
+  try {
+    setDeletingUser(true);
+    setDeleteError("");
+
+    await deleteCMSUser(deleteUser.id);
+    setUsers((previousUsers) =>
+      previousUsers.filter((user) => user.id !== deleteUser.id)
+    );
+    setDeleteUser(null);
+  } catch (err) {
+    setDeleteError(
+      err instanceof Error ? err.message : "Unable to delete the user."
+    );
+  } finally {
+    setDeletingUser(false);
   }
 }
 
@@ -466,6 +492,18 @@ function closePasswordModal() {
       >
         <Power size={14} />
         {user.isActive ? "Deactivate" : "Activate"}
+      </button>
+
+      <button
+        type="button"
+        onClick={() => {
+          setDeleteUser(user);
+          setDeleteError("");
+        }}
+        className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50"
+      >
+        <Trash2 size={14} />
+        Delete
       </button>
 
     </div>
@@ -902,6 +940,76 @@ function closePasswordModal() {
 
       </div>
 
+    </div>
+  </div>
+)}
+
+{deleteUser && !isProtectedAdmin(deleteUser) && (
+  <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/40 p-4">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-user-title"
+      className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+    >
+      <div className="flex items-center justify-between">
+        <div>
+          <h2
+            id="delete-user-title"
+            className="text-xl font-semibold text-gray-900"
+          >
+            Permanently delete user?
+          </h2>
+          <p className="mt-1 text-sm text-gray-500">
+            This action cannot be undone.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setDeleteUser(null)}
+          disabled={deletingUser}
+          aria-label="Close delete confirmation"
+          className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 disabled:opacity-50"
+        >
+          <X size={19} />
+        </button>
+      </div>
+
+      <div className="mt-5 rounded-lg bg-red-50 p-4">
+        <p className="text-sm font-medium text-gray-900">
+          {deleteUser.name || "Unnamed User"}
+        </p>
+        <p className="mt-1 text-xs text-gray-500">{deleteUser.email}</p>
+      </div>
+
+      <p className="mt-4 text-sm leading-6 text-gray-600">
+        This permanently removes the user&apos;s sign-in account and CMS profile.
+      </p>
+
+      {deleteError && (
+        <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          {deleteError}
+        </div>
+      )}
+
+      <div className="mt-6 flex justify-end gap-3 border-t border-gray-100 pt-4">
+        <button
+          type="button"
+          disabled={deletingUser}
+          onClick={() => setDeleteUser(null)}
+          className="rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          onClick={handleDeleteUser}
+          disabled={deletingUser}
+          className="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+        >
+          {deletingUser ? "Deleting..." : "Delete Permanently"}
+        </button>
+      </div>
     </div>
   </div>
 )}

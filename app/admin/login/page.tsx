@@ -27,15 +27,11 @@ export default function AdminLogin() {
 
     try {
       if (mode === "signin") {
-        const { profile } = await loginUser(email, password);
-        if (profile) {
-          router.push("/admin/dashboard");
-        }
+        await loginUser(email.trim(), password);
+        router.replace("/admin/dashboard");
       } else {
-        const { profile } = await registerInitialAdmin(email, password, name);
-        if (profile) {
-          router.push("/admin/dashboard");
-        }
+        await registerInitialAdmin(email.trim(), password, name);
+        router.replace("/admin/dashboard");
       }
     } catch (err: any) {
       setError(
