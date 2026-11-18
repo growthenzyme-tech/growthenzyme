@@ -167,17 +167,17 @@ export default function AdminLogin() {
   return (
     <main className="min-h-screen bg-[#EFF4EB] flex flex-col justify-between selection:bg-[#3F5738]/20 selection:text-[#223624]">
       {/* ========================================================= */}
-      {/* TOP BANNER HERO (login.jpg with smooth gradient fade)     */}
+      {/* TOP BANNER HERO (4K Marketing Agency Green Theme)         */}
       {/* ========================================================= */}
-      <section className="relative w-full h-52 sm:h-60 md:h-64 overflow-hidden">
+      <section className="relative w-full h-56 sm:h-64 md:h-72 overflow-hidden">
         <img
-          src="/images/login.jpg"
-          alt="GrowthEnzyme Login Banner"
-          className="w-full h-full object-cover object-top"
+          src="/images/marketing-agency-green.jpg"
+          alt="GrowthEnzyme Growth Marketing Agency"
+          className="w-full h-full object-cover object-[center_35%]"
         />
 
         {/* Seamless linear gradient fade into pale sage page background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#EFF4EB]/35 to-[#EFF4EB]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#EFF4EB]/30 to-[#EFF4EB]" />
 
         {/* Top Right Brand Badge */}
         <div className="absolute top-5 right-5 sm:top-7 sm:right-10 z-20">
