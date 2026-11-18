@@ -19,8 +19,8 @@ export type CMSUser = {
   email: string;
   roleId: string;
   isActive: boolean;
-  mustChangePassword?: boolean;
   createdAt?: any;
+  role?: string
 };
 
 const usersRef = collection(db, "users");
@@ -123,3 +123,49 @@ export async function updateUserStatus(
 export async function deleteUserProfile(userId: string) {
   return await deleteDoc(doc(db, "users", userId));
 }
+
+
+
+export async function changeCMSUserPassword(
+  userId: string,
+  password: string
+) {
+  if (!userId) {
+    throw new Error("User ID is required.");
+  }
+
+  if (password.length < 6) {
+    throw new Error("Password must contain at least 6 characters.");
+  }
+
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) {
+    throw new Error("Please log in again.");
+  }
+
+  const idToken = await currentUser.getIdToken();
+
+  const response = await fetch(
+    `/api/admin/users/${encodeURIComponent(userId)}/password`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: JSON.stringify({ password }),
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      result.error || "Unable to update the user's password."
+    );
+  }
+
+  return result;
+}
+

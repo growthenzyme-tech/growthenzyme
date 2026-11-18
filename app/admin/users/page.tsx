@@ -14,11 +14,13 @@ import {
   EyeOff,
   Copy,
   Check,
+KeyRound,
 } from "lucide-react";
 
 import {
   getAllUsers,
   createCMSUser,
+  changeCMSUserPassword,
   type CMSUser,
 } from "@/app/lib/users";
 
@@ -37,6 +39,11 @@ export default function UsersPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [creating, setCreating] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<CMSUser | null>(null);
+const [newPassword, setNewPassword] = useState("");
+const [savingPassword, setSavingPassword] = useState(false);
+const [passwordError, setPasswordError] = useState("");
+const [showNewPassword, setShowNewPassword] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -75,6 +82,35 @@ export default function UsersPage() {
     }
   }
 
+async function handleChangePassword(
+  e: React.FormEvent<HTMLFormElement>
+) {
+  e.preventDefault();
+
+  if (!selectedUser) return;
+
+  try {
+    setSavingPassword(true);
+    setPasswordError("");
+
+    await changeCMSUserPassword(selectedUser.id, newPassword);
+
+    setSelectedUser(null);
+    setNewPassword("");
+    setShowNewPassword(false);
+
+    alert("User password updated successfully.");
+  } catch (err) {
+    setPasswordError(
+      err instanceof Error
+        ? err.message
+        : "Unable to update password."
+    );
+  } finally {
+    setSavingPassword(false);
+  }
+}
+
   useEffect(() => {
     loadData();
   }, []);
@@ -92,6 +128,16 @@ export default function UsersPage() {
 
     return "Role not assigned";
   }
+
+  function isProtectedAdmin(user: CMSUser) {
+  const roleName = getRoleName(user).toLowerCase();
+
+  return (
+    roleName === "administrator" ||
+    roleName === "admin" ||
+    user.roleId === "system-admin"
+  );
+}
 
   const filteredUsers = users.filter((user) => {
     const searchValue = search.toLowerCase();
@@ -163,7 +209,7 @@ export default function UsersPage() {
       `Email: ${createdCredentials.email}`,
       `Temporary Password: ${createdCredentials.password}`,
       "Login: /admin/login",
-      "Please change your password after your first login.",
+      
     ].join("\n");
 
     try {
@@ -173,7 +219,14 @@ export default function UsersPage() {
       setFormError("Unable to copy credentials. Please copy them manually.");
     }
   }
+function closePasswordModal() {
+  if (savingPassword) return;
 
+  setSelectedUser(null);
+  setNewPassword("");
+  setPasswordError("");
+  setShowNewPassword(false);
+}
   return (
     <div className="mx-auto max-w-7xl space-y-8">
 
@@ -297,6 +350,7 @@ export default function UsersPage() {
                   <th className="px-5 py-4 font-semibold">User</th>
                   <th className="px-5 py-4 font-semibold">Assigned Role</th>
                   <th className="px-5 py-4 font-semibold">Account Status</th>
+                  <th className="px-5 py-4 font-semibold">Actions</th>
                 </tr>
               </thead>
 
@@ -340,6 +394,24 @@ export default function UsersPage() {
                         {user.isActive ? "Active" : "Inactive"}
                       </span>
                     </td>
+
+                    <td className="px-5 py-4">
+{!isProtectedAdmin(user) && (
+  <button
+    type="button"
+    onClick={() => {
+      setSelectedUser(user);
+      setNewPassword("");
+      setPasswordError("");
+      setShowNewPassword(false);
+    }}
+    className="inline-flex items-center gap-2 rounded-lg border border-[#405C48]/20 px-3 py-2 text-xs font-medium text-[#405C48] hover:bg-[#EDF2EC]"
+  >
+    <KeyRound size={14} />
+    Change Password
+  </button>
+)}
+</td>
                   </tr>
                 ))}
               </tbody>
@@ -456,9 +528,9 @@ export default function UsersPage() {
                   </button>
                 </div>
 
-                <p className="mt-1.5 text-xs text-gray-400">
-                  Minimum 6 characters. The user must change it after first login.
-                </p>
+    <p className="mt-1.5 text-xs text-gray-400">
+  Minimum 6 characters. This password will be assigned to the new user.
+</p>
               </div>
 
               <div>
@@ -591,6 +663,101 @@ export default function UsersPage() {
           </div>
         </div>
       )}
+
+      
+{selectedUser && !isProtectedAdmin(selectedUser) && (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 p-4">
+      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Change User Password
+            </h2>
+            <p className="mt-1 text-sm text-gray-500">
+              Set a new password for this account.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setSelectedUser(null)}
+            disabled={savingPassword}
+            className="rounded-lg p-2 text-gray-400 hover:bg-gray-100"
+          >
+            <X size={19} />
+          </button>
+        </div>
+
+        <div className="mt-5 rounded-lg bg-[#F7F9F6] p-4">
+          <p className="text-sm font-medium text-gray-900">
+            {selectedUser.name}
+          </p>
+          <p className="mt-1 text-xs text-gray-500">
+            {selectedUser.email}
+          </p>
+        </div>
+
+        <form onSubmit={handleChangePassword} className="mt-5 space-y-4">
+          {passwordError && (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+              {passwordError}
+            </div>
+          )}
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-700">
+              New Password
+            </label>
+
+            <div className="relative">
+              <input
+                required
+                minLength={6}
+                type={showNewPassword ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Enter new password"
+                className="w-full rounded-lg border border-gray-200 px-4 py-3 pr-12 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-[#405C48]"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                aria-label={showNewPassword ? "Hide password" : "Show password"}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+
+            <p className="mt-1.5 text-xs text-gray-400">
+              Minimum 6 characters.
+            </p>
+          </div>
+
+          <div className="flex justify-end gap-3 border-t border-gray-100 pt-4">
+            <button
+              type="button"
+              disabled={savingPassword}
+              onClick={() => setSelectedUser(null)}
+              className="rounded-lg border border-gray-200 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              disabled={savingPassword || newPassword.length < 6}
+              className="rounded-lg bg-[#405C48] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#334A3A] disabled:opacity-50"
+            >
+              {savingPassword ? "Updating..." : "Update Password"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )}
+
 
     </div>
   );

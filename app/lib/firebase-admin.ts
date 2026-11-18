@@ -13,6 +13,7 @@ type FirebaseServiceAccount = {
 };
 
 type CloudflareSecrets = {
+  FIREBASE_SERVICE_ACCOUNT_JSON_BASE64?: string;
   FIREBASE_SERVICE_ACCOUNT_JSON?: string;
 };
 
@@ -56,36 +57,51 @@ function getPrivateKeyBytes(
 function getServiceAccount(): FirebaseServiceAccount {
   const env = getCloudflareContext().env as CloudflareSecrets;
 
-  const rawCredentials = env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  const encodedCredentials =
+    env.FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 ||
+    process.env.FIREBASE_SERVICE_ACCOUNT_JSON_BASE64;
 
-  if (!rawCredentials) {
-    throw new Error(
-      "Firebase service-account credentials are not configured."
-    );
-  }
-
-  let credentials: FirebaseServiceAccount;
+  const rawCredentials =
+    env.FIREBASE_SERVICE_ACCOUNT_JSON ||
+    process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
 
   try {
-    credentials = JSON.parse(rawCredentials);
+    let credentialsText = "";
+
+    if (encodedCredentials) {
+      const binary = atob(encodedCredentials.trim());
+
+      const bytes = Uint8Array.from(
+        binary,
+        (character) => character.charCodeAt(0)
+      );
+
+      credentialsText = new TextDecoder().decode(bytes);
+    } else if (rawCredentials) {
+      credentialsText = rawCredentials;
+    } else {
+      throw new Error("Credentials missing");
+    }
+
+    const credentials = JSON.parse(
+      credentialsText
+    ) as FirebaseServiceAccount;
+
+    if (
+      credentials.type !== "service_account" ||
+      !credentials.project_id ||
+      !credentials.client_email ||
+      !credentials.private_key
+    ) {
+      throw new Error("Credentials incomplete");
+    }
+
+    return credentials;
   } catch {
     throw new Error(
-      "Firebase service-account credentials contain invalid JSON."
+      "Firebase service-account credentials are missing, invalid, or incomplete."
     );
   }
-
-  if (
-    credentials.type !== "service_account" ||
-    !credentials.project_id ||
-    !credentials.client_email ||
-    !credentials.private_key
-  ) {
-    throw new Error(
-      "Firebase service-account credentials are incomplete."
-    );
-  }
-
-  return credentials;
 }
 
 export async function getFirebaseAccessToken(): Promise<string> {
@@ -100,7 +116,10 @@ export async function getFirebaseAccessToken(): Promise<string> {
 
   const claims = {
     iss: credentials.client_email,
-    scope: "https://www.googleapis.com/auth/datastore",
+   scope: [
+  "https://www.googleapis.com/auth/datastore",
+  "https://www.googleapis.com/auth/identitytoolkit",
+].join(" "),
     aud:
       credentials.token_uri ||
       "https://oauth2.googleapis.com/token",

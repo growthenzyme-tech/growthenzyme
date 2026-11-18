@@ -312,7 +312,7 @@ export async function POST(request: NextRequest) {
             email: { stringValue: email },
             roleId: { stringValue: roleId },
             isActive: { booleanValue: true },
-            mustChangePassword: { booleanValue: true },
+           
             createdAt: { timestampValue: timestamp },
             updatedAt: { timestampValue: timestamp },
           },
