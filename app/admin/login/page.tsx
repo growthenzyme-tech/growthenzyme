@@ -3,31 +3,22 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  loginUser,
-  registerInitialAdmin,
-  resetUserPassword,
-} from "@/app/lib/auth";
+import { loginUser, resetUserPassword } from "@/app/lib/auth";
 import {
   Mail,
   Lock,
   Eye,
   EyeOff,
   ArrowRight,
-  User,
   Loader2,
   AlertCircle,
   HelpCircle,
   Check,
-  Sparkles,
-  LogIn,
 } from "lucide-react";
 
 export default function AdminLogin() {
   const router = useRouter();
 
-  const [mode, setMode] = useState<"signin" | "register">("signin");
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -44,13 +35,8 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      if (mode === "signin") {
-        await loginUser(email.trim(), password);
-        router.replace("/admin/dashboard");
-      } else {
-        await registerInitialAdmin(email.trim(), password, name);
-        router.replace("/admin/dashboard");
-      }
+      await loginUser(email.trim(), password);
+      router.replace("/admin/dashboard");
     } catch (err: any) {
       setError(
         err instanceof Error
@@ -122,59 +108,17 @@ export default function AdminLogin() {
       {/* ========================================================= */}
       {/* MAIN CONTENT & LIGHT GREENISH CANVAS LOGIN CARD           */}
       {/* ========================================================= */}
-      <div className="relative -mt-28 sm:-mt-34 md:-mt-40 lg:-mt-44 mx-auto w-full max-w-[760px] px-5 z-10 flex-1 flex flex-col justify-center my-auto">
-        {/* LIGHT GREENISH FLOATING CARD (Extended length to top) */}
+      <div className="relative -mt-24 sm:-mt-28 md:-mt-32 lg:-mt-36 mx-auto w-full max-w-[700px] px-5 z-10 flex-1 flex flex-col justify-center my-auto">
+        {/* LIGHT GREENISH FLOATING CARD */}
         <div className="rounded-[28px] sm:rounded-[32px] border border-[#ADC4A4]/80 bg-[#D7E6D1] pt-7 sm:pt-9 md:pt-10 pb-6 sm:pb-8 md:pb-10 px-6 sm:px-8 md:px-10 lg:px-11 shadow-[0_25px_60px_-15px_rgba(41,56,47,0.18)]">
           {/* CENTERED HEADLINE & SUBTITLE */}
-          <div className="text-center mb-5 sm:mb-6">
+          <div className="text-center mb-6 sm:mb-7">
             <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#1B2921]">
-              {mode === "signin" ? "Welcome Back" : "Create Admin Account"}
+              Welcome Back
             </h1>
             <p className="mt-1.5 text-xs sm:text-sm text-[#2E4735] max-w-xl mx-auto leading-relaxed">
-              {mode === "signin"
-                ? "Sign in to access your dashboard and continue where you left off."
-                : "Set up your admin credentials to manage GrowthEnzyme articles & assets."}
+              Sign in to access your dashboard and continue where you left off.
             </p>
-          </div>
-
-          {/* MODE SELECTOR TABS (Pure White Container on Light Greenish Canvas) */}
-          <div className="flex rounded-xl sm:rounded-2xl bg-white p-1.5 border border-[#ADC4A4] mb-5 sm:mb-6 shadow-2xs">
-            <button
-              type="button"
-              onClick={() => {
-                setMode("signin");
-                setError("");
-                setResetSuccess("");
-              }}
-              className={`flex-1 inline-flex items-center justify-center gap-2 rounded-lg sm:rounded-xl py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition cursor-pointer ${
-                mode === "signin"
-                  ? "bg-[#29382F] text-white shadow-xs"
-                  : "text-[#2E4735] hover:text-[#1B2921]"
-              }`}
-            >
-              <LogIn size={14} />
-              <span>Sign In</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setMode("register");
-                setError("");
-                setResetSuccess("");
-              }}
-              className={`flex-1 inline-flex items-center justify-center gap-2 rounded-lg sm:rounded-xl py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition cursor-pointer ${
-                mode === "register"
-                  ? "bg-[#29382F] text-white shadow-xs"
-                  : "text-[#2E4735] hover:text-[#1B2921]"
-              }`}
-            >
-              <Sparkles
-                size={14}
-                className={mode === "register" ? "text-white" : "text-[#2E4735]"}
-              />
-              <span>Create Admin</span>
-            </button>
           </div>
 
           {/* FEEDBACK BANNERS */}
@@ -184,18 +128,6 @@ export default function AdminLogin() {
               <div className="flex-1">
                 <p className="font-semibold text-red-950">Authentication Notice</p>
                 <p className="mt-0.5 text-red-800 leading-relaxed">{error}</p>
-                {mode === "signin" && error.includes("invalid-credential") && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMode("register");
-                      setError("");
-                    }}
-                    className="mt-1.5 block text-xs font-bold text-[#1B2921] underline hover:text-black cursor-pointer"
-                  >
-                    Need to create this admin account? Click here →
-                  </button>
-                )}
               </div>
             </div>
           )}
@@ -208,26 +140,7 @@ export default function AdminLogin() {
           )}
 
           {/* FORM */}
-          <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
-            {/* FULL NAME (Only in Register Mode) */}
-            {mode === "register" && (
-              <div>
-                <label className="mb-1.5 block text-xs sm:text-sm font-semibold text-[#1B2921]">
-                  Full Name
-                </label>
-                <div className="relative flex items-center rounded-xl sm:rounded-2xl bg-white border border-[#ADC4A4] px-4 py-2.5 sm:py-3 transition focus-within:border-[#29382F] focus-within:ring-2 focus-within:ring-[#29382F]/15 shadow-2xs">
-                  <User size={16} className="text-[#3B5A44] shrink-0 mr-3" />
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Administrator"
-                    className="w-full bg-transparent outline-none text-xs sm:text-sm text-[#1B2921] placeholder-gray-400"
-                  />
-                </div>
-              </div>
-            )}
-
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* EMAIL ADDRESS */}
             <div>
               <label className="mb-1.5 block text-xs sm:text-sm font-semibold text-[#1B2921]">
@@ -251,23 +164,16 @@ export default function AdminLogin() {
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="block text-xs sm:text-sm font-semibold text-[#1B2921]">
-                  Password{" "}
-                  {mode === "register" && (
-                    <span className="text-[11px] font-normal text-[#2E4735]">
-                      (min 6 chars)
-                    </span>
-                  )}
+                  Password
                 </label>
-                {mode === "signin" && (
-                  <button
-                    type="button"
-                    onClick={handleForgotPassword}
-                    disabled={sendingReset}
-                    className="text-xs font-semibold text-[#1B2921] hover:underline cursor-pointer"
-                  >
-                    {sendingReset ? "Sending..." : "Forgot?"}
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  disabled={sendingReset}
+                  className="text-xs font-semibold text-[#1B2921] hover:underline cursor-pointer"
+                >
+                  {sendingReset ? "Sending..." : "Forgot?"}
+                </button>
               </div>
 
               <div className="relative flex items-center rounded-xl sm:rounded-2xl bg-white border border-[#ADC4A4] px-4 py-2.5 sm:py-3 transition focus-within:border-[#29382F] focus-within:ring-2 focus-within:ring-[#29382F]/15 shadow-2xs">
@@ -302,17 +208,11 @@ export default function AdminLogin() {
                 {loading ? (
                   <>
                     <Loader2 size={16} className="animate-spin" />
-                    <span>
-                      {mode === "signin"
-                        ? "Signing In..."
-                        : "Creating Account..."}
-                    </span>
+                    <span>Signing In...</span>
                   </>
                 ) : (
                   <>
-                    <span>
-                      {mode === "signin" ? "Sign In" : "Create Admin & Sign In"}
-                    </span>
+                    <span>Sign In</span>
                     <ArrowRight
                       size={16}
                       className="transition-transform group-hover:translate-x-1"
@@ -324,7 +224,7 @@ export default function AdminLogin() {
           </form>
 
           {/* EXPANDABLE TROUBLESHOOTING HINT */}
-          <div className="mt-4 pt-3 border-t border-[#ADC4A4]/60">
+          <div className="mt-5 pt-3.5 border-t border-[#ADC4A4]/60">
             <button
               type="button"
               onClick={() => setShowHelp(!showHelp)}
@@ -342,17 +242,12 @@ export default function AdminLogin() {
                 <p className="font-semibold text-[#142318]">Quick Solutions:</p>
                 <ul className="list-disc pl-4 space-y-1 text-[11px]">
                   <li>
-                    <strong>First-time setup?</strong> Switch to the{" "}
-                    <strong>&ldquo;Create Admin&rdquo;</strong> tab above and enter
-                    your desired admin email and password.
-                  </li>
-                  <li>
-                    <strong>Already registered?</strong> Double check for typos or
-                    click <strong>Forgot?</strong> above.
+                    <strong>Double check your credentials</strong> for typos or
+                    click <strong>Forgot?</strong> above to reset your password.
                   </li>
                   <li>
                     <strong>Firebase Console:</strong> Ensure{" "}
-                    <em>Email/Password</em> is enabled in{" "}
+                    <em>Email/Password</em> sign-in provider is enabled in{" "}
                     <a
                       href="https://console.firebase.google.com/project/growthenzyme-cms/authentication/providers"
                       target="_blank"
