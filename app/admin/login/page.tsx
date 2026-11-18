@@ -80,12 +80,12 @@ export default function AdminLogin() {
     <main className="min-h-screen bg-white flex flex-col justify-between selection:bg-[#D78359]/20 selection:text-[#29382F]">
       
       {/* ========================================================= */}
-      {/* TOP BANNER HERO (MARKETING.jpg with smooth gradient fade) */}
+      {/* TOP BANNER HERO (login.jpg with smooth gradient fade)     */}
       {/* ========================================================= */}
       <section className="relative w-full h-64 sm:h-72 md:h-84 overflow-hidden">
         <img
-          src="/images/MARKETING.jpg"
-          alt="GrowthEnzyme Marketing & Tech"
+          src="/images/login.jpg"
+          alt="GrowthEnzyme Login Banner"
           className="w-full h-full object-cover object-center scale-[1.02]"
         />
 
