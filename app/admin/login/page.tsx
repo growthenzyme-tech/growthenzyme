@@ -267,7 +267,7 @@ export default function AdminLogin() {
 
       {/* FOOTER NOTE */}
       <footer className="text-center py-2 sm:py-2.5 text-[11px] text-gray-400 shrink-0">
-        &copy; {new Date().getFullYear()} GrowthEnzyme. All rights reserved.
+        &copy; {new Date().getFullYear()} Growth Enzyme. All rights reserved.
       </footer>
     </main>
   );

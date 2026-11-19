@@ -18,6 +18,8 @@ import {
   ChevronRight,
   MessageSquare,
   ShieldCheck,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { logoutUser, observeAuth } from "@/app/lib/auth";
 import { doc, getDoc } from "firebase/firestore";
@@ -44,6 +46,41 @@ export default function AdminShell({
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    try {
+      const savedTheme = localStorage.getItem("admin_theme");
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+        setIsDarkMode(true);
+        document.documentElement.classList.add("dark");
+      } else {
+        setIsDarkMode(false);
+        document.documentElement.classList.remove("dark");
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  function toggleDarkMode() {
+    try {
+      if (isDarkMode) {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("admin_theme", "light");
+        setIsDarkMode(false);
+      } else {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("admin_theme", "dark");
+        setIsDarkMode(true);
+      }
+    } catch {
+      setIsDarkMode(!isDarkMode);
+    }
+  }
 
   // Authentication states
 type PermissionKey =
@@ -388,19 +425,16 @@ const sidebar = (
 
     {/* Brand Header */}
     <div className="flex h-[82px] items-center justify-between border-b border-white/15 px-7">
-      <Link href="/admin/dashboard" className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-[#B6CBA9] text-xl font-bold text-[#29382F] shadow-sm">
-          G
-        </div>
+      <Link href="/admin/dashboard" className="group flex items-center gap-3">
+        <img
+          src="/images/logo.png"
+          alt="Growth Enzyme Logo"
+          className="h-10 w-10 object-contain drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
+        />
 
-        <div>
-          <p className="text-[15px] font-bold tracking-wide text-white">
-            GrowthEnzyme
-          </p>
-          <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/75">
-            Content Studio
-          </p>
-        </div>
+        <span className="text-[16px] font-bold tracking-wide text-white transition-colors group-hover:text-[#B6CBA9]">
+          Growth Enzyme
+        </span>
       </Link>
 
       <button
@@ -489,7 +523,7 @@ const sidebar = (
 
       <div className="mt-3 border-t border-white/10 px-3 pt-4">
         <p className="text-[10px] font-medium tracking-wide text-white/65">
-          GrowthEnzyme CMS · 2026
+          Growth Enzyme CMS · 2026
         </p>
       </div>
     </div>
@@ -498,7 +532,7 @@ const sidebar = (
 
 
   return (
-    <div className="min-h-screen bg-[#f7f7f5]">
+    <div className="min-h-screen bg-[#f7f7f5] transition-colors dark:bg-[#0E1612]">
       <div className="fixed inset-y-0 left-0 z-40 hidden w-[255px] lg:block">
         {sidebar}
       </div>
@@ -518,38 +552,74 @@ const sidebar = (
       )}
 
       <div className="lg:pl-[255px]">
-        <header className="sticky top-0 z-30 flex h-[76px] items-center justify-between border-b border-gray-200 bg-white/95 px-5 backdrop-blur-md md:px-9">
+        <header className="sticky top-0 z-30 flex h-[76px] items-center justify-between border-b border-gray-200 bg-white/95 px-5 backdrop-blur-md transition-colors dark:border-[#202E26] dark:bg-[#15201A]/95 md:px-9">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
-              className="rounded-lg border border-gray-200 p-2 text-gray-700 lg:hidden"
+              className="rounded-lg border border-gray-200 p-2 text-gray-700 transition hover:bg-gray-100 dark:border-white/15 dark:text-gray-200 dark:hover:bg-white/10 lg:hidden"
               aria-label="Open navigation"
             >
               <Menu size={20} />
             </button>
 
             <div>
-              <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-gray-400">
-                GrowthEnzyme / CMS
+              <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-gray-400 dark:text-[#8FA89B]">
+                Growth Enzyme / CMS
               </p>
-              <h2 className="mt-1 text-sm font-semibold text-gray-900">
+              <h2 className="mt-1 text-sm font-semibold text-gray-900 dark:text-white">
                 {currentPage}
               </h2>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden text-right sm:block">
-              <p className="text-xs font-semibold text-gray-800">
-                Content Management
-              </p>
-              <p className="mt-1 text-[10px] text-gray-400">
-                Admin Workspace
-              </p>
-            </div>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#242424] text-sm font-semibold text-white">
-              G
-            </div>
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* Dark / Light Mode Toggle */}
+            <button
+              type="button"
+              onClick={toggleDarkMode}
+              className="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50/80 px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm transition hover:bg-gray-100 hover:text-gray-900 dark:border-white/15 dark:bg-white/5 dark:text-gray-200 dark:hover:bg-white/10 dark:hover:text-white"
+              title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              aria-label={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {isDarkMode ? (
+                <>
+                  <Sun size={15} className="text-amber-400" />
+                  <span className="hidden sm:inline">Light</span>
+                </>
+              ) : (
+                <>
+                  <Moon size={15} className="text-gray-600" />
+                  <span className="hidden sm:inline">Dark</span>
+                </>
+              )}
+            </button>
+
+            {/* Log Out Option */}
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="flex items-center gap-2 rounded-xl border border-red-200/80 bg-red-50/70 px-3 py-2 text-xs font-semibold text-red-600 shadow-sm transition hover:bg-red-100 hover:text-red-700 disabled:opacity-50 dark:border-red-900/30 dark:bg-red-950/30 dark:text-red-400 dark:hover:bg-red-900/50"
+              title="Log Out"
+            >
+              <LogOut size={15} />
+              <span className="hidden sm:inline">
+                {loggingOut ? "Signing out..." : "Log Out"}
+              </span>
+            </button>
+
+            {/* Growth Enzyme Logo */}
+            <Link
+              href="/admin/dashboard"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white p-1.5 shadow-sm transition hover:scale-105 hover:border-[#29382F]/30 dark:border-white/15 dark:bg-[#1f2e26]"
+              title="Growth Enzyme Dashboard"
+            >
+              <img
+                src="/images/logo.png"
+                alt="Growth Enzyme Logo"
+                className="h-full w-full object-contain"
+              />
+            </Link>
           </div>
         </header>
 

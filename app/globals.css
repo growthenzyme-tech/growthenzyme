@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @font-face {
   font-family: 'Bricolage Grotesque';
   src: url('/fonts/BricolageGrotesque.woff2') format('woff2');
@@ -34,6 +36,12 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+}
+
+html.dark {
+  --background: #0e1612;
+  --foreground: #ededed;
+  color-scheme: dark;
 }
 
 body {
