@@ -37,14 +37,15 @@ const projects: Project[] = [
     categories: ["Performance Marketing", "Meta Ads", "SMM"],
     description:
       "Ran multiple Meta Ads campaigns for a local interior design studio — combining a call-objective ad and a messaging ad. Delivered 36 direct calls at just ₹35 per call, 47K+ video views, and 10 messaging conversations started, across a tight local budget.",
-    image: "/services/img2.webp",
-    imageAlt: "Dream Decor Interior project",
+    image: "/images/dream-decor-curved-4k.jpg",
+    imageAlt: "Dream Decor Interior project in 4K clarity",
     results: [
       { value: "36", label: "Calls" },
       { value: "₹35.31", label: "Per call" },
       { value: "47,907", label: "Views" },
     ],
     theme: "bg-[#F2E5D9]",
+    link: "/case-studies/dream-decor",
   },
   {
     number: "03",
@@ -52,15 +53,15 @@ const projects: Project[] = [
     categories: ["Web Design", "Landing Page", "Health Care"],
     description:
       "Designed a conversion-focused landing page for a traditional Ayurvedic clinic. The brief was clear: earn trust fast, make booking frictionless. Clean layout, local-language elements, and a clear call-to-action — built to convert first-time visitors into appointments.",
-    image: "/services/img3.webp",
-    imageAlt: "Pattanam Vaidhyar Vaidhyasalai website project",
+    image: "/images/pattanam-vaithiyar-4k.jpg",
+    imageAlt: "Pattanam Vaidhyar Vaidhyasalai 4th-generation Siddha clinic in 4K clarity",
     results: [
       { value: "5 Days", label: "Delivered in" },
       { value: "Mobile-first", label: "Experience" },
       { value: "Conversion", label: "Focused" },
     ],
     theme: "bg-[#EAE8DC]",
-    link: "https://pattanamvaidhyar.in/",
+    link: "/case-studies/pattanam-vaithiyar",
   },
   {
     number: "04",
@@ -105,14 +106,14 @@ export default function Work() {
           <span className="font-heading inline-flex items-center rounded-full border border-[#506B59]/30 bg-[#FFFDF8]/60 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#506B59] backdrop-blur sm:text-xs">
             Our Portfolio
           </span>
-<h2 className="font-heading mt-5 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:mt-6 sm:text-6xl lg:text-7xl">
-  Work we're
-  <br />
+          <h2 className="font-heading mt-5 max-w-[520px] text-[clamp(2.5rem,10vw,3.5rem)] font-bold uppercase leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:mt-6 sm:text-6xl lg:text-7xl">
+            Work we're
+            <br />
 
-  <span className="mt-2 inline-block rounded-full bg-[#29382F] px-4 py-2.5 text-white sm:mt-3 sm:px-7 sm:py-3">
-    proud of.
-  </span>
-</h2>
+            <span className="mt-2 inline-block rounded-full bg-[#29382F] px-4 py-2.5 text-white sm:mt-3 sm:px-7 sm:py-3">
+              proud of.
+            </span>
+          </h2>
 
           <p className="mt-4 max-w-[420px] text-sm leading-6 text-[#506B59] sm:text-base sm:leading-7">
             A curated selection of projects across performance, design and web.
@@ -123,9 +124,8 @@ export default function Work() {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:gap-6">
           {projects.map((project, index) => {
             const isLeftCard = index % 2 === 0;
-            const cardClasses = `group relative flex min-w-0 flex-col overflow-visible border border-white/60 bg-white p-4 shadow-[0_18px_40px_rgba(41,56,47,0.14)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_50px_rgba(41,56,47,0.2)] sm:p-5 ${
-              project.link ? "cursor-pointer" : ""
-            }`;
+            const cardClasses = `group relative flex min-w-0 flex-col overflow-visible border border-white/60 bg-white p-4 shadow-[0_18px_40px_rgba(41,56,47,0.14)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_50px_rgba(41,56,47,0.2)] sm:p-5 ${project.link ? "cursor-pointer" : ""
+              }`;
 
             const cardContent = (
               <>
@@ -159,11 +159,10 @@ export default function Work() {
 
                   {/* THREE OVERLAPPING RESULT BOXES */}
                   <div
-                    className={`absolute top-1/2 z-20 flex w-[100px] -translate-y-1/2 flex-col gap-3 sm:w-[108px] md:w-[116px] ${
-                      isLeftCard
-                        ? "left-2 md:left-[-76px]"
-                        : "right-2 md:right-[-76px]"
-                    }`}
+                    className={`absolute top-1/2 z-20 flex w-[100px] -translate-y-1/2 flex-col gap-3 sm:w-[108px] md:w-[116px] ${isLeftCard
+                      ? "left-2 md:left-[-76px]"
+                      : "right-2 md:right-[-76px]"
+                      }`}
                   >
                     {project.results.map((result) => (
                       <div
@@ -193,11 +192,10 @@ export default function Work() {
                       return (
                         <span
                           key={category}
-                          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[9px] font-bold uppercase tracking-[0.12em] sm:text-[10px] ${
-                            isInProgress
-                              ? "border border-[#D78359]/40 bg-[#FAECE5] text-[#C26233]"
-                              : "border border-[#D5E0D2] bg-[#E8EEE5] text-[#29382F]"
-                          }`}
+                          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[9px] font-bold uppercase tracking-[0.12em] sm:text-[10px] ${isInProgress
+                            ? "border border-[#D78359]/40 bg-[#FAECE5] text-[#C26233]"
+                            : "border border-[#D5E0D2] bg-[#E8EEE5] text-[#29382F]"
+                            }`}
                         >
                           {isInProgress && (
                             <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
@@ -240,6 +238,29 @@ export default function Work() {
               </article>
             );
           })}
+        </div>
+
+        {/* VIEW ALL CASE STUDIES LINK */}
+        <div className="mt-12 flex flex-col items-center justify-between gap-5 rounded-2xl border border-[#29382F]/15 bg-white/70 p-6 backdrop-blur-sm sm:flex-row sm:px-8">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#506B59]">
+              Growth Enzyme Portfolio
+            </p>
+            <h4 className="font-heading mt-1 text-lg font-bold text-[#29382F] sm:text-xl">
+              Explore Verified Client Success Stories & Detailed Case Studies
+            </h4>
+          </div>
+
+          <Link
+            href="/case-studies"
+            className="group inline-flex shrink-0 items-center gap-2.5 rounded-xl bg-[#29382F] px-6 py-3.5 text-xs font-bold text-white shadow-md transition-all hover:bg-[#3d5446] hover:shadow-lg"
+          >
+            View All Case Studies
+            <ArrowRight
+              size={15}
+              className="transition-transform group-hover:translate-x-1"
+            />
+          </Link>
         </div>
 
         {/* BOTTOM CTA PANEL */}

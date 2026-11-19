@@ -351,8 +351,15 @@ export default function AdminShell({
   }
   const currentPage =
     navigation.find((item) => pathname.startsWith(item.href))?.label ||
-    (pathname.includes("/edit/") ? "Edit Blog" :
-      pathname.includes("/create") ? "Create Blog" : "CMS");
+    (pathname.includes("/case-studies/edit/")
+      ? "Edit Case Study"
+      : pathname.includes("/case-studies/create")
+      ? "Create Case Study"
+      : pathname.includes("/edit/")
+      ? "Edit Blog"
+      : pathname.includes("/create")
+      ? "Create Blog"
+      : "CMS");
 
   async function handleLogout() {
     try {

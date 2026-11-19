@@ -8,9 +8,11 @@ import { Menu, X } from "lucide-react";
 import { getGeneralSettings } from "@/app/lib/settings";
 
 const navLinks = [
-  { name: "Services", href: "#services" },
-  { name: "Works", href: "#work" },
-  { name: "Process", href: "#process" },
+  { name: "Services", href: "/#services" },
+  { name: "Works", href: "/#work" },
+  { name: "Process", href: "/#process" },
+  { name: "Case Studies", href: "/case-studies" },
+  { name: "Blogs", href: "/blog" },
 ];
 
 export default function Navbar() {
