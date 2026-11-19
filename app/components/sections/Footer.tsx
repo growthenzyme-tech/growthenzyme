@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getGeneralSettings } from "@/app/lib/settings";
+import { ArrowRight } from "lucide-react";
 
 const services = [
   { id: "01", name: "Performance Marketing", href: "#services" },
@@ -90,205 +91,209 @@ const phoneHref = phone.replace(/[^\d+]/g, "");
     <footer className="w-full bg-white text-[#173D32] px-6 pt-8 pb-6 sm:px-10 sm:pt-10 sm:pb-7 md:px-14 lg:px-20 lg:pt-11 lg:pb-8 xl:px-24">
       <div className="mx-auto max-w-[1480px]">
         {/* MAIN 2-COLUMN GRID (EDITORIAL LEFT + TALL ORGANIC ARCH CARD RIGHT) */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-12 xl:gap-16 items-stretch">
+       <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[1fr_500px] lg:gap-12 xl:grid-cols-[1fr_540px]">
 
           {/* LEFT COLUMN: BRAND, HEADLINE, CONTACT, SOCIALS, CTA */}
-          <div className="flex flex-col justify-between">
-            <div>
-              {/* BRAND LOGO & NAME */}
-              <Link href="/" className="inline-flex items-center gap-3.5 group flex-wrap sm:flex-nowrap">
-                <div className="relative flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white ring-1 ring-[#173D32]/10 shadow-sm transition-transform duration-300 group-hover:scale-105">
-                  <Image
-                    src="/images/logo.png"
-                    alt="GrowthEnzyme logo"
-                    width={48}
-                    height={48}
-                    className="h-full w-full object-contain p-1"
-                  />
-                </div>
-                <span
-                  className="font-heading text-[#173D32]"
-                  style={{
-                    fontFamily: '"Bricolage Grotesque", "Bricolage Grotesque Placeholder", sans-serif',
-                    fontSize: "clamp(30px, 4.5vw, 50px)",
-                    fontWeight: 800,
-                    fontStyle: "normal",
-                    lineHeight: "90.174px",
-                    letterSpacing: "-2.8476px",
-                    color: "#173D32",
-                  }}
-                >
-                 {websiteName}
-                </span>
-              </Link>
+       <div className="flex w-full flex-col justify-start">
 
-              {/* DISPLAY HEADLINE */}
-              <div>
-                <h2
-                  className="font-heading mt-2 text-[#173D32]"
-                  style={{
-                    fontFamily: '"Bricolage Grotesque", "Bricolage Grotesque Placeholder", sans-serif',
-                    fontSize: "24px",
-                    fontWeight: 500,
-                    fontStyle: "normal",
-                    lineHeight: "28.8px",
-                    letterSpacing: "normal",
-                    color: "#173D32",
-                  }}
-                >
-                  Catalyzing Digital Growth
-                </h2>
-              </div>
+  {/* BRAND LOGO & NAME */}
+  <Link
+    href="/"
+    className="group inline-flex items-center gap-4"
+  >
+    <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white ring-1 ring-[#173D32]/10 shadow-sm transition-transform duration-300 group-hover:scale-105 sm:h-16 sm:w-16">
+      <Image
+        src="/images/logo.png"
+        alt="GrowthEnzyme logo"
+        width={64}
+        height={64}
+        className="h-full w-full object-contain p-1"
+      />
+    </div>
 
-              {/* SUBTITLE */}
-              <p className="mt-2.5 text-sm sm:text-base text-[#4E6255] max-w-lg font-normal leading-normal">
-                A full-service digital growth agency.
-              </p>
+    <span className="font-heading text-[clamp(2rem,4vw,3.2rem)] font-extrabold leading-none tracking-[-0.06em] text-[#173D32]">
+      {websiteName}
+    </span>
+  </Link>
 
-              {/* THIN DIVIDER LINE */}
-              <div className="mt-3.5 sm:mt-4 border-t border-[#173D32]/15 max-w-xl" />
+  {/* HEADLINE */}
+  <div className="mt-7">
+    <h2 className="font-heading text-2xl font-semibold tracking-tight text-[#173D32] sm:text-3xl mt-8">
+      Catalyzing Digital Growth
+    </h2>
 
-              {/* CONTACT DETAILS */}
-          {/* CONTACT DETAILS */}
-<div className="mt-3.5 sm:mt-4">
-  <h3 className="font-heading inline-flex items-center gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#55695C]">
-    <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
-    CONTACT
-  </h3>
+    <p className="mt-3 max-w-xl text-sm leading-7 text-[#4E6255] sm:text-base">
+      A full-service digital growth agency.
+    </p>
+  </div>
 
-  {contactEmail && (
+  {/* DIVIDER */}
+<div className="mt-9 w-full border-t border-[#173D32]/15" />
+
+  {/* CONTACT + SOCIALS HORIZONTAL LAYOUT */}
+<div className="mt-9 grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-12 lg:gap-16">
+
+    {/* CONTACT */}
+    <div>
+      <h3 className="font-heading inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#55695C] sm:text-xs">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+        CONTACT
+      </h3>
+
+      <div className="mt-4 space-y-2">
+        {contactEmail && (
+          <a
+            href={`mailto:${contactEmail}`}
+            className="block break-all text-sm font-semibold tracking-tight text-[#173D32] transition-colors hover:text-[#D78359] sm:text-base"
+          >
+            {contactEmail}
+          </a>
+        )}
+
+        {phone && (
+          <a
+            href={`tel:${phoneHref}`}
+            className="block text-sm font-medium text-[#4E6255] transition-colors hover:text-[#D78359] sm:text-base"
+          >
+            {phone}
+          </a>
+        )}
+
+        {address && (
+          <p className="text-sm leading-6 text-[#4E6255] sm:text-base">
+            {address}
+          </p>
+        )}
+      </div>
+    </div>
+
+    {/* SOCIALS */}
+    {socials.length > 0 && (
+      <div>
+        <h3 className="font-heading inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#55695C] sm:text-xs">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+          SOCIALS
+        </h3>
+
+        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
+          {socials.map((social) => (
+            <a
+              key={social.name}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-1 text-sm font-medium text-[#173D32] transition-colors hover:text-[#D78359] sm:text-base"
+            >
+              {social.name}
+              <span className="text-xs transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                ↗
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+  </div>
+
+  {/* CTA */}
+{/* <div className="mt-12">
     <a
       href={`mailto:${contactEmail}`}
-      className="mt-1.5 text-sm sm:text-base font-semibold tracking-tight text-[#173D32] hover:text-[#D78359] transition-colors block"
+      className="font-instrument group inline-flex items-center gap-3 rounded-full bg-[#173D32] px-7 py-3 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#D78359] hover:shadow-[0_8px_20px_rgba(215,131,89,0.3)]"
     >
-      {contactEmail}
+      Let's grow together
+      <ArrowRight
+        size={16}
+        className="transition-transform duration-300 group-hover:translate-x-1"
+      />
     </a>
-  )}
+  </div> */}
 
-  {phone && (
-    <a
-      href={`tel:${phoneHref}`}
-      className="mt-0.5 text-sm sm:text-base font-medium text-[#4E6255] hover:text-[#D78359] transition-colors block"
-    >
-      {phone}
-    </a>
-  )}
-
-  {address && (
-    <p className="mt-1 text-sm sm:text-base font-medium text-[#4E6255]">
-      {address}
-    </p>
-  )}
 </div>
 
-              {/* SOCIALS */}
-            {/* SOCIALS */}
-{socials.length > 0 && (
-  <div className="mt-4 sm:mt-4.5">
-    <h3 className="font-heading inline-flex items-center gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#55695C]">
+          {/* RIGHT COLUMN: SAGE ARCH CARD WITH COMPACT VERTICAL LENGTH */}
+     {/* RIGHT COLUMN: WIDE ORGANIC SERVICES PANEL */}
+<div className="relative flex min-h-[440px] w-full flex-col justify-between overflow-hidden rounded-tl-[150px] rounded-tr-3xl rounded-bl-3xl rounded-br-[150px] bg-[#CBD7BD] px-10 pb-10 pl-12 pt-16 shadow-[0_16px_40px_rgba(23,61,50,0.08)] sm:rounded-tl-[180px] sm:rounded-br-[180px] sm:px-14 sm:pb-12 sm:pt-20 lg:min-h-[400px] lg:px-16">
+
+  {/* Services Header */}
+  <div>
+    <h3 className="font-heading inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#173D32]/70">
       <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
-      SOCIALS
+      SERVICES
     </h3>
 
-    <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1.5">
-      {socials.map((social) => (
-        <a
-          key={social.name}
-          href={social.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group inline-flex items-center gap-1 text-sm font-medium text-[#173D32] hover:text-[#D78359] transition-colors"
+    {/* Two-column Services Grid */}
+    <div className="mt-8 grid grid-cols-2 gap-x-8 gap-y-0">
+      {services.map((service) => (
+        <Link
+          key={service.id}
+          href={service.href}
+          className="group flex min-w-0 items-center gap-3 border-b border-[#173D32]/15 py-5 transition-colors hover:border-[#D78359]/50"
         >
-          <span>{social.name}</span>
-          <span className="text-xs transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#D78359]">
-            ↗
+          <span className="shrink-0 font-mono text-xs tracking-wider text-[#173D32]/50 transition-colors group-hover:text-[#D78359]">
+            {service.id}
           </span>
-        </a>
+
+          <span className="font-heading text-sm font-bold leading-tight text-[#173D32] transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#D78359] sm:text-base">
+            {service.name}
+          </span>
+        </Link>
       ))}
     </div>
+
+    {/* Blog Link */}
+<Link
+  href="/blog"
+  className="group mt-3 flex items-center justify-between border-b border-[#173D32]/15 py-3 transition-colors hover:border-[#D78359]/50"
+>
+  <div className="flex items-center gap-4">
+    <span className="font-mono text-xs text-[#173D32]/50">
+      07
+    </span>
+
+    <span className="font-heading text-sm font-bold text-[#173D32] transition-colors group-hover:text-[#D78359]">
+      Blog
+    </span>
   </div>
-)}
-            </div>
 
-            {/* ACTION ROW: PILL BUTTON */}
-            <div className="mt-6 sm:mt-7 flex flex-wrap items-center gap-4 sm:gap-6">
-              <a
-                href={`mailto:${contactEmail}`}
-                className="font-instrument group inline-flex items-center gap-2 rounded-full bg-[#173D32] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:bg-[#D78359] hover:shadow-[0_8px_20px_rgba(215,131,89,0.3)] hover:-translate-y-0.5"
-              >
-                <span>Let&apos;s grow together</span>
-                <span className="text-xs transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                  ↗
-                </span>
-              </a>
-            </div>
-          </div>
+  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#173D32] text-white shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-[#D78359]">
+    <ArrowRight
+      size={16}
+      className="transition-transform duration-300 group-hover:translate-x-1"
+    />
+  </span>
+</Link>
+  </div>
 
-          {/* RIGHT COLUMN: SAGE ARCH CARD WITH COMPACT VERTICAL LENGTH */}
-          <div className="w-full max-w-[370px] sm:max-w-[385px] lg:w-[380px] xl:w-[390px] relative flex flex-col justify-between overflow-hidden bg-[#CBD7BD] pl-10 pr-7 pt-16 sm:pl-14 sm:pr-8 sm:pt-20 lg:pl-16 lg:pr-9 lg:pt-24 pb-10 sm:pb-12 rounded-tl-[160px] sm:rounded-tl-[180px] lg:rounded-tl-[200px] rounded-tr-3xl sm:rounded-tr-[2rem] rounded-bl-3xl sm:rounded-bl-[2rem] rounded-br-[160px] sm:rounded-br-[180px] lg:rounded-br-[200px] shadow-[0_16px_40px_rgba(23,61,50,0.08)] shrink-0 self-stretch min-h-[460px] sm:min-h-[490px]">
-            <div>
-              {/* CARD HEADER */}
-              <h3 className="font-heading inline-flex items-center gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.22em] text-[#173D32]/70">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
-                SERVICES
-              </h3>
+  {/* Bottom CTA */}
+  {/* <div className="mt-10 flex items-center gap-4 pt-2">
+    <Link
+      href="#contact"
+      aria-label="Contact us"
+      className="group flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#173D32] text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-[#D78359]"
+    >
+      <ArrowRight
+        size={22}
+        className="-rotate-45 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+      />
+    </Link>
 
-              {/* NUMBERED SERVICES LIST WITH COMPACT ROWS */}
-              <ul className="mt-4 sm:mt-5 flex flex-col">
-                {services.map((service) => (
-                  <li key={service.id}>
-                    <Link
-                      href={service.href}
-                      className="group flex items-center justify-between border-b border-[#173D32]/15 py-2.5 sm:py-3 transition-colors hover:border-[#D78359]/40"
-                    >
-                      <div className="flex items-center gap-3.5 sm:gap-4 min-w-0">
-                        <span className="font-mono text-xs text-[#173D32]/50 tracking-wider shrink-0 transition-colors group-hover:text-[#D78359]">
-                          {service.id}
-                        </span>
-                        <span className="font-heading text-sm sm:text-[15px] font-bold text-[#173D32] transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#D78359] whitespace-nowrap">
-                          {service.name}
-                        </span>
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* CARD BOTTOM: CIRCULAR ARROW BUTTON + TAGLINE */}
-            <div className="mt-7 sm:mt-8 flex items-center gap-4 pt-1">
-              <Link
-                href="#contact"
-                aria-label="Contact us"
-                className="group flex h-12 w-12 sm:h-13 sm:w-13 shrink-0 items-center justify-center rounded-full bg-[#173D32] text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-[#D78359] hover:shadow-[0_8px_20px_rgba(215,131,89,0.35)]"
-              >
-                <svg
-                  className="h-5 w-5 sm:h-5.5 sm:w-5.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M7 17L17 7M17 7H7M17 7V17"
-                  />
-                </svg>
-              </Link>
-              <div className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#D78359] shrink-0" />
-                <div className="font-heading text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] leading-tight text-[#173D32]">
-                  GROWTH,<br />WITHOUT LIMITS.
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="flex items-center gap-2">
+      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#D78359]" />
+      <p className="font-heading text-[10px] font-bold uppercase leading-tight tracking-[0.16em] text-[#173D32] sm:text-xs">
+        GROWTH,
+        <br />
+        WITHOUT LIMITS.
+      </p>
+    </div>
+  </div> */}
+</div>
 
         </div>
 
         {/* BOTTOM COPYRIGHT LINE */}
-        <div className="mt-8 sm:mt-10 pt-4 sm:pt-5 border-t border-[#173D32]/10 text-xs text-[#55695C]">
+        <div className="mt-8 text-center sm:mt-10 pt-4 sm:pt-5 border-t border-[#173D32]/10 text-xs text-[#55695C]">
          <p>
   © {new Date().getFullYear()}{" "}
   {footerCopyright || `${websiteName}. All rights reserved.`}

@@ -7,6 +7,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/app/lib/firebase";
 import { logoutUser } from "@/app/lib/auth";
+import { getAllBlogs, type Blog } from "@/app/lib/blog";
+import { FileEdit, CheckCircle2 } from "lucide-react";
 import {
   BookOpen,
   BriefcaseBusiness,
@@ -21,6 +23,8 @@ export default function AdminDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
+const [blogs, setBlogs] = useState<Blog[]>([]);
+const [statsLoading, setStatsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -63,6 +67,22 @@ export default function AdminDashboard() {
 
     return () => unsubscribe();
   }, [router]);
+
+
+  useEffect(() => {
+  async function fetchDashboardStats() {
+    try {
+      const data = await getAllBlogs();
+      setBlogs(data as Blog[]);
+    } catch (error) {
+      console.error("Error loading dashboard blog statistics:", error);
+    } finally {
+      setStatsLoading(false);
+    }
+  }
+
+  fetchDashboardStats();
+}, []);
 
   async function handleLogout() {
     await logoutUser();
@@ -115,6 +135,16 @@ export default function AdminDashboard() {
       href: "/admin/media",
     },
   ];
+
+  const totalBlogs = blogs.length;
+
+const publishedBlogs = blogs.filter(
+  (blog) => blog.status === "published"
+).length;
+
+const draftBlogs = blogs.filter(
+  (blog) => blog.status === "draft"
+).length;
 
   return (
     <main className="min-h-screen bg-[#FFFDF8] p-5 sm:p-8 lg:p-10">
@@ -194,6 +224,87 @@ export default function AdminDashboard() {
           </div>
         </section>
 
+{/* BLOG STATISTICS */}
+<section>
+  <div className="mb-5">
+    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#D78359]">
+      Content Performance
+    </p>
+
+    <h2
+      className="mt-2 text-2xl font-bold text-[#29382F]"
+      style={{
+        fontFamily: "var(--font-heading), Georgia, serif",
+      }}
+    >
+      Blog Overview
+    </h2>
+  </div>
+
+  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+    {/* Total Blogs */}
+    <div className="rounded-2xl border border-[#DDE4D9] bg-white p-6">
+      <div className="flex items-center justify-between">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E8EDE3] text-[#29382F]">
+          <BookOpen size={21} />
+        </div>
+        <span className="text-[10px] font-bold uppercase tracking-wider text-[#829181]">
+          Total
+        </span>
+      </div>
+
+      <p className="mt-5 text-3xl font-bold text-[#29382F]">
+        {statsLoading ? "..." : totalBlogs}
+      </p>
+
+      <p className="mt-1 text-sm text-[#667267]">
+        Total Blog Articles
+      </p>
+    </div>
+
+    {/* Published Blogs */}
+    <div className="rounded-2xl border border-[#DDE4D9] bg-white p-6">
+      <div className="flex items-center justify-between">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E8EDE3] text-[#405C48]">
+          <CheckCircle2 size={21} />
+        </div>
+        <span className="text-[10px] font-bold uppercase tracking-wider text-[#405C48]">
+          Live
+        </span>
+      </div>
+
+      <p className="mt-5 text-3xl font-bold text-[#29382F]">
+        {statsLoading ? "..." : publishedBlogs}
+      </p>
+
+      <p className="mt-1 text-sm text-[#667267]">
+        Published Blogs
+      </p>
+    </div>
+
+    {/* Draft Blogs */}
+    <div className="rounded-2xl border border-[#DDE4D9] bg-white p-6">
+      <div className="flex items-center justify-between">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F5F0E5] text-[#29382F]">
+          <FileEdit size={21} />
+        </div>
+        <span className="text-[10px] font-bold uppercase tracking-wider text-[#829181]">
+          In Progress
+        </span>
+      </div>
+
+      <p className="mt-5 text-3xl font-bold text-[#29382F]">
+        {statsLoading ? "..." : draftBlogs}
+      </p>
+
+      <p className="mt-1 text-sm text-[#667267]">
+        Draft Blogs
+      </p>
+    </div>
+
+  </div>
+</section>
         {/* Dashboard Section */}
         <section>
           <div className="mb-6 flex items-end justify-between gap-4">
