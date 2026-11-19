@@ -70,35 +70,44 @@ export async function getAllBlogs() {
   }
 }
 
+
 export async function getPublishedBlogs() {
   try {
     const q = query(
       blogsRef,
-      where("status", "==", "published"),
-      orderBy("publishedAt", "desc")
+      where("status", "==", "published")
     );
 
     const snapshot = await getDocs(q);
 
-    return snapshot.docs.map((item) => ({
+    const blogs = snapshot.docs.map((item) => ({
       id: item.id,
       ...item.data(),
-    }));
+    })) as Blog[];
+
+    // Sort newest first using publishedAt, falling back to createdAt.
+    return blogs.sort((a, b) => {
+      const getTime = (value: any) => {
+        if (!value) return 0;
+
+        if (typeof value.toDate === "function") {
+          return value.toDate().getTime();
+        }
+
+        return new Date(value).getTime() || 0;
+      };
+
+      const dateA = getTime(a.publishedAt) || getTime(a.createdAt);
+      const dateB = getTime(b.publishedAt) || getTime(b.createdAt);
+
+      return dateB - dateA;
+    });
   } catch (err: any) {
-    console.warn("Notice fetching published blogs (falling back to unordered query):", err?.message || err);
-    try {
-      const fallbackQ = query(blogsRef, where("status", "==", "published"));
-      const snap = await getDocs(fallbackQ);
-      return snap.docs.map((item) => ({
-        id: item.id,
-        ...item.data(),
-      }));
-    } catch (secondErr: any) {
-      console.warn("Firestore blogs query error:", secondErr?.message || secondErr);
-      return [];
-    }
+    console.error("Error fetching published blogs:", err?.message || err);
+    return [];
   }
 }
+
 
 export async function getBlogBySlug(
   slug: string

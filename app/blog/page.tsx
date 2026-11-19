@@ -40,12 +40,14 @@ export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [featuredBlogId, setFeaturedBlogId] = useState("");
+  const [visibleCount, setVisibleCount] = useState(4);
 
   // Fetch published blogs and the admin-selected Lead Article
   useEffect(() => {
     async function fetchBlogs() {
       try {
         const data = await getPublishedBlogs();
+        console.log("FIREBASE PUBLISHED BLOGS:", data);
 
         // Settings are fetched separately so a settings error
         // does not prevent published blogs from loading.
@@ -82,6 +84,10 @@ export default function BlogPage() {
 
     fetchBlogs();
   }, []);
+
+  useEffect(() => {
+  setVisibleCount(4);
+}, [activeCategory, search]);
 
   // Format Firebase dates
   function formatDate(timestamp: any) {
@@ -141,6 +147,34 @@ export default function BlogPage() {
     ? filteredBlogs.filter((blog) => blog.id !== leadBlog.id)
     : filteredBlogs;
 
+    // Sort Latest Articles by newest publication date
+const sortedLatestBlogs = [...remainingBlogs].sort((a, b) => {
+  const getDate = (blog: Blog) => {
+    const timestamp = blog.publishedAt || blog.createdAt;
+
+    if (!timestamp) return 0;
+
+    const date = timestamp?.toDate
+      ? timestamp.toDate()
+      : new Date(timestamp);
+
+    return date.getTime() || 0;
+  };
+
+  return getDate(b) - getDate(a);
+});
+
+// Display 4 articles initially
+const visibleBlogs = sortedLatestBlogs.slice(0, visibleCount);
+console.log("BLOG DEBUG:", {
+  fetchedPublishedBlogs: blogs.length,
+  filteredBlogs: filteredBlogs.length,
+  featuredBlogId,
+  leadArticle: leadBlog?.title || "No lead article",
+  remainingArticles: remainingBlogs.length,
+  latestArticles: sortedLatestBlogs.length,
+  articleTitles: sortedLatestBlogs.map((blog) => blog.title),
+});
   return (
     <>
     <main className="min-h-screen overflow-hidden bg-[#FFFDF8]">
@@ -400,7 +434,7 @@ export default function BlogPage() {
   ) : (
   <div className="grid grid-cols-1 gap-x-12 gap-y-16 lg:grid-cols-2">
 
-  {remainingBlogs.map((blog) => (
+{visibleBlogs.map((blog) => (
     <article
       key={blog.id}
       className="group grid min-w-0 grid-cols-[0.9fr_1.1fr] items-center"
@@ -463,6 +497,22 @@ export default function BlogPage() {
   ))}
 
 </div>
+  )}
+
+  {/* View More Button */}
+  {sortedLatestBlogs.length > visibleCount && (
+    <div className="mt-16 flex justify-center">
+      <button
+        onClick={() => setVisibleCount((current) => current + 4)}
+        className="group inline-flex items-center gap-4 rounded-full bg-[#29382F] px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-1 hover:bg-[#506B59]"
+      >
+        View More Articles
+
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 transition-transform duration-300 group-hover:translate-x-1">
+          <ArrowRight size={15} />
+        </span>
+      </button>
+    </div>
   )}
 </div>
 

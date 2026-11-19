@@ -209,122 +209,109 @@ export default function BlogEditor({ blogId }: BlogEditorProps) {
   }
 
 
-  async function handleSubmit(status: "draft" | "published") {
-    setError("");
 
-    const user = auth.currentUser;
+async function handleSubmit(status: "draft" | "published") {
+  setError("");
 
-    if (!user) {
-      setError("Your session has expired. Please log in again.");
-      router.replace("/admin/login");
-      return;
-    }
+  const user = auth.currentUser;
 
-    if (!title.trim() || !slug.trim() || !excerpt.trim()) {
-      setError("Please complete the title, slug and short description.");
-      return;
-    }
-
-    if (!editor || editor.isEmpty) {
-      setError("Please write your blog content.");
-      return;
-    }
-
-    const cleanSlug = slug.trim();
-
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(cleanSlug)) {
-      setError("Please use a valid URL slug.");
-      return;
-    }
-
-    setSaving(true);
-
-    try {
-      // 1. Check duplicate slug
-      const slugQuery = query(
-        collection(db, "blogs"),
-        where("slug", "==", cleanSlug)
-      );
-
-      const slugSnapshot = await getDocs(slugQuery);
-
-      const duplicateSlug = slugSnapshot.docs.some(
-        (item) => item.id !== blogId
-      );
-
-      if (duplicateSlug) {
-        setError(
-          "This URL slug is already in use. Please choose another slug."
-        );
-        return;
-      }
-
-      // 2. Handle cover image
-      let coverImageId = coverImage ? existingCoverImageId : null;
-
-      if (coverImageChanged && coverImage && !coverImageId) {
-        const mediaRef = await addDoc(collection(db, "media"), {
-          data: coverImage,
-          url: coverImage,
-          type: "image",
-          mimeType: "image/jpeg",
-          fileName: `${cleanSlug}-cover.jpg`,
-          category: "blog-cover",
-          uploadedBy: user.uid,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        });
-
-        coverImageId = mediaRef.id;
-      }
-
-      // 3. Prepare blog data
-      const blogData = {
-        title: title.trim(),
-        slug: cleanSlug,
-        excerpt: excerpt.trim(),
-        category,
-        content: editor.getHTML(),
-        coverImageId,
-        seoTitle: seoTitle.trim() || title.trim(),
-        metaDescription: metaDescription.trim() || excerpt.trim(),
-        status,
-        updatedAt: serverTimestamp(),
-        publishedAt:
-          status === "published"
-            ? existingPublishedAt || serverTimestamp()
-            : null,
-      };
-
-      // 4. Create or update blog
-      if (blogId) {
-        await updateDoc(doc(db, "blogs", blogId), blogData);
-      } else {
-        await addDoc(collection(db, "blogs"), {
-          ...blogData,
-          authorId: user.uid,
-          authorName:
-            user.displayName || user.email || "GrowthEnzyme Team",
-          createdAt: serverTimestamp(),
-        });
-      }
-
-      // 5. Redirect after successful save
-      router.push("/admin/blogs");
-      router.refresh();
-
-    } catch (err) {
-      console.error("Blog save error:", err);
-
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Unable to save the blog. Please try again."
-      );
-    } finally {
-      setSaving(false);
-    }
+  if (!user) {
+    setError("Your session has expired. Please log in again.");
+    router.replace("/admin/login");
+    return;
   }
+
+  if (!title.trim() || !slug.trim() || !excerpt.trim()) {
+    setError("Please complete the title, slug and short description.");
+    return;
+  }
+
+  if (!editor || editor.isEmpty) {
+    setError("Please write your blog content.");
+    return;
+  }
+
+  const cleanSlug = slug.trim();
+
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(cleanSlug)) {
+    setError("Please use a valid URL slug.");
+    return;
+  }
+
+  setSaving(true);
+
+  try {
+    // 1. Check duplicate slug
+    const slugQuery = query(
+      collection(db, "blogs"),
+      where("slug", "==", cleanSlug)
+    );
+
+    const slugSnapshot = await getDocs(slugQuery);
+
+    const duplicateSlug = slugSnapshot.docs.some(
+      (item) => item.id !== blogId
+    );
+
+    if (duplicateSlug) {
+      setError(
+        "This URL slug is already in use. Please choose another slug."
+      );
+      return;
+    }
+
+    // 2. Prepare cover image reference
+    const coverImageId = coverImage
+      ? existingCoverImageId
+      : null;
+
+    // 3. Prepare blog data
+    const blogData = {
+      title: title.trim(),
+      slug: cleanSlug,
+      excerpt: excerpt.trim(),
+      category,
+      content: editor.getHTML(),
+      coverImageId,
+      seoTitle: seoTitle.trim() || title.trim(),
+      metaDescription: metaDescription.trim() || excerpt.trim(),
+      status,
+      updatedAt: serverTimestamp(),
+      publishedAt:
+        status === "published"
+          ? existingPublishedAt || serverTimestamp()
+          : null,
+    };
+
+    // 4. Create or update blog
+    if (blogId) {
+      await updateDoc(doc(db, "blogs", blogId), blogData);
+    } else {
+      await addDoc(collection(db, "blogs"), {
+        ...blogData,
+        authorId: user.uid,
+        authorName:
+          user.displayName || user.email || "GrowthEnzyme Team",
+        createdAt: serverTimestamp(),
+      });
+    }
+
+    // 5. Redirect after successful save
+    router.push("/admin/blogs");
+    router.refresh();
+
+  } catch (err) {
+    console.error("Blog save error:", err);
+
+    setError(
+      err instanceof Error
+        ? err.message
+        : "Unable to save the blog. Please try again."
+    );
+  } finally {
+    setSaving(false);
+  }
+}
 
 
   const inputClass =

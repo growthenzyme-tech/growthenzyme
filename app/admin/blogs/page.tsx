@@ -56,6 +56,7 @@ export default function BlogManagementPage() {
   const [actionId, setActionId] = useState<string | null>(null);
   const [featuredBlogId, setFeaturedBlogId] = useState("");
 
+
 const fetchBlogs = useCallback(async () => {
   try {
     setError("");
@@ -152,10 +153,17 @@ const fetchBlogs = useCallback(async () => {
       setBlogs((current) =>
         current.filter((item) => item.id !== blog.id)
       );
-    } catch (err) {
-      console.error("Delete error:", err);
-      alert("Unable to delete this blog. Please try again.");
-    } finally {
+} catch (err: any) {
+  console.error("Delete error details:", {
+    code: err?.code,
+    message: err?.message,
+    error: err,
+  });
+
+  alert(
+    `Unable to delete blog.\n\nError: ${err?.code || "Unknown"}\n${err?.message || "Please try again."}`
+  );
+} finally {
       setActionId(null);
     }
   }

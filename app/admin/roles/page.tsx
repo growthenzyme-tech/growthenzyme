@@ -22,6 +22,7 @@ import {
   type RolePermissions,
 } from "@/app/lib/roles";
 
+
 const permissionOptions: {
   key: keyof RolePermissions;
   label: string;
@@ -35,7 +36,27 @@ const permissionOptions: {
   {
     key: "blogs",
     label: "Blog Management",
-    description: "Create, edit and manage blog articles.",
+    description: "Access the Blog Management section.",
+  },
+  {
+    key: "blogsCreate",
+    label: "Create Blogs",
+    description: "Create new blog articles and save drafts.",
+  },
+  {
+    key: "blogsEdit",
+    label: "Edit Blogs",
+    description: "Edit all existing blog articles.",
+  },
+  {
+    key: "blogsPublish",
+    label: "Publish Blogs",
+    description: "Publish and unpublish blog articles.",
+  },
+  {
+    key: "blogsDelete",
+    label: "Delete Blogs",
+    description: "Permanently delete blog articles.",
   },
   {
     key: "comments",
@@ -63,6 +84,7 @@ const permissionOptions: {
     description: "Manage website configuration.",
   },
 ];
+
 
 const emptyPermissions: RolePermissions = {
   ...defaultPermissions,

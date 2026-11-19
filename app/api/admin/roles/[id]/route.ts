@@ -8,6 +8,10 @@ const API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
 const PERMISSION_KEYS = [
   "dashboard",
   "blogs",
+  "blogsCreate",
+  "blogsEdit",
+  "blogsPublish",
+  "blogsDelete",
   "comments",
   "media",
   "caseStudies",

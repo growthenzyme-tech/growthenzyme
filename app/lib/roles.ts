@@ -14,6 +14,10 @@ import { db, auth } from "./firebase";
 export type RolePermissions = {
   dashboard: boolean;
   blogs: boolean;
+  blogsCreate: boolean;
+  blogsEdit: boolean;
+  blogsPublish: boolean;
+  blogsDelete: boolean;
   comments: boolean;
   media: boolean;
   caseStudies: boolean;
@@ -39,6 +43,10 @@ const rolesRef = collection(db, "roles");
 export const defaultPermissions: RolePermissions = {
   dashboard: true,
   blogs: false,
+  blogsCreate: false,
+  blogsEdit: false,
+  blogsPublish: false,
+  blogsDelete: false,
   comments: false,
   media: false,
   caseStudies: false,
