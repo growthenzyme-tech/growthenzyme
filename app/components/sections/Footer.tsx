@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getGeneralSettings } from "@/app/lib/settings";
+import { ArrowRight } from "lucide-react";
 
 const services = [
   { id: "01", name: "Performance Marketing", href: "#services" },
@@ -254,6 +255,26 @@ const phoneHref = phone.replace(/[^\d+]/g, "");
                 ))}
               </ul>
             </div>
+            {/* BLOG LINK */}
+<Link
+  href="/blog"
+  className="group mt-5 flex items-center justify-between border-b border-[#173D32]/15 py-3 transition-colors hover:border-[#D78359]/40"
+>
+  <div className="flex items-center gap-4">
+    <span className="font-mono text-xs text-[#173D32]/50">
+      07
+    </span>
+
+    <span className="font-heading text-sm font-bold text-[#173D32] transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#D78359]">
+      Blog
+    </span>
+  </div>
+
+  <ArrowRight
+    size={15}
+    className="text-[#173D32]/50 transition-transform group-hover:translate-x-1 group-hover:text-[#D78359]"
+  />
+</Link>
 
             {/* CARD BOTTOM: CIRCULAR ARROW BUTTON + TAGLINE */}
             <div className="mt-7 sm:mt-8 flex items-center gap-4 pt-1">

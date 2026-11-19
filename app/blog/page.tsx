@@ -160,10 +160,12 @@ export default function BlogPage() {
     </div>
 
     <div className="py-10 text-center md:py-14">
-      <h1 className="font-heading text-6xl font-bold tracking-tight text-[#29382F] sm:text-7xl md:text-8xl">
-        The Blog
-        <span className="text-[#FFFDF8]">.</span>
-      </h1>
+     <h1 className="whitespace-nowrap font-heading text-[clamp(2.6rem,11vw,4.2rem)] font-bold leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:text-[clamp(3.5rem,9vw,5rem)] lg:text-[clamp(3rem,5.4vw,5.6rem)]">
+  The
+  <span className="ml-2 inline-block rounded-full bg-[#29382F] px-4 py-2.5 text-white sm:ml-3 sm:px-8">
+    Blog.
+  </span>
+</h1>
 
       <p className="mx-auto mt-5 max-w-xl text-xs leading-7 text-[#29382F]/75 sm:text-sm">
         Discover ideas, insights and strategies to help your
@@ -192,51 +194,56 @@ export default function BlogPage() {
     </div>
 
   </div>
+
+  {/* Bottom fade */}
+<div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-gradient-to-b from-transparent to-[#FFFDF8]" />
 </section>
 
 
 
       {/* ================= CATEGORY FILTERS ================= */}
-      <section className="border-b border-[#29382F]/10 bg-[#FFFDF8] px-6 py-7 md:px-12 lg:px-20">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+ <section className="border-b border-[#29382F]/10 bg-[#FFFDF8] px-6 py-7 md:px-12 lg:px-20">
+  <div className="mx-auto flex max-w-7xl flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
 
-          <div className="flex flex-wrap items-center gap-x-7 gap-y-4">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`text-[10px] font-bold uppercase tracking-[0.13em] transition ${
-                  activeCategory === category
-                    ? "text-[#29382F]"
-                    : "text-[#829181] hover:text-[#29382F]"
-                }`}
-              >
-                {category}
+    {/* Category Tabs */}
+    <div className="flex w-fit max-w-full items-center overflow-x-auto rounded-xl border border-[#29382F]/[0.06] bg-white p-1 shadow-[0_4px_18px_rgba(41,56,47,0.06)]">
+      {categories.map((category) => (
+        <button
+          key={category}
+          onClick={() => setActiveCategory(category)}
+          className={`relative shrink-0 px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] transition-all duration-300 sm:px-7 ${
+            activeCategory === category
+              ? "text-[#29382F]"
+              : "text-[#829181] hover:text-[#29382F]"
+          }`}
+        >
+          {category}
 
-                {activeCategory === category && (
-                  <span className="mt-2 block h-[2px] w-full bg-[#8DA77F]" />
-                )}
-              </button>
-            ))}
-          </div>
+          {activeCategory === category && (
+            <span className="absolute inset-x-3 bottom-0 h-[3px] rounded-full bg-[#8DA77F] sm:inset-x-5" />
+          )}
+        </button>
+      ))}
+    </div>
 
-          <div className="relative w-full lg:max-w-[240px]">
-            <Search
-              size={15}
-              className="absolute left-0 top-1/2 -translate-y-1/2 text-[#829181]"
-            />
+    {/* Search */}
+    <div className="relative w-full lg:max-w-[240px]">
+      <Search
+        size={15}
+        className="absolute left-0 top-1/2 -translate-y-1/2 text-[#829181]"
+      />
 
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search articles..."
-              className="w-full border-b border-[#29382F]/20 bg-transparent py-2 pl-7 text-xs text-[#29382F] outline-none placeholder:text-[#829181] focus:border-[#506B59]"
-            />
-          </div>
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search articles..."
+        className="w-full border-b border-[#29382F]/20 bg-transparent py-3 pl-7 text-xs text-[#29382F] outline-none placeholder:text-[#829181] transition-colors focus:border-[#506B59]"
+      />
+    </div>
 
-        </div>
-      </section>
+  </div>
+</section>
 
 
       {/* ================= BLOG CONTENT ================= */}
@@ -361,103 +368,105 @@ export default function BlogPage() {
 
 
             {/* ================= LATEST ARTICLES ================= */}
-            <div>
-              <div className="mb-10 flex items-end justify-between gap-4">
-                <div>
-                  <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#829181]">
-                    Explore Our Journal
-                  </p>
+        <div>
+  {/* Section Heading */}
+  <div className="mb-12 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+    <div>
+      <p className="mb-4 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.22em] text-[#829181]">
+        <span className="h-px w-8 bg-[#8DA77F]" />
+        Explore Our Journal
+      </p>
 
-                  <h2
-                    className="text-4xl text-[#29382F] sm:text-5xl"
-                    style={{
-                      fontFamily: "'Cormorant Garamond', Georgia, serif",
-                    }}
-                  >
-                    Latest Articles
-                  </h2>
-                </div>
+      <h2 className="font-heading text-[clamp(2.5rem,7vw,4.5rem)] font-bold leading-[0.95] tracking-[-0.055em] text-[#29382F]">
+        Latest
+        <span className="ml-2 inline-block rounded-full bg-[#29382F] px-5 py-2 text-white sm:ml-3 sm:px-7">
+          Articles.
+        </span>
+      </h2>
+    </div>
 
-                <span className="hidden text-[10px] text-[#829181] sm:block">
-                  {remainingBlogs.length} Articles
-                </span>
+    <span className="pb-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#829181]">
+      {remainingBlogs.length} Articles
+    </span>
+  </div>
+
+  {/* Articles Grid */}
+  {remainingBlogs.length === 0 ? (
+    <div className="border border-[#29382F]/10 bg-[#F5F0E5] px-6 py-16 text-center">
+      <p className="font-heading text-2xl text-[#29382F]">
+        No more articles to display.
+      </p>
+    </div>
+  ) : (
+    <div className="grid gap-x-8 gap-y-12 md:grid-cols-2">
+
+      {remainingBlogs.map((blog) => (
+        <article
+          key={blog.id}
+          className="group flex min-w-0 flex-col"
+        >
+          {/* Larger Article Image */}
+          <Link
+            href={`/blog/${blog.slug || blog.id}`}
+            className="relative mb-6 block aspect-[16/10] w-full overflow-hidden rounded-2xl bg-[#E9E5DA]"
+          >
+            {blog.coverImage ? (
+              <img
+                src={blog.coverImage}
+                alt={blog.title || "Blog article"}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center bg-[#B6CBA9] text-xs font-bold uppercase tracking-widest text-[#29382F]">
+                GrowthEnzyme Journal
               </div>
+            )}
 
-              {remainingBlogs.length === 0 ? (
-                <div className="border border-[#29382F]/10 bg-[#F5F0E5] px-6 py-12 text-center">
-                  <p className="text-sm text-[#667267]">
-                    No more articles to display.
-                  </p>
-                </div>
-              ) : (
-                <div className="grid gap-x-8 gap-y-9 md:grid-cols-2">
-                  {remainingBlogs.map((blog) => (
-                    <article
-                      key={blog.id}
-                      className="group flex min-w-0 gap-4 border-b border-[#29382F]/10 pb-8 sm:gap-5"
-                    >
-                      <Link
-                        href={`/blog/${blog.slug || blog.id}`}
-                        className="relative block h-[145px] w-[112px] shrink-0 overflow-hidden bg-[#E9E5DA] sm:h-[165px] sm:w-[135px]"
-                      >
-                        {blog.coverImage ? (
-                          <img
-                            src={blog.coverImage}
-                            alt={blog.title || "Blog article"}
-                            className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="flex h-full items-center justify-center bg-[#B6CBA9] text-[10px] text-[#29382F]">
-                            Article
-                          </div>
-                        )}
-                      </Link>
+            {/* Category Badge */}
+            <span className="absolute left-4 top-4 rounded-full border border-white/30 bg-[#FFFDF8]/95 px-4 py-2 text-[9px] font-bold uppercase tracking-widest text-[#29382F] backdrop-blur-sm">
+              {blog.category || "Insights"}
+            </span>
+          </Link>
 
-                      <div className="flex min-w-0 flex-1 flex-col items-start py-1">
+          {/* Article Content */}
+          <div className="flex flex-1 flex-col items-start">
 
-                        <p className="mb-2 text-[9px] font-bold uppercase tracking-wider text-[#8DA77F]">
-                          {blog.category || "Insights"}
-                        </p>
-
-                        <Link
-                          href={`/blog/${blog.slug || blog.id}`}
-                        >
-                          <h3
-                            className="line-clamp-3 text-xl leading-tight text-[#29382F] transition group-hover:text-[#506B59] sm:text-2xl"
-                            style={{
-                              fontFamily: "'Cormorant Garamond', Georgia, serif",
-                            }}
-                          >
-                            {blog.title}
-                          </h3>
-                        </Link>
-
-                        <div className="mt-3 flex items-center gap-2 text-[9px] text-[#829181]">
-                          <CalendarDays size={11} />
-                          {formatDate(blog.publishedAt || blog.createdAt)}
-                        </div>
-
-                        <p className="mt-2 line-clamp-2 text-[10px] leading-5 text-[#667267] sm:text-xs">
-                          {blog.excerpt}
-                        </p>
-
-                        <Link
-                          href={`/blog/${blog.slug || blog.id}`}
-                          className="mt-auto inline-flex items-center gap-2 pt-4 text-[9px] font-bold uppercase tracking-widest text-[#405C48]"
-                        >
-                          Read More
-                          <ArrowRight
-                            size={12}
-                            className="transition-transform group-hover:translate-x-1"
-                          />
-                        </Link>
-
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              )}
+            <div className="mb-3 flex items-center gap-2 text-[10px] font-medium text-[#829181]">
+              <CalendarDays size={13} />
+              {formatDate(blog.publishedAt || blog.createdAt)}
             </div>
+
+            <Link href={`/blog/${blog.slug || blog.id}`}>
+              <h3 className="font-heading line-clamp-2 text-2xl font-bold leading-tight tracking-tight text-[#29382F] transition-colors duration-300 group-hover:text-[#506B59] sm:text-3xl">
+                {blog.title}
+              </h3>
+            </Link>
+
+            <p className="mt-3 line-clamp-3 text-xs leading-6 text-[#667267] sm:text-sm">
+              {blog.excerpt}
+            </p>
+
+            {/* Read More Button */}
+            <Link
+              href={`/blog/${blog.slug || blog.id}`}
+              className="group/button mt-6 inline-flex items-center justify-center gap-3 rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-[#29382F] shadow-[0_4px_0_#6F9259,0_7px_14px_rgba(41,56,47,0.10)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_6px_0_#6F9259,0_10px_18px_rgba(41,56,47,0.15)]"
+            >
+              Read Article
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/50 bg-white/35">
+                <ArrowUpRight
+                  size={14}
+                  className="transition-transform duration-300 group-hover/button:translate-x-0.5 group-hover/button:-translate-y-0.5"
+                />
+              </span>
+            </Link>
+
+          </div>
+        </article>
+      ))}
+
+    </div>
+  )}
+</div>
 
           </div>
         </section>
