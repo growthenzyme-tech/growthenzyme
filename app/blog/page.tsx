@@ -173,12 +173,17 @@ export default function BlogPage() {
 
     <div className="flex flex-wrap items-center justify-center gap-3">
       <a
-        href="/"
-        className="inline-flex items-center gap-2 rounded-full bg-[#29382F] px-6 py-3 text-[9px] font-bold uppercase tracking-widest text-white transition hover:bg-[#506B59]"
-      >
-        Back to Home
-        <ArrowUpRight size={13} />
-      </a>
+  href="/"
+  className="group inline-flex items-center justify-center gap-4 rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-5 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.13)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.18)]"
+>
+  Back to Home
+  <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/50 bg-white/35">
+    <ArrowUpRight
+      size={16}
+      className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+    />
+  </span>
+</a>
 
       <span className="inline-flex items-center gap-2 rounded-full border border-[#29382F]/30 px-5 py-3 text-[9px] font-bold uppercase tracking-widest text-[#29382F]">
         <BookOpen size={13} />
