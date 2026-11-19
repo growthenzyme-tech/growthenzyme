@@ -17,6 +17,7 @@ import {
   CheckCircle2,
   FileEdit,
   MoreHorizontal,
+   Star,
 } from "lucide-react";
 
 import {
@@ -24,6 +25,11 @@ import {
   deleteBlog,
   updateBlogStatus,
 } from "@/app/lib/blog";
+
+import {
+  getGeneralSettings,
+  updateFeaturedBlogId,
+} from "@/app/lib/settings";
 
 type Blog = {
   id: string;
@@ -48,21 +54,29 @@ export default function BlogManagementPage() {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const [error, setError] = useState("");
   const [actionId, setActionId] = useState<string | null>(null);
+  const [featuredBlogId, setFeaturedBlogId] = useState("");
 
-  const fetchBlogs = useCallback(async () => {
-    try {
-      setError("");
-      setLoading(true);
+const fetchBlogs = useCallback(async () => {
+  try {
+    setError("");
+    setLoading(true);
 
-      const data = await getAllBlogs();
-      setBlogs(data as Blog[]);
-    } catch (err) {
-      console.error("Error fetching blogs:", err);
-      setError("Unable to load blogs. Please check your connection and permissions.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    const [data, settings] = await Promise.all([
+      getAllBlogs(),
+      getGeneralSettings(),
+    ]);
+
+    setBlogs(data as Blog[]);
+    setFeaturedBlogId(settings.featuredBlogId || "");
+  } catch (err) {
+    console.error("Error fetching blogs:", err);
+    setError(
+      "Unable to load blogs. Please check your connection and permissions."
+    );
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
   useEffect(() => {
     fetchBlogs();
@@ -105,6 +119,24 @@ export default function BlogManagementPage() {
       year: "numeric",
     });
   }
+
+
+  async function handleSetLeadArticle(blog: Blog) {
+  if (blog.status !== "published") return;
+
+  try {
+    setActionId(blog.id);
+
+    await updateFeaturedBlogId(blog.id);
+
+    setFeaturedBlogId(blog.id);
+  } catch (err) {
+    console.error("Error setting Lead Article:", err);
+    alert("Unable to set this blog as the Lead Article.");
+  } finally {
+    setActionId(null);
+  }
+}
 
   async function handleDelete(blog: Blog) {
     const confirmed = window.confirm(
@@ -432,6 +464,7 @@ return (
                   {/* Blog Details */}
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
+
                       <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#DDE4D9] bg-[#E8EDE3] text-[#405C48]">
                         <FileText size={19} />
                       </div>
@@ -492,6 +525,29 @@ return (
                   {/* Actions */}
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end gap-1">
+
+                                            {blog.status === "published" && (
+  <button
+    onClick={() => handleSetLeadArticle(blog)}
+    disabled={actionId === blog.id}
+    title={
+      featuredBlogId === blog.id
+        ? "Currently selected as Lead Article"
+        : "Set as Lead Article"
+    }
+    className={`flex h-9 items-center gap-1.5 rounded-lg px-2 text-[10px] font-bold transition disabled:opacity-40 ${
+      featuredBlogId === blog.id
+        ? "bg-[#E8EDE3] text-[#405C48]"
+        : "text-[#657365] hover:bg-[#E8EDE3] hover:text-[#29382F]"
+    }`}
+  >
+    <Star
+      size={15}
+      fill={featuredBlogId === blog.id ? "currentColor" : "none"}
+    />
+    {featuredBlogId === blog.id ? "Lead Article" : "Set Lead"}
+  </button>
+)}
 
                       {blog.status === "published" && blog.slug && (
                         <Link
