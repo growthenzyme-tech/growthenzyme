@@ -76,7 +76,17 @@ const [authError, setAuthError] = useState("");
 
   // Authentication check
 // Verify authentication and load role permissions only once.
+
+// Verify authentication and load role permissions.
 useEffect(() => {
+  // Login page must remain accessible without authentication.
+  if (pathname === "/admin/login") {
+    setCheckingAuth(false);
+    setRole(null);
+    setAuthError("");
+    return;
+  }
+
   let active = true;
 
   const unsubscribe = observeAuth(async (user) => {
@@ -85,7 +95,11 @@ useEffect(() => {
     if (!user) {
       setRole(null);
       setCheckingAuth(false);
-      router.replace("/admin/login");
+
+      if (pathname !== "/admin/login") {
+        router.replace("/admin/login");
+      }
+
       return;
     }
 
@@ -93,7 +107,6 @@ useEffect(() => {
       setCheckingAuth(true);
       setAuthError("");
 
-      // Fetch the user's Firestore profile.
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
 
@@ -104,13 +117,6 @@ useEffect(() => {
       }
 
       const profile = userSnap.data();
-      console.log("CMS USER DEBUG:", {
-  email: user.email,
-  uid: user.uid,
-  role: profile.role,
-  roleId: profile.roleId,
-  isActive: profile.isActive,
-});
 
       if (profile.isActive !== true) {
         throw new Error("Your account is inactive.");
@@ -128,8 +134,10 @@ useEffect(() => {
         settings: false,
       };
 
-      // Administrator accounts
-      const rawRole = (profile.role || profile.roleId || "").toString().toLowerCase();
+      const rawRole = (
+        profile.role || profile.roleId || ""
+      ).toString().toLowerCase();
+
       const isSystemAdmin =
         profile.role === "admin" ||
         profile.role === "administrator" ||
@@ -149,13 +157,9 @@ useEffect(() => {
           users: true,
           settings: true,
         };
-      }
-
-      // Legacy writer.
-      else if (profile.role === "writer" && !profile.roleId) {
+      } else if (profile.role === "writer" && !profile.roleId) {
         userRole = "writer";
 
-        // Preserve the existing writer navigation access.
         userPermissions = {
           dashboard: true,
           blogs: true,
@@ -165,10 +169,7 @@ useEffect(() => {
           users: false,
           settings: false,
         };
-      }
-
-      // Custom role.
-      else if (profile.roleId) {
+      } else if (profile.roleId) {
         const roleRef = doc(db, "roles", profile.roleId);
         const roleSnap = await getDoc(roleRef);
 
@@ -211,7 +212,6 @@ useEffect(() => {
 
       if (!active) return;
 
-      // Store the verified role and permissions.
       setRole(userRole);
       setPermissions(userPermissions);
       setAuthError("");
@@ -237,7 +237,8 @@ useEffect(() => {
     active = false;
     unsubscribe();
   };
-}, [router]);
+}, [pathname, router]);
+
 
 
 // Check page access using the already-loaded permissions.
