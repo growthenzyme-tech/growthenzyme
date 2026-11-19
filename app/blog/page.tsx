@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Search,
@@ -182,153 +183,61 @@ export default function BlogPage() {
     <>
       <main className="min-h-screen overflow-hidden bg-[#FFFDF8]">
         {/* ================= BLOG HERO ================= */}
-     {/* ================= BLOG HERO ================= */}
-        <section className="relative overflow-hidden bg-[#B6CBA9] px-6 pb-12 pt-16 md:px-12 md:pb-14 md:pt-20 lg:px-20">
-          <div className="relative mx-auto grid max-w-7xl items-center gap-8 lg:grid-cols-12 lg:gap-10">
-            {/* LEFT COLUMN: Title, Copy & Actions */}
-            <div className="lg:col-span-6">
-              <div className="flex items-center gap-3">
-                <span className="h-px w-8 bg-[#29382F]/50" />
-                <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#29382F]">
-                  GrowthEnzyme Journal
-                </p>
-              </div>
+        <section className="relative flex min-h-[380px] sm:min-h-[440px] lg:min-h-[500px] w-full items-center justify-center overflow-hidden bg-[#1F5930] px-6 py-20 text-center text-white">
+          {/* Background Hero Image with user-selected green gradient */}
+          <Image
+            src="/images/blog-hero-bg.png"
+            alt="The Blog Hero"
+            fill
+            priority
+            className="object-cover object-center"
+          />
 
-              <div className="py-5 md:py-6">
-                <h1 className="whitespace-nowrap font-heading text-[clamp(2.5rem,10vw,4rem)] font-bold leading-[0.98] tracking-[-0.065em] text-[#29382F] sm:text-[clamp(3.2rem,7vw,4.4rem)] lg:text-[clamp(3rem,4.6vw,4.6rem)]">
-                  The
-                  <span className="ml-2 inline-block rounded-full bg-[#29382F] px-5 py-2 text-white sm:ml-3 sm:px-7">
-                    Blog.
-                  </span>
-                </h1>
+          {/* Soft ambient tint overlay to preserve contrast while keeping the exact rich green vibrant */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-black/10 backdrop-blur-[0px]"
+          />
 
-                <p className="mt-4 max-w-md text-xs leading-6 text-[#29382F]/80 sm:text-sm">
-                  Discover ideas, insights and strategies to help your business
-                  grow in the digital world.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3">
-                <Link
-                  href="/"
-                  className="group inline-flex items-center justify-center gap-3 rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-4 py-2.5 text-xs font-bold text-[#29382F] shadow-[0_4px_0_#6F9259,0_8px_16px_rgba(41,56,47,0.13)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_6px_0_#6F9259,0_10px_20px_rgba(41,56,47,0.18)] sm:text-sm"
-                >
-                  Back to Home
-                  <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/50 bg-white/35">
-                    <ArrowUpRight
-                      size={15}
-                      className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                    />
-                  </span>
-                </Link>
-
-                <a
-                  href="#blog-feed"
-                  className="inline-flex items-center gap-2 rounded-full border border-[#29382F]/30 bg-white/30 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-[#29382F] backdrop-blur-xs transition hover:bg-[#F5F0E5]"
-                >
-                  <BookOpen size={13} />
-                  Explore Our Articles
-                </a>
-              </div>
+          {/* Centered Editorial Content matching reference template */}
+          <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center justify-center px-4">
+            {/* Top Tagline */}
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/20 px-4 py-1.5 backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white">
+                GrowthEnzyme Journal
+              </span>
             </div>
 
-            {/* RIGHT COLUMN: Compact Staggered 2 Published Article Image Cards */}
-            <div className="relative lg:col-span-6">
-              {loading ? (
-                <div className="relative mx-auto h-[280px] max-w-md animate-pulse rounded-3xl bg-[#F5F0E5]" />
-              ) : heroSpotlights.length > 0 ? (
-                <div className="relative mx-auto max-w-lg">
-                  {/* ================= IMAGE CARD 1 (Top-Left + Floating Card 1) ================= */}
-                  {heroSpotlights[0] && (
-                    <Link
-                      href={`/blog/${heroSpotlights[0].slug || heroSpotlights[0].id}`}
-                      className="group relative z-20 block w-[70%] sm:w-[56%]"
-                    >
-                      <div className="aspect-[16/10] overflow-hidden rounded-2xl border-2 border-[#29382F] bg-[#E9E5DA] shadow-[0_12px_24px_rgba(41,56,47,0.14)]">
-                        {heroSpotlights[0].coverImage ? (
-                          <img
-                            src={heroSpotlights[0].coverImage}
-                            alt={heroSpotlights[0].title || "Featured insight"}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="flex h-full items-center justify-center bg-[#D5E1CC] text-xs font-bold text-[#29382F]">
-                            GrowthEnzyme
-                          </div>
-                        )}
-                      </div>
+            {/* Largely text: THE BLOG */}
+            <h1 className="font-heading text-[clamp(3rem,8.5vw,5.5rem)] font-extrabold uppercase tracking-[0.16em] text-white sm:tracking-[0.2em] drop-shadow-xl">
+              The Blog
+            </h1>
 
-                      {/* Floating Card 1 */}
-                      <div className="relative z-30 -mt-6 ml-3 mr-3 rounded-xl border border-[#29382F]/15 bg-white p-2.5 shadow-[0_10px_22px_rgba(41,56,47,0.13)] transition-transform duration-300 group-hover:-translate-y-0.5 sm:p-3">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="rounded-full bg-[#D5E1CC] px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider text-[#29382F]">
-                            {heroSpotlights[0].category || "Insights"}
-                          </span>
-                          <span className="text-[8px] font-medium text-[#829181]">
-                            {formatDate(
-                              heroSpotlights[0].publishedAt ||
-                                heroSpotlights[0].createdAt
-                            )}
-                          </span>
-                        </div>
-                        <p className="mt-1 line-clamp-1 font-heading text-xs font-bold text-[#29382F]">
-                          {heroSpotlights[0].title}
-                        </p>
-                      </div>
-                    </Link>
-                  )}
+            {/* Subtitle matching reference */}
+            <p className="mt-4 max-w-2xl text-xs font-semibold uppercase tracking-[0.22em] text-white sm:text-sm md:text-base leading-relaxed drop-shadow-md">
+              Stay up to date on tips, tricks, &amp; trends for social media &amp; digital marketing
+            </p>
 
-                  {/* ================= IMAGE CARD 2 (Bottom-Right + Floating Card 2) ================= */}
-                  {heroSpotlights[1] && (
-                    <Link
-                      href={`/blog/${heroSpotlights[1].slug || heroSpotlights[1].id}`}
-                      className="group relative z-20 ml-auto mt-3 block w-[70%] sm:-mt-16 sm:w-[56%]"
-                    >
-                      <div className="aspect-[16/10] overflow-hidden rounded-2xl border-2 border-[#29382F] bg-[#E9E5DA] shadow-[0_14px_28px_rgba(41,56,47,0.16)]">
-                        {heroSpotlights[1].coverImage ? (
-                          <img
-                            src={heroSpotlights[1].coverImage}
-                            alt={heroSpotlights[1].title || "Latest insight"}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="flex h-full items-center justify-center bg-[#29382F] text-xs font-bold text-[#B6CBA9]">
-                            Latest Story
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Floating Card 2 */}
-                      <div className="relative z-30 -mt-6 -ml-5 mr-5 rounded-xl border border-[#29382F]/15 bg-white p-2.5 shadow-[0_10px_22px_rgba(41,56,47,0.13)] transition-transform duration-300 group-hover:-translate-y-0.5 sm:p-3">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="rounded-full bg-[#29382F] px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider text-[#B6CBA9]">
-                            {heroSpotlights[1].category || "Strategy"}
-                          </span>
-                          <span className="inline-flex items-center gap-1 text-[9px] font-bold text-[#29382F]">
-                            Read <ArrowUpRight size={11} />
-                          </span>
-                        </div>
-                        <p className="mt-1 line-clamp-1 font-heading text-xs font-bold text-[#29382F]">
-                          {heroSpotlights[1].title}
-                        </p>
-                      </div>
-                    </Link>
-                  )}
-                </div>
-              ) : (
-                <div className="mx-auto flex aspect-[16/10] max-w-md flex-col items-center justify-center rounded-3xl border-2 border-[#29382F] bg-[#FFFDF8] p-6 text-center shadow-[0_14px_28px_rgba(41,56,47,0.12)]">
-                  <span className="rounded-full bg-[#D5E1CC] px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#29382F]">
-                    Editorial Hub
-                  </span>
-                  <p className="mt-3 font-heading text-xl font-bold text-[#29382F]">
-                    Fresh playbooks & growth stories coming soon.
-                  </p>
-                </div>
-              )}
+            {/* Quick Actions */}
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
+              <a
+                href="#blog-feed"
+                className="inline-flex items-center gap-2 rounded-full border border-[#29382F] bg-[#29382F] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#173D32]"
+              >
+                <BookOpen size={14} />
+                Explore Articles
+              </a>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/20 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-md transition-all duration-300 hover:bg-white/30"
+              >
+                Back to Home <ArrowUpRight size={14} />
+              </Link>
             </div>
           </div>
 
-          {/* Bottom fade */}
+          {/* Bottom subtle fade into page */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-10 bg-gradient-to-b from-transparent to-[#FFFDF8]" />
         </section>
 

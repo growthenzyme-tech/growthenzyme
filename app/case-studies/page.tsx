@@ -132,11 +132,10 @@ export default function CaseStudiesPage() {
                   <button
                     key={industry}
                     onClick={() => setActiveIndustry(industry)}
-                    className={`rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
-                      active
-                        ? "bg-[#29382F] text-white shadow-md shadow-[#29382F]/15"
-                        : "border border-[#29382F]/15 bg-white text-[#29382F]/80 hover:bg-[#EEF5EB] hover:text-[#29382F]"
-                    }`}
+                    className={`rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${active
+                      ? "bg-[#29382F] text-white shadow-md shadow-[#29382F]/15"
+                      : "border border-[#29382F]/15 bg-white text-[#29382F]/80 hover:bg-[#EEF5EB] hover:text-[#29382F]"
+                      }`}
                   >
                     {industry}
                   </button>
@@ -380,31 +379,35 @@ export default function CaseStudiesPage() {
       </section>
 
       {/* BOTTOM CTA */}
-      <section className="border-t border-[#29382F]/10 bg-[#29382F] py-16 text-white sm:py-20">
+      <section className="relative w-full bg-transparent py-16 sm:py-20 lg:py-24 text-[#29382F]">
         <div className="mx-auto max-w-5xl px-5 text-center sm:px-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#B6CBA9]">
-            <TrendingUp size={14} /> Next Success Story
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#29382F]/15 bg-white/80 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#29382F] shadow-sm backdrop-blur-sm">
+            <TrendingUp size={14} className="text-[#D78359]" />
+            Next Success Story
           </div>
           <h2
-            className="font-heading mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl"
+            className="font-heading mt-5 text-3xl font-bold tracking-tight text-[#29382F] sm:text-4xl lg:text-5xl"
             style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
           >
             Ready to scale your business with measurable results?
           </h2>
-          <p className="font-instrument mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/80 sm:text-base">
+          <p className="font-instrument mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#506B59] sm:text-base lg:text-lg">
             Whether you need to dominate local search, launch high-ROI performance ads, or build custom business management systems, we are ready to partner with you.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/#contact"
-              className="inline-flex items-center gap-3 rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-7 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_5px_0_#6F9259] transition-all hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259]"
+              className="group inline-flex items-center gap-3 rounded-xl bg-[#29382F] px-8 py-3.5 text-sm font-bold text-white shadow-md shadow-[#29382F]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1A4538] hover:shadow-lg hover:shadow-[#29382F]/30"
             >
               Start a Project
-              <ArrowRight size={17} />
+              <ArrowRight
+                size={17}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
             </Link>
             <Link
               href="/#services"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-white/20"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#29382F]/20 bg-white/70 px-7 py-3.5 text-sm font-semibold text-[#29382F] shadow-sm transition-all duration-300 hover:bg-[#29382F] hover:text-white hover:-translate-y-0.5"
             >
               Explore Our Services
             </Link>
