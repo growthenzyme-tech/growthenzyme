@@ -233,7 +233,7 @@ export const INITIAL_CASE_STUDIES: CaseStudy[] = [
     slug: "rojes-comfortworks",
     client: "Rojes comfortworks",
     industry: "Mattress manufacturer",
-    title: "Rojes Comfortworks – Scaling Mattress Direct-To-Consumer Sales With Targeted Meta Ads & SEO",
+    title: "Rojes Comfortworks – Scaling Direct-To-Consumer Mattress Sales With Meta Ads & SEO",
     coverImage: "/images/rojes-comfortworks-4k.jpg",
     coverImageAlt: "Rojes Comfortworks ergonomic mattress collection in 4K clarity",
     shortDescription:

@@ -310,14 +310,14 @@ export default function CaseStudiesPage() {
 
                   <Link href={`/case-studies/${study.slug}`}>
                     <h3
-                      className="font-heading text-xl font-bold leading-snug text-[#29382F] transition-colors duration-200 group-hover:text-[#D78359]"
+                      className="font-heading text-xl font-bold leading-snug text-[#29382F] line-clamp-3 min-h-[4.2rem] sm:min-h-[4.5rem] transition-colors duration-200"
                       style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
                     >
                       {study.title}
                     </h3>
                   </Link>
 
-                  <p className="font-instrument mt-3 line-clamp-3 text-xs leading-relaxed text-[#506B59]">
+                  <p className="font-instrument mt-3 line-clamp-3 text-xs leading-relaxed text-[#506B59] min-h-[3.6rem]">
                     {study.shortDescription}
                   </p>
 
@@ -347,7 +347,7 @@ export default function CaseStudiesPage() {
                   </div>
 
                   {/* Services Provided Badges */}
-                  <div className="mt-5 flex flex-wrap gap-1.5">
+                  <div className="mt-5 flex flex-wrap gap-1.5 min-h-[3.25rem] content-start">
                     {study.servicesProvided.slice(0, 3).map((svc) => (
                       <span
                         key={svc}
@@ -364,8 +364,8 @@ export default function CaseStudiesPage() {
                   </div>
 
                   {/* Footer Link */}
-                  <div className="mt-6 pt-4 border-t border-[#29382F]/10 flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#29382F] group-hover:text-[#D78359] transition-colors">
+                  <div className="mt-auto pt-5 border-t border-[#29382F]/10 flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#29382F] transition-colors">
                       Read Full Story
                     </span>
                     <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EEF5EB] text-[#29382F] transition-all group-hover:bg-[#29382F] group-hover:text-white">
