@@ -196,7 +196,7 @@ export default function BlogPage() {
   </div>
 
   {/* Bottom fade */}
-<div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-gradient-to-b from-transparent to-[#FFFDF8]" />
+<div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-b from-transparent to-[#FFFDF8]" />
 </section>
 
 
@@ -398,73 +398,71 @@ export default function BlogPage() {
       </p>
     </div>
   ) : (
-    <div className="grid gap-x-8 gap-y-12 md:grid-cols-2">
+  <div className="grid grid-cols-1 gap-x-12 gap-y-16 lg:grid-cols-2">
 
-      {remainingBlogs.map((blog) => (
-        <article
-          key={blog.id}
-          className="group flex min-w-0 flex-col"
-        >
-          {/* Larger Article Image */}
-          <Link
-            href={`/blog/${blog.slug || blog.id}`}
-            className="relative mb-6 block aspect-[16/10] w-full overflow-hidden rounded-2xl bg-[#E9E5DA]"
-          >
-            {blog.coverImage ? (
-              <img
-                src={blog.coverImage}
-                alt={blog.title || "Blog article"}
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-            ) : (
-              <div className="flex h-full items-center justify-center bg-[#B6CBA9] text-xs font-bold uppercase tracking-widest text-[#29382F]">
-                GrowthEnzyme Journal
-              </div>
-            )}
-
-            {/* Category Badge */}
-            <span className="absolute left-4 top-4 rounded-full border border-white/30 bg-[#FFFDF8]/95 px-4 py-2 text-[9px] font-bold uppercase tracking-widest text-[#29382F] backdrop-blur-sm">
-              {blog.category || "Insights"}
-            </span>
-          </Link>
-
-          {/* Article Content */}
-          <div className="flex flex-1 flex-col items-start">
-
-            <div className="mb-3 flex items-center gap-2 text-[10px] font-medium text-[#829181]">
-              <CalendarDays size={13} />
-              {formatDate(blog.publishedAt || blog.createdAt)}
-            </div>
-
-            <Link href={`/blog/${blog.slug || blog.id}`}>
-              <h3 className="font-heading line-clamp-2 text-2xl font-bold leading-tight tracking-tight text-[#29382F] transition-colors duration-300 group-hover:text-[#506B59] sm:text-3xl">
-                {blog.title}
-              </h3>
-            </Link>
-
-            <p className="mt-3 line-clamp-3 text-xs leading-6 text-[#667267] sm:text-sm">
-              {blog.excerpt}
-            </p>
-
-            {/* Read More Button */}
-            <Link
-              href={`/blog/${blog.slug || blog.id}`}
-              className="group/button mt-6 inline-flex items-center justify-center gap-3 rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-[#29382F] shadow-[0_4px_0_#6F9259,0_7px_14px_rgba(41,56,47,0.10)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_6px_0_#6F9259,0_10px_18px_rgba(41,56,47,0.15)]"
-            >
-              Read Article
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/50 bg-white/35">
-                <ArrowUpRight
-                  size={14}
-                  className="transition-transform duration-300 group-hover/button:translate-x-0.5 group-hover/button:-translate-y-0.5"
-                />
-              </span>
-            </Link>
-
+  {remainingBlogs.map((blog) => (
+    <article
+      key={blog.id}
+      className="group grid min-w-0 grid-cols-[0.9fr_1.1fr] items-center"
+    >
+      {/* Left: Cover Image */}
+      <Link
+        href={`/blog/${blog.slug || blog.id}`}
+        className="relative z-10 block aspect-[4/5] min-w-0 overflow-hidden rounded-2xl bg-[#E9E5DA]"
+      >
+        {blog.coverImage ? (
+          <img
+            src={blog.coverImage}
+            alt={blog.title || "Blog article"}
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-[#B6CBA9] text-xs font-bold text-[#29382F]">
+            GrowthEnzyme
           </div>
-        </article>
-      ))}
+        )}
+      </Link>
 
-    </div>
+      {/* Right: Article Details */}
+      <div className="relative z-20 -ml-5 flex min-h-[220px] min-w-0 flex-col items-start rounded-2xl border border-[#29382F]/[0.06] bg-[#FFFDF8] p-4 shadow-[0_15px_40px_rgba(41,56,47,0.09)] sm:-ml-8 sm:min-h-[260px] sm:p-6">
+
+        <span className="mb-3 rounded-full bg-[#D5E1CC] px-3 py-1.5 text-[8px] font-bold uppercase tracking-widest text-[#405C48]">
+          {blog.category || "Insights"}
+        </span>
+
+        <div className="mb-3 flex items-center gap-1.5 text-[9px] text-[#829181]">
+          <CalendarDays size={11} />
+          {formatDate(blog.publishedAt || blog.createdAt)}
+        </div>
+
+        <Link href={`/blog/${blog.slug || blog.id}`}>
+          <h3 className="font-heading line-clamp-3 text-lg font-bold leading-tight tracking-tight text-[#29382F] transition-colors group-hover:text-[#506B59] sm:text-xl xl:text-2xl">
+            {blog.title}
+          </h3>
+        </Link>
+
+        <p className="mt-3 line-clamp-3 text-[10px] leading-5 text-[#667267] sm:text-xs">
+          {blog.excerpt}
+        </p>
+
+        <Link
+          href={`/blog/${blog.slug || blog.id}`}
+          className="group/button mt-auto inline-flex items-center justify-center gap-2 pt-5 text-[9px] font-bold uppercase tracking-wider text-[#405C48]"
+        >
+          Read Article
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-[#D5E1CC] bg-[#D5E1CC]/50 transition-all duration-300 group-hover/button:bg-[#29382F] group-hover/button:text-white">
+            <ArrowUpRight
+              size={13}
+              className="transition-transform group-hover/button:translate-x-0.5 group-hover/button:-translate-y-0.5"
+            />
+          </span>
+        </Link>
+
+      </div>
+    </article>
+  ))}
+
+</div>
   )}
 </div>
 
