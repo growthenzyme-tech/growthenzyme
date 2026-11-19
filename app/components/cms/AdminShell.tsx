@@ -380,9 +380,13 @@ export default function AdminShell({
     }
 
     // Roles & Permissions is administrator-only.
-    if (item.href === "/admin/roles") {
-      return false;
-    }
+  // Roles & Permissions and Settings are administrator-only.
+if (
+  item.href === "/admin/roles" ||
+  item.href === "/admin/settings"
+) {
+  return false;
+}
 
     const permissionMap: Record<string, PermissionKey> = {
       "/admin/dashboard": "dashboard",
