@@ -6,7 +6,7 @@ import HeroTicker from "../HeroTicker";
 
 export default function Hero() {
   return (
-    <section className="relative isolate mx-auto mt-20 w-full max-w-full overflow-hidden bg-[#B6CBA9] text-[#29382F]">
+    <section className="relative isolate mx-auto  w-full max-w-full overflow-hidden bg-[#B6CBA9] text-[#29382F]">
 
       {/* Hero Main Content */}
       <div className="relative mx-auto grid min-h-0 max-w-[1320px] items-center gap-7 px-5 py-9 sm:gap-8 sm:px-8 sm:py-12 lg:min-h-[700px] lg:grid-cols-[1fr_0.95fr] lg:gap-8 lg:px-14 lg:py-16">
