@@ -357,7 +357,7 @@ export default function BlogPage() {
           className="mt-8 inline-flex w-fit items-center gap-3 rounded-full bg-[#29382F] px-6 py-3.5 text-[9px] font-bold uppercase tracking-widest text-white transition hover:bg-[#506B59]"
         >
           Read Article
-          <ArrowUpRight size={14} />
+     
         </Link>
 
       </div>
