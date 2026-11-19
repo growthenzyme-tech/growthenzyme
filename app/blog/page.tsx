@@ -3,11 +3,21 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Search, CalendarDays, ArrowRight } from "lucide-react";
+import {
+  Search,
+  CalendarDays,
+  ArrowRight,
+  ArrowUpRight,
+  BookOpen,
+} from "lucide-react";
+
 import {
   getPublishedBlogs,
   getMediaById,
 } from "@/app/lib/blog";
+
+import { getGeneralSettings } from "@/app/lib/settings";
+import Footer from "@/app/components/sections/Footer";
 
 type Blog = {
   id: string;
@@ -26,13 +36,25 @@ export default function BlogPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
+  const [featuredBlogId, setFeaturedBlogId] = useState("");
 
+  // Fetch published blogs and the admin-selected Lead Article
   useEffect(() => {
     async function fetchBlogs() {
       try {
         const data = await getPublishedBlogs();
+
+        // Settings are fetched separately so a settings error
+        // does not prevent published blogs from loading.
+        try {
+          const settings = await getGeneralSettings();
+          setFeaturedBlogId(settings.featuredBlogId || "");
+        } catch (settingsError) {
+          console.error("Error fetching blog settings:", settingsError);
+        }
 
         const blogsWithImages = await Promise.all(
           data.map(async (blog: any) => {
@@ -61,10 +83,11 @@ export default function BlogPage() {
     fetchBlogs();
   }, []);
 
+  // Format Firebase dates
   function formatDate(timestamp: any) {
     if (!timestamp) return "";
 
-    const date = timestamp.toDate
+    const date = timestamp?.toDate
       ? timestamp.toDate()
       : new Date(timestamp);
 
@@ -77,318 +100,405 @@ export default function BlogPage() {
     });
   }
 
+  // Generate categories dynamically
   const categories = useMemo(() => {
-    return [
-      "All",
-      ...Array.from(
-        new Set(
-          blogs
-            .map((blog) => blog.category)
-            .filter((category): category is string => Boolean(category))
-        )
-      ),
-    ];
+    const uniqueCategories = Array.from(
+      new Set(
+        blogs
+          .map((blog) => blog.category)
+          .filter((category): category is string => Boolean(category))
+      )
+    );
+
+    return ["All", ...uniqueCategories];
   }, [blogs]);
 
-  const featuredBlog = blogs[0];
+  // Category and search filtering
+  const filteredBlogs = useMemo(() => {
+    return blogs.filter((blog) => {
+      const matchesCategory =
+        activeCategory === "All" ||
+        blog.category === activeCategory;
 
-const filteredBlogs = useMemo(() => {
-  const hasActiveFilter =
-    activeCategory !== "All" || search.trim() !== "";
+      const searchText = search.toLowerCase();
 
-  return blogs.filter((blog) => {
-    if (!hasActiveFilter && blog.id === featuredBlog?.id) {
-      return false;
-    }
+      const matchesSearch =
+        (blog.title || "").toLowerCase().includes(searchText) ||
+        (blog.excerpt || "").toLowerCase().includes(searchText) ||
+        (blog.category || "").toLowerCase().includes(searchText);
 
-    const matchesCategory =
-      activeCategory === "All" ||
-      blog.category === activeCategory;
+      return matchesCategory && matchesSearch;
+    });
+  }, [blogs, activeCategory, search]);
 
-    const searchTerm = search.trim().toLowerCase();
+  // Admin-selected Lead Article
+  const leadBlog = filteredBlogs.find(
+    (blog) => blog.id === featuredBlogId
+  );
 
-    const matchesSearch =
-      !searchTerm ||
-      blog.title?.toLowerCase().includes(searchTerm) ||
-      blog.excerpt?.toLowerCase().includes(searchTerm);
-
-    return matchesCategory && matchesSearch;
-  });
-}, [blogs, activeCategory, search, featuredBlog]);
+  // All other articles
+  const remainingBlogs = leadBlog
+    ? filteredBlogs.filter((blog) => blog.id !== leadBlog.id)
+    : filteredBlogs;
 
   return (
-    <main className="min-h-screen bg-[#F8F8F5]">
+    <>
+    <main className="min-h-screen overflow-hidden bg-[#FFFDF8]">
 
-      {/* HERO SECTION */}
-      <section className="relative overflow-hidden px-6 pb-20 pt-32 md:px-12 md:pb-28 lg:px-20">
-        <div className="absolute right-[-100px] top-10 h-[350px] w-[350px] rounded-full bg-[#E8EDE4] opacity-60 blur-3xl" />
+      {/* ================= BLOG HERO ================= */}
+     
+<section className="relative overflow-hidden bg-[#B6CBA9] px-6 pb-16 pt-32 md:px-12 md:pb-20 lg:px-20">
 
-        <div className="relative mx-auto max-w-7xl">
-          <p className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-[#829181]">
-            <span className="h-px w-8 bg-[#829181]" />
-            GrowthEnzyme Journal
+  <div className="relative mx-auto max-w-7xl">
+
+    <div className="flex items-center justify-center gap-4">
+      <span className="h-px w-10 bg-[#29382F]/50" />
+      <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#29382F]">
+        GrowthEnzyme Journal
+      </p>
+      <span className="h-px w-10 bg-[#29382F]/50" />
+    </div>
+
+    <div className="py-10 text-center md:py-14">
+      <h1 className="font-heading text-6xl font-bold tracking-tight text-[#29382F] sm:text-7xl md:text-8xl">
+        The Blog
+        <span className="text-[#FFFDF8]">.</span>
+      </h1>
+
+      <p className="mx-auto mt-5 max-w-xl text-xs leading-7 text-[#29382F]/75 sm:text-sm">
+        Discover ideas, insights and strategies to help your
+        business grow in the digital world.
+      </p>
+    </div>
+
+    <div className="flex flex-wrap items-center justify-center gap-3">
+      <a
+  href="/"
+  className="group inline-flex items-center justify-center gap-4 rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-5 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.13)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.18)]"
+>
+  Back to Home
+  <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/50 bg-white/35">
+    <ArrowUpRight
+      size={16}
+      className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+    />
+  </span>
+</a>
+
+      <span className="inline-flex items-center gap-2 rounded-full border border-[#29382F]/30 px-5 py-3 text-[9px] font-bold uppercase tracking-widest text-[#29382F]">
+        <BookOpen size={13} />
+        Explore Our Articles
+      </span>
+    </div>
+
+  </div>
+</section>
+
+
+
+      {/* ================= CATEGORY FILTERS ================= */}
+      <section className="border-b border-[#29382F]/10 bg-[#FFFDF8] px-6 py-7 md:px-12 lg:px-20">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+
+          <div className="flex flex-wrap items-center gap-x-7 gap-y-4">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`text-[10px] font-bold uppercase tracking-[0.13em] transition ${
+                  activeCategory === category
+                    ? "text-[#29382F]"
+                    : "text-[#829181] hover:text-[#29382F]"
+                }`}
+              >
+                {category}
+
+                {activeCategory === category && (
+                  <span className="mt-2 block h-[2px] w-full bg-[#8DA77F]" />
+                )}
+              </button>
+            ))}
+          </div>
+
+          <div className="relative w-full lg:max-w-[240px]">
+            <Search
+              size={15}
+              className="absolute left-0 top-1/2 -translate-y-1/2 text-[#829181]"
+            />
+
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search articles..."
+              className="w-full border-b border-[#29382F]/20 bg-transparent py-2 pl-7 text-xs text-[#29382F] outline-none placeholder:text-[#829181] focus:border-[#506B59]"
+            />
+          </div>
+
+        </div>
+      </section>
+
+
+      {/* ================= BLOG CONTENT ================= */}
+      {loading ? (
+        <section className="bg-[#FFFDF8] px-6 py-28 text-center">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[#B6CBA9] border-t-[#29382F]" />
+          <p className="mt-4 text-xs text-[#667267]">
+            Loading articles...
+          </p>
+        </section>
+      ) : error ? (
+        <section className="bg-[#FFFDF8] px-6 py-28 text-center">
+          <p className="text-sm text-red-600">{error}</p>
+        </section>
+      ) : filteredBlogs.length === 0 ? (
+        <section className="bg-[#FFFDF8] px-6 py-28 text-center">
+          <h2
+            className="text-4xl text-[#29382F]"
+            style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+            }}
+          >
+            No articles found
+          </h2>
+
+          <p className="mt-3 text-xs text-[#667267]">
+            Try another category or search term.
           </p>
 
-          <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_350px] lg:items-end">
-            <h1
-              className="max-w-4xl text-5xl leading-[1.08] tracking-tight text-[#29382F] md:text-7xl lg:text-[82px]"
-              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
-            >
-              Ideas that inspire
-              <span className="block italic text-[#829181]">
-                growth.
-              </span>
-            </h1>
-
-            <div className="pb-2">
-              <p className="max-w-sm text-sm leading-8 text-[#747D73]">
-                Insights, strategies and perspectives to help businesses
-                grow in an ever-changing digital world.
-              </p>
-
-              <p className="mt-6 text-xs font-medium uppercase tracking-[0.15em] text-[#405C48]">
-                Ideas · Innovation · Growth
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FEATURED ARTICLE */}
-      <section className="px-6 pb-20 md:px-12 lg:px-20">
-        <div className="mx-auto max-w-7xl">
-
-          <div className="mb-7 flex items-center justify-between border-b border-[#E4E7DF] pb-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#405C48]">
-              Featured Story
-            </p>
-            <span className="text-xs text-[#92998F]">
-              01 / Latest
-            </span>
-          </div>
-
-          {loading ? (
-            <div className="flex min-h-[300px] items-center justify-center rounded-2xl bg-[#EEF0EA]">
-              <p className="text-sm text-gray-500">Loading featured story...</p>
-            </div>
-          ) : error ? (
-            <p className="py-12 text-center text-sm text-red-500">{error}</p>
-          ) : featuredBlog ? (
-            <Link
-              href={`/blog/${featuredBlog.slug}`}
-              className="group grid overflow-hidden rounded-2xl bg-[#EDEFE8] lg:grid-cols-2"
-            >
-              <div className="aspect-[16/10] overflow-hidden bg-[#E0E5DC] lg:aspect-auto lg:min-h-[430px]">
-                {featuredBlog.coverImage ? (
-                  <img
-                    src={featuredBlog.coverImage}
-                    alt={featuredBlog.title || "Featured article"}
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex h-full min-h-[300px] items-center justify-center font-serif text-3xl text-[#829181]">
-                    GrowthEnzyme
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-col justify-center p-7 sm:p-12 lg:p-14">
-                <span className="w-fit rounded-full border border-[#D5DDCF] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#405C48]">
-                  {featuredBlog.category || "Insights"}
-                </span>
-
-                <h2
-                  className="mt-7 text-4xl leading-tight text-[#29382F] transition group-hover:text-[#627D65] md:text-5xl"
-                  style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
-                >
-                  {featuredBlog.title}
-                </h2>
-
-                <p className="mt-5 line-clamp-3 text-sm leading-8 text-[#747D73]">
-                  {featuredBlog.excerpt}
-                </p>
-
-                <div className="mt-8 flex flex-wrap items-center gap-4 text-xs text-[#858D83]">
-                  <span className="flex items-center gap-2">
-                    <CalendarDays size={14} />
-                    {formatDate(featuredBlog.publishedAt)}
-                  </span>
-                  {featuredBlog.authorName && (
-                    <span>By {featuredBlog.authorName}</span>
-                  )}
-                </div>
-
-                <span className="mt-9 inline-flex w-fit items-center gap-3 border-b border-[#405C48] pb-2 text-sm font-semibold text-[#405C48]">
-                  Read Featured Story
-                  <ArrowUpRight size={17} className="transition group-hover:-translate-y-1 group-hover:translate-x-1" />
-                </span>
-              </div>
-            </Link>
-          ) : (
-            <div className="rounded-2xl bg-[#EDEFE8] px-6 py-20 text-center">
-              <h2
-                className="text-3xl text-[#29382F]"
-                style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
-              >
-                Our journal is just getting started.
-              </h2>
-              <p className="mt-3 text-sm text-[#747D73]">
-                Check back soon for our latest insights.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* LATEST ARTICLES */}
-      {!loading && !error && blogs.length > 0 && (
-        <section className="px-6 pb-24 md:px-12 lg:px-20">
+          <button
+            onClick={() => {
+              setSearch("");
+              setActiveCategory("All");
+            }}
+            className="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#506B59] underline underline-offset-4"
+          >
+            Clear Filters
+          </button>
+        </section>
+      ) : (
+        <section className="bg-[#FFFDF8] px-6 py-16 md:px-12 md:py-20 lg:px-20">
           <div className="mx-auto max-w-7xl">
 
-            <div className="mb-10 flex flex-col gap-5 border-b border-[#E4E7DF] pb-6 md:flex-row md:items-end md:justify-between">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#829181]">
-                  Explore Our Journal
-                </p>
-                <h2
-                  className="mt-3 text-4xl text-[#29382F] md:text-5xl"
-                  style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
-                >
-                  Latest Articles
-                </h2>
-              </div>
+            {/* ================= LEAD ARTICLE ================= */}
+         
+{/* ================= LEAD ARTICLE ================= */}
+{leadBlog && (
+  <div className="mb-20">
+    <div className="mb-8 flex items-center gap-4">
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#829181]">
+        Editor's Pick
+      </p>
+      <span className="h-px flex-1 bg-[#29382F]/15" />
+    </div>
 
-              <p className="text-sm text-[#92998F]">
-                {blogs.length} Published {blogs.length === 1 ? "Article" : "Articles"}
-              </p>
-            </div>
+    <article className="relative grid items-center lg:grid-cols-[1.35fr_0.65fr]">
 
-            {/* Search */}
-            <div className="mb-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => setActiveCategory(category)}
-                    className={`rounded-full px-4 py-2 text-xs font-medium transition ${
-                      activeCategory === category
-                        ? "bg-[#405C48] text-white"
-                        : "border border-[#DDE3D8] bg-transparent text-[#6D786C] hover:bg-[#EDF1E9]"
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
+      {/* Article Image */}
+      <Link
+        href={`/blog/${leadBlog.slug || leadBlog.id}`}
+        className="group relative block h-[280px] overflow-hidden bg-[#E9E5DA] sm:h-[380px] lg:h-[460px]"
+      >
+        {leadBlog.coverImage ? (
+          <img
+            src={leadBlog.coverImage}
+            alt={leadBlog.title || "Featured article"}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-[#B6CBA9] text-sm text-[#29382F]">
+            Featured Article
+          </div>
+        )}
 
-              <div className="relative w-full md:max-w-[260px]">
-                <Search
-                  size={16}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#92998F]"
-                />
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search articles..."
-                  className="h-10 w-full rounded-full border border-[#DDE3D8] bg-white pl-9 pr-4 text-xs text-[#29382F] outline-none focus:border-[#829181]"
-                />
-              </div>
-            </div>
+        <span className="absolute left-5 top-5 bg-[#29382F] px-4 py-2 text-[9px] font-bold uppercase tracking-widest text-white">
+          {leadBlog.category || "Featured"}
+        </span>
+      </Link>
 
-            {filteredBlogs.length === 0 ? (
-              <div className="py-16 text-center">
-                <p className="font-serif text-2xl text-[#29382F]">
-                  No matching articles
-                </p>
-                <p className="mt-2 text-sm text-[#92998F]">
-                  Try another category or search term.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
-                {filteredBlogs.map((blog) => (
-                  <Link
-                    key={blog.id}
-                    href={`/blog/${blog.slug}`}
-                    className="group block"
-                  >
-                    <div className="aspect-[16/10] overflow-hidden rounded-xl bg-[#E9ECE7]">
-                      {blog.coverImage ? (
-                        <img
-                          src={blog.coverImage}
-                          alt={blog.title || "Blog cover"}
-                          className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center font-serif text-xl text-[#829181]">
-                          GrowthEnzyme
-                        </div>
-                      )}
-                    </div>
+      {/* Overlapping Content Card */}
+      <div className="relative z-10 -mt-8 ml-4 bg-white p-7 shadow-[0_20px_55px_rgba(41,56,47,0.12)] sm:ml-10 sm:p-10 lg:-ml-20 lg:mt-0 lg:p-12">
 
-                    <div className="mt-5 flex items-center justify-between gap-3">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#829181]">
-                        {blog.category || "Insights"}
-                      </span>
-                      <span className="text-[11px] text-[#92998F]">
-                        {formatDate(blog.publishedAt)}
-                      </span>
-                    </div>
+        <p className="mb-5 text-[9px] font-bold uppercase tracking-[0.2em] text-[#8DA77F]">
+          Featured Article
+        </p>
 
-                    <div className="mt-3 flex items-start justify-between gap-3">
-                      <h3
-                        className="text-2xl leading-snug text-[#29382F] transition group-hover:text-[#829181]"
-                        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
-                      >
-                        {blog.title}
-                      </h3>
-                      <ArrowUpRight
-                        size={19}
-                        className="mt-1 shrink-0 text-[#829181] transition group-hover:-translate-y-1 group-hover:translate-x-1"
-                      />
-                    </div>
+        <h2 className="font-heading text-3xl font-semibold leading-tight text-[#29382F] sm:text-4xl lg:text-5xl">
+          {leadBlog.title}
+        </h2>
 
-                    <p className="mt-3 line-clamp-3 text-sm leading-7 text-[#747D73]">
-                      {blog.excerpt}
-                    </p>
+        <p className="mt-5 line-clamp-4 text-xs leading-7 text-[#667267] sm:text-sm">
+          {leadBlog.excerpt ||
+            "Discover our latest insights and ideas."}
+        </p>
 
-                    <span className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-[#405C48]">
-                      Read Article
-                      <ArrowRight size={14} className="transition group-hover:translate-x-1" />
-                    </span>
-                  </Link>
-                ))}
-              </div>
+        <div className="mt-6 flex flex-wrap items-center gap-4 text-[10px] text-[#829181]">
+          <span className="inline-flex items-center gap-2">
+            <CalendarDays size={13} />
+            {formatDate(
+              leadBlog.publishedAt || leadBlog.createdAt
             )}
+          </span>
+
+          {leadBlog.authorName && (
+            <span>By {leadBlog.authorName}</span>
+          )}
+        </div>
+
+        <Link
+          href={`/blog/${leadBlog.slug || leadBlog.id}`}
+          className="mt-8 inline-flex w-fit items-center gap-3 rounded-full bg-[#29382F] px-6 py-3.5 text-[9px] font-bold uppercase tracking-widest text-white transition hover:bg-[#506B59]"
+        >
+          Read Article
+          <ArrowUpRight size={14} />
+        </Link>
+
+      </div>
+    </article>
+  </div>
+)}
+
+
+
+            {/* ================= LATEST ARTICLES ================= */}
+            <div>
+              <div className="mb-10 flex items-end justify-between gap-4">
+                <div>
+                  <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#829181]">
+                    Explore Our Journal
+                  </p>
+
+                  <h2
+                    className="text-4xl text-[#29382F] sm:text-5xl"
+                    style={{
+                      fontFamily: "'Cormorant Garamond', Georgia, serif",
+                    }}
+                  >
+                    Latest Articles
+                  </h2>
+                </div>
+
+                <span className="hidden text-[10px] text-[#829181] sm:block">
+                  {remainingBlogs.length} Articles
+                </span>
+              </div>
+
+              {remainingBlogs.length === 0 ? (
+                <div className="border border-[#29382F]/10 bg-[#F5F0E5] px-6 py-12 text-center">
+                  <p className="text-sm text-[#667267]">
+                    No more articles to display.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid gap-x-8 gap-y-9 md:grid-cols-2">
+                  {remainingBlogs.map((blog) => (
+                    <article
+                      key={blog.id}
+                      className="group flex min-w-0 gap-4 border-b border-[#29382F]/10 pb-8 sm:gap-5"
+                    >
+                      <Link
+                        href={`/blog/${blog.slug || blog.id}`}
+                        className="relative block h-[145px] w-[112px] shrink-0 overflow-hidden bg-[#E9E5DA] sm:h-[165px] sm:w-[135px]"
+                      >
+                        {blog.coverImage ? (
+                          <img
+                            src={blog.coverImage}
+                            alt={blog.title || "Blog article"}
+                            className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center bg-[#B6CBA9] text-[10px] text-[#29382F]">
+                            Article
+                          </div>
+                        )}
+                      </Link>
+
+                      <div className="flex min-w-0 flex-1 flex-col items-start py-1">
+
+                        <p className="mb-2 text-[9px] font-bold uppercase tracking-wider text-[#8DA77F]">
+                          {blog.category || "Insights"}
+                        </p>
+
+                        <Link
+                          href={`/blog/${blog.slug || blog.id}`}
+                        >
+                          <h3
+                            className="line-clamp-3 text-xl leading-tight text-[#29382F] transition group-hover:text-[#506B59] sm:text-2xl"
+                            style={{
+                              fontFamily: "'Cormorant Garamond', Georgia, serif",
+                            }}
+                          >
+                            {blog.title}
+                          </h3>
+                        </Link>
+
+                        <div className="mt-3 flex items-center gap-2 text-[9px] text-[#829181]">
+                          <CalendarDays size={11} />
+                          {formatDate(blog.publishedAt || blog.createdAt)}
+                        </div>
+
+                        <p className="mt-2 line-clamp-2 text-[10px] leading-5 text-[#667267] sm:text-xs">
+                          {blog.excerpt}
+                        </p>
+
+                        <Link
+                          href={`/blog/${blog.slug || blog.id}`}
+                          className="mt-auto inline-flex items-center gap-2 pt-4 text-[9px] font-bold uppercase tracking-widest text-[#405C48]"
+                        >
+                          Read More
+                          <ArrowRight
+                            size={12}
+                            className="transition-transform group-hover:translate-x-1"
+                          />
+                        </Link>
+
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </div>
+
           </div>
         </section>
       )}
 
-      {/* FOOTER CTA */}
-      <section className="bg-[#29382F] px-6 py-16 md:px-12 lg:px-20">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
+
+      {/* ================= BOTTOM CTA ================= */}
+      {/* <section className="bg-[#29382F] px-6 py-16 md:px-12 md:py-20 lg:px-20">
+        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#A8B7A5]">
-              Keep Growing
+            <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[#B6CBA9]">
+              Ready to grow?
             </p>
+
             <h2
-              className="mt-3 text-4xl text-white md:text-5xl"
-              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
-          >
-              Let's grow your business.
+              className="max-w-2xl text-4xl leading-tight text-[#FFFDF8] sm:text-5xl md:text-6xl"
+              style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+              }}
+            >
+              Let's create something
+              <span className="italic text-[#B6CBA9]">
+                {" "}meaningful.
+              </span>
             </h2>
           </div>
 
           <Link
-            href="/#contact"
-            className="inline-flex w-fit items-center gap-3 rounded-full bg-[#F2F3EC] px-6 py-3.5 text-sm font-semibold text-[#29382F] transition hover:bg-white"
+            href="/contact"
+            className="inline-flex shrink-0 items-center gap-4 rounded-full bg-[#B6CBA9] px-7 py-4 text-[10px] font-bold uppercase tracking-widest text-[#29382F] transition hover:bg-[#FFFDF8]"
           >
-            Get in Touch
-            <ArrowUpRight size={17} />
+            Let's Talk
+            <ArrowUpRight size={16} />
           </Link>
+
         </div>
-      </section>
+      </section> */}
 
     </main>
+    <Footer />
+    </>
   );
 }

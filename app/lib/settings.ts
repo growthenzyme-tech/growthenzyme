@@ -9,7 +9,8 @@ import { db } from "./firebase";
 
 export type GeneralSettings = {
   websiteName: string;
- 
+  featuredBlogId?: string;
+
   defaultMetaDescription: string;
   defaultSocialImage: string;
   footerCopyright: string;
@@ -40,6 +41,7 @@ export type GeneralSettings = {
 
 export const defaultGeneralSettings: GeneralSettings = {
   websiteName: "GrowthEnzyme",
+  featuredBlogId: "",
  
   defaultMetaDescription: "",
   defaultSocialImage: "",
@@ -97,6 +99,20 @@ export async function updateGeneralSettings(
     settingsRef,
     {
       ...data,
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
+}
+
+
+export async function updateFeaturedBlogId(
+  blogId: string
+): Promise<void> {
+  await setDoc(
+    settingsRef,
+    {
+      featuredBlogId: blogId,
       updatedAt: serverTimestamp(),
     },
     { merge: true }
