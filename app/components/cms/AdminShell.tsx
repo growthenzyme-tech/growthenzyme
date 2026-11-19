@@ -18,8 +18,6 @@ import {
   ChevronRight,
   MessageSquare,
   ShieldCheck,
-  Sun,
-  Moon,
 } from "lucide-react";
 import { logoutUser, observeAuth } from "@/app/lib/auth";
 import { doc, getDoc } from "firebase/firestore";
@@ -46,301 +44,275 @@ export default function AdminShell({
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     try {
-      const savedTheme = localStorage.getItem("admin_theme");
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-        setIsDarkMode(true);
-        document.documentElement.classList.add("dark");
-      } else {
-        setIsDarkMode(false);
-        document.documentElement.classList.remove("dark");
-      }
+      localStorage.removeItem("admin_theme");
+      document.documentElement.classList.remove("dark");
     } catch {
       // ignore
     }
   }, []);
 
-  function toggleDarkMode() {
-    try {
-      if (isDarkMode) {
-        document.documentElement.classList.remove("dark");
-        localStorage.setItem("admin_theme", "light");
-        setIsDarkMode(false);
-      } else {
-        document.documentElement.classList.add("dark");
-        localStorage.setItem("admin_theme", "dark");
-        setIsDarkMode(true);
-      }
-    } catch {
-      setIsDarkMode(!isDarkMode);
-    }
-  }
-
   // Authentication states
-type PermissionKey =
-  | "dashboard"
-  | "blogs"
-  | "comments"
-  | "media"
-  | "caseStudies"
-  | "users"
-  | "settings";
+  type PermissionKey =
+    | "dashboard"
+    | "blogs"
+    | "comments"
+    | "media"
+    | "caseStudies"
+    | "users"
+    | "settings";
 
-type RolePermissions = Record<PermissionKey, boolean>;
+  type RolePermissions = Record<PermissionKey, boolean>;
 
-const [role, setRole] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
 
-const [permissions, setPermissions] = useState<RolePermissions>({
-  dashboard: false,
-  blogs: false,
-  comments: false,
-  media: false,
-  caseStudies: false,
-  users: false,
-  settings: false,
-});
+  const [permissions, setPermissions] = useState<RolePermissions>({
+    dashboard: false,
+    blogs: false,
+    comments: false,
+    media: false,
+    caseStudies: false,
+    users: false,
+    settings: false,
+  });
 
-const [checkingAuth, setCheckingAuth] = useState(true);
-const [authError, setAuthError] = useState("");
-
-  // Authentication check
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [authError, setAuthError] = useState("");
 
   // Authentication check
-// Verify authentication and load role permissions only once.
 
-// Verify authentication and load role permissions.
-useEffect(() => {
-  // Login page must remain accessible without authentication.
-  if (pathname === "/admin/login") {
-    setCheckingAuth(false);
-    setRole(null);
-    setAuthError("");
-    return;
-  }
+  // Authentication check
+  // Verify authentication and load role permissions only once.
 
-  let active = true;
-
-  const unsubscribe = observeAuth(async (user) => {
-    if (!active) return;
-
-    if (!user) {
-      setRole(null);
+  // Verify authentication and load role permissions.
+  useEffect(() => {
+    // Login page must remain accessible without authentication.
+    if (pathname === "/admin/login") {
       setCheckingAuth(false);
+      setRole(null);
+      setAuthError("");
+      return;
+    }
 
-      if (pathname !== "/admin/login") {
-        router.replace("/admin/login");
+    let active = true;
+
+    const unsubscribe = observeAuth(async (user) => {
+      if (!active) return;
+
+      if (!user) {
+        setRole(null);
+        setCheckingAuth(false);
+
+        if (pathname !== "/admin/login") {
+          router.replace("/admin/login");
+        }
+
+        return;
+      }
+
+      try {
+        setCheckingAuth(true);
+        setAuthError("");
+
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!active) return;
+
+        if (!userSnap.exists()) {
+          throw new Error("User profile not found.");
+        }
+
+        const profile = userSnap.data();
+
+        if (profile.isActive !== true) {
+          throw new Error("Your account is inactive.");
+        }
+
+        let userRole = "writer";
+
+        let userPermissions: RolePermissions = {
+          dashboard: false,
+          blogs: false,
+          comments: false,
+          media: false,
+          caseStudies: false,
+          users: false,
+          settings: false,
+        };
+
+        const rawRole = (
+          profile.role || profile.roleId || ""
+        ).toString().toLowerCase();
+
+        const isSystemAdmin =
+          profile.role === "admin" ||
+          profile.role === "administrator" ||
+          profile.roleId === "system-admin" ||
+          rawRole.includes("admin") ||
+          rawRole.includes("super");
+
+        if (isSystemAdmin) {
+          userRole = "admin";
+
+          userPermissions = {
+            dashboard: true,
+            blogs: true,
+            comments: true,
+            media: true,
+            caseStudies: true,
+            users: true,
+            settings: true,
+          };
+        } else if (profile.role === "writer" && !profile.roleId) {
+          userRole = "writer";
+
+          userPermissions = {
+            dashboard: true,
+            blogs: true,
+            comments: false,
+            media: true,
+            caseStudies: false,
+            users: false,
+            settings: false,
+          };
+        } else if (profile.roleId) {
+          const roleRef = doc(db, "roles", profile.roleId);
+          const roleSnap = await getDoc(roleRef);
+
+          if (!active) return;
+
+          if (!roleSnap.exists()) {
+            throw new Error("Assigned role not found.");
+          }
+
+          const roleData = roleSnap.data();
+
+          if (roleData.isActive !== true) {
+            throw new Error("Assigned role is inactive.");
+          }
+
+          const savedPermissions = roleData.permissions || {};
+
+          userPermissions = {
+            dashboard: savedPermissions.dashboard === true,
+            blogs: savedPermissions.blogs === true,
+            comments: savedPermissions.comments === true,
+            media: savedPermissions.media === true,
+            caseStudies: savedPermissions.caseStudies === true,
+            users: savedPermissions.users === true,
+            settings: savedPermissions.settings === true,
+          };
+
+          const hasPermission = Object.values(userPermissions).some(
+            (permission) => permission === true
+          );
+
+          if (!hasPermission) {
+            throw new Error("No active CMS permissions.");
+          }
+
+          userRole = roleData.name?.toLowerCase() || "custom";
+        } else {
+          throw new Error("No valid role is assigned to your account.");
+        }
+
+        if (!active) return;
+
+        setRole(userRole);
+        setPermissions(userPermissions);
+        setAuthError("");
+        setCheckingAuth(false);
+
+        console.log("CMS authentication successful:", userRole);
+      } catch (error) {
+        console.error("CMS authentication error:", error);
+
+        if (!active) return;
+
+        setAuthError(
+          error instanceof Error
+            ? error.message
+            : "Unable to verify your account."
+        );
+
+        setCheckingAuth(false);
+      }
+    });
+
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, [pathname, router]);
+
+
+
+  // Check page access using the already-loaded permissions.
+  useEffect(() => {
+    if (
+      pathname === "/admin/login" ||
+      checkingAuth ||
+      authError ||
+      !role
+    ) {
+      return;
+    }
+
+    const isAdministrator =
+      role === "admin" || role === "administrator";
+
+    // Roles & Permissions and Settings are administrator-only.
+    const adminOnlyPaths = [
+      "/admin/roles",
+      "/admin/settings",
+    ];
+
+    const isAdminOnlyPage = adminOnlyPaths.some(
+      (path) => pathname === path || pathname.startsWith(`${path}/`)
+    );
+
+    if (isAdminOnlyPage) {
+      if (!isAdministrator) {
+        router.replace("/admin/blogs");
       }
 
       return;
     }
 
-    try {
-      setCheckingAuth(true);
-      setAuthError("");
+    const routePermissions: {
+      path: string;
+      permission: PermissionKey;
+    }[] = [
+        { path: "/admin/dashboard", permission: "dashboard" },
+        { path: "/admin/blogs", permission: "blogs" },
+        { path: "/admin/case-studies", permission: "caseStudies" },
+        { path: "/admin/media", permission: "media" },
+        { path: "/admin/users", permission: "users" },
+        { path: "/admin/settings", permission: "settings" },
+        { path: "/admin/comments", permission: "comments" },
+      ];
 
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (!active) return;
-
-      if (!userSnap.exists()) {
-        throw new Error("User profile not found.");
-      }
-
-      const profile = userSnap.data();
-
-      if (profile.isActive !== true) {
-        throw new Error("Your account is inactive.");
-      }
-
-      let userRole = "writer";
-
-      let userPermissions: RolePermissions = {
-        dashboard: false,
-        blogs: false,
-        comments: false,
-        media: false,
-        caseStudies: false,
-        users: false,
-        settings: false,
-      };
-
-      const rawRole = (
-        profile.role || profile.roleId || ""
-      ).toString().toLowerCase();
-
-      const isSystemAdmin =
-        profile.role === "admin" ||
-        profile.role === "administrator" ||
-        profile.roleId === "system-admin" ||
-        rawRole.includes("admin") ||
-        rawRole.includes("super");
-
-      if (isSystemAdmin) {
-        userRole = "admin";
-
-        userPermissions = {
-          dashboard: true,
-          blogs: true,
-          comments: true,
-          media: true,
-          caseStudies: true,
-          users: true,
-          settings: true,
-        };
-      } else if (profile.role === "writer" && !profile.roleId) {
-        userRole = "writer";
-
-        userPermissions = {
-          dashboard: true,
-          blogs: true,
-          comments: false,
-          media: true,
-          caseStudies: false,
-          users: false,
-          settings: false,
-        };
-      } else if (profile.roleId) {
-        const roleRef = doc(db, "roles", profile.roleId);
-        const roleSnap = await getDoc(roleRef);
-
-        if (!active) return;
-
-        if (!roleSnap.exists()) {
-          throw new Error("Assigned role not found.");
-        }
-
-        const roleData = roleSnap.data();
-
-        if (roleData.isActive !== true) {
-          throw new Error("Assigned role is inactive.");
-        }
-
-        const savedPermissions = roleData.permissions || {};
-
-        userPermissions = {
-          dashboard: savedPermissions.dashboard === true,
-          blogs: savedPermissions.blogs === true,
-          comments: savedPermissions.comments === true,
-          media: savedPermissions.media === true,
-          caseStudies: savedPermissions.caseStudies === true,
-          users: savedPermissions.users === true,
-          settings: savedPermissions.settings === true,
-        };
-
-        const hasPermission = Object.values(userPermissions).some(
-          (permission) => permission === true
-        );
-
-        if (!hasPermission) {
-          throw new Error("No active CMS permissions.");
-        }
-
-        userRole = roleData.name?.toLowerCase() || "custom";
-      } else {
-        throw new Error("No valid role is assigned to your account.");
-      }
-
-      if (!active) return;
-
-      setRole(userRole);
-      setPermissions(userPermissions);
-      setAuthError("");
-      setCheckingAuth(false);
-
-      console.log("CMS authentication successful:", userRole);
-    } catch (error) {
-      console.error("CMS authentication error:", error);
-
-      if (!active) return;
-
-      setAuthError(
-        error instanceof Error
-          ? error.message
-          : "Unable to verify your account."
-      );
-
-      setCheckingAuth(false);
-    }
-  });
-
-  return () => {
-    active = false;
-    unsubscribe();
-  };
-}, [pathname, router]);
-
-
-
-// Check page access using the already-loaded permissions.
-useEffect(() => {
-  if (
-    pathname === "/admin/login" ||
-    checkingAuth ||
-    authError ||
-    !role
-  ) {
-    return;
-  }
-
-  const isAdministrator =
-    role === "admin" || role === "administrator";
-
-  // Roles & Permissions and Settings are administrator-only.
-  const adminOnlyPaths = [
-    "/admin/roles",
-    "/admin/settings",
-  ];
-
-  const isAdminOnlyPage = adminOnlyPaths.some(
-    (path) => pathname === path || pathname.startsWith(`${path}/`)
-  );
-
-  if (isAdminOnlyPage) {
-    if (!isAdministrator) {
-      router.replace("/admin/blogs");
-    }
-
-    return;
-  }
-
-  const routePermissions: {
-    path: string;
-    permission: PermissionKey;
-  }[] = [
-    { path: "/admin/dashboard", permission: "dashboard" },
-    { path: "/admin/blogs", permission: "blogs" },
-    { path: "/admin/case-studies", permission: "caseStudies" },
-    { path: "/admin/media", permission: "media" },
-    { path: "/admin/users", permission: "users" },
-    { path: "/admin/settings", permission: "settings" },
-    { path: "/admin/comments", permission: "comments" },
-  ];
-
-  const matchedRoute = routePermissions.find(
-    (item) =>
-      pathname === item.path ||
-      pathname.startsWith(`${item.path}/`)
-  );
-
-  if (!matchedRoute || isAdministrator) {
-    return;
-  }
-
-  if (!permissions[matchedRoute.permission]) {
-    const firstAllowedRoute = routePermissions.find(
-      (item) => permissions[item.permission]
+    const matchedRoute = routePermissions.find(
+      (item) =>
+        pathname === item.path ||
+        pathname.startsWith(`${item.path}/`)
     );
 
-    router.replace(firstAllowedRoute?.path || "/admin/login");
-  }
-}, [pathname, checkingAuth, authError, role, permissions, router]);
+    if (!matchedRoute || isAdministrator) {
+      return;
+    }
+
+    if (!permissions[matchedRoute.permission]) {
+      const firstAllowedRoute = routePermissions.find(
+        (item) => permissions[item.permission]
+      );
+
+      router.replace(firstAllowedRoute?.path || "/admin/login");
+    }
+  }, [pathname, checkingAuth, authError, role, permissions, router]);
 
   // Keep the login screen independent of the CMS navigation.
   if (pathname === "/admin/login") {
@@ -348,39 +320,39 @@ useEffect(() => {
   }
 
   if (checkingAuth) {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f7f7f5]">
-      <div className="text-center">
-        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-[#405C48]" />
-        <p className="mt-4 text-sm text-gray-500">
-          Verifying your account...
-        </p>
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#f7f7f5]">
+        <div className="text-center">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-[#405C48]" />
+          <p className="mt-4 text-sm text-gray-500">
+            Verifying your account...
+          </p>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
-if (authError) {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#f7f7f5] px-5 text-center">
-      <p className="text-sm text-red-600">{authError}</p>
-      <button
-        onClick={() => window.location.reload()}
-        className="mt-4 rounded-lg bg-[#405C48] px-5 py-2 text-sm text-white"
-      >
-        Try Again
-      </button>
-    </div>
-  );
-}
+  if (authError) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#f7f7f5] px-5 text-center">
+        <p className="text-sm text-red-600">{authError}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 rounded-lg bg-[#405C48] px-5 py-2 text-sm text-white"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
 
-if (!role) {
-  return null;
-}
+  if (!role) {
+    return null;
+  }
   const currentPage =
     navigation.find((item) => pathname.startsWith(item.href))?.label ||
     (pathname.includes("/edit/") ? "Edit Blog" :
-    pathname.includes("/create") ? "Create Blog" : "CMS");
+      pathname.includes("/create") ? "Create Blog" : "CMS");
 
   async function handleLogout() {
     try {
@@ -392,148 +364,146 @@ if (!role) {
     }
   }
 
-const isAdministrator =
-  role === "admin" || role === "administrator";
+  const isAdministrator =
+    role === "admin" || role === "administrator";
 
-const visibleNavigation = navigation.filter((item) => {
-  if (isAdministrator) {
-    return true;
-  }
+  const visibleNavigation = navigation.filter((item) => {
+    if (isAdministrator) {
+      return true;
+    }
 
-  // Roles & Permissions is administrator-only.
-  if (item.href === "/admin/roles") {
-    return false;
-  }
+    // Roles & Permissions is administrator-only.
+    if (item.href === "/admin/roles") {
+      return false;
+    }
 
-  const permissionMap: Record<string, PermissionKey> = {
-    "/admin/dashboard": "dashboard",
-    "/admin/blogs": "blogs",
-    "/admin/case-studies": "caseStudies",
-    "/admin/media": "media",
-    "/admin/users": "users",
-    "/admin/settings": "settings",
-    "/admin/comments": "comments",
-  };
+    const permissionMap: Record<string, PermissionKey> = {
+      "/admin/dashboard": "dashboard",
+      "/admin/blogs": "blogs",
+      "/admin/case-studies": "caseStudies",
+      "/admin/media": "media",
+      "/admin/users": "users",
+      "/admin/settings": "settings",
+      "/admin/comments": "comments",
+    };
 
-  const permission = permissionMap[item.href];
+    const permission = permissionMap[item.href];
 
-  return permission ? permissions[permission] : false;
-});
+    return permission ? permissions[permission] : false;
+  });
 
 
-const sidebar = (
-  <aside className="flex h-full flex-col bg-[#29382F] text-white">
+  const sidebar = (
+    <aside className="flex h-full flex-col bg-[#29382F] text-white">
 
-    {/* Brand Header */}
-    <div className="flex h-[82px] items-center justify-between border-b border-white/15 px-7">
-      <Link href="/admin/dashboard" className="group flex items-center gap-3">
-        <img
-          src="/images/logo.png"
-          alt="Growth Enzyme Logo"
-          className="h-10 w-10 object-contain drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
-        />
+      {/* Brand Header */}
+      <div className="flex h-[82px] items-center justify-between border-b border-white/15 px-7">
+        <Link href="/admin/dashboard" className="group flex items-center gap-3">
+          <img
+            src="/images/logo.png"
+            alt="Growth Enzyme Logo"
+            className="h-10 w-10 object-contain drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
+          />
 
-        <span className="text-[16px] font-bold tracking-wide text-white transition-colors group-hover:text-[#B6CBA9]">
-          Growth Enzyme
-        </span>
-      </Link>
+          <span className="text-[16px] font-bold tracking-wide text-white transition-colors group-hover:text-[#B6CBA9]">
+            Growth Enzyme
+          </span>
+        </Link>
 
-      <button
-        onClick={() => setMobileOpen(false)}
-        className="rounded-lg p-2 text-white/80 transition hover:bg-white/15 hover:text-white lg:hidden"
-        aria-label="Close navigation"
-      >
-        <X size={20} />
-      </button>
-    </div>
-
-    {/* Navigation */}
-    <div className="px-5 pt-8">
-      <div className="mb-5 flex items-center gap-3 px-3">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70">
-          Workspace
-        </p>
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="rounded-lg p-2 text-white/80 transition hover:bg-white/15 hover:text-white lg:hidden"
+          aria-label="Close navigation"
+        >
+          <X size={20} />
+        </button>
       </div>
 
-      <nav className="space-y-1.5">
-        {visibleNavigation.map((item) => {
-          const active = pathname.startsWith(item.href);
-          const Icon = item.icon;
+      {/* Navigation */}
+      <div className="px-5 pt-8">
+        <div className="mb-5 flex items-center gap-3 px-3">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70">
+            Workspace
+          </p>
+        </div>
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className={`group relative flex items-center gap-3 overflow-hidden rounded-xl px-3.5 py-3 text-[13px] transition-all duration-200 ${
-                active
+        <nav className="space-y-1.5">
+          {visibleNavigation.map((item) => {
+            const active = pathname.startsWith(item.href);
+            const Icon = item.icon;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                className={`group relative flex items-center gap-3 overflow-hidden rounded-xl px-3.5 py-3 text-[13px] transition-all duration-200 ${active
                   ? "bg-[#B6CBA9] font-bold text-[#29382F] shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
                   : "font-medium text-white/90 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              {active && (
-                <span className="absolute bottom-2 left-0 top-2 w-1 rounded-r-full bg-[#D78359]" />
-              )}
+                  }`}
+              >
+                {active && (
+                  <span className="absolute bottom-2 left-0 top-2 w-1 rounded-r-full bg-[#D78359]" />
+                )}
 
-              <Icon
-                size={18}
-                strokeWidth={active ? 2.2 : 1.9}
-                className={`shrink-0 transition-colors ${
-                  active
+                <Icon
+                  size={18}
+                  strokeWidth={active ? 2.2 : 1.9}
+                  className={`shrink-0 transition-colors ${active
                     ? "text-[#29382F]"
                     : "text-white/85 group-hover:text-[#B6CBA9]"
-                }`}
-              />
-
-              <span>{item.label}</span>
-
-              {active && (
-                <ChevronRight
-                  size={16}
-                  strokeWidth={2.5}
-                  className="ml-auto text-[#29382F]"
+                    }`}
                 />
-              )}
-            </Link>
-          );
-        })}
-      </nav>
-    </div>
 
-    {/* Bottom Actions */}
-    <div className="mt-auto space-y-2 border-t border-white/15 p-5">
+                <span>{item.label}</span>
 
-      <Link
-        href="/"
-        target="_blank"
-        className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-[12px] font-semibold text-white/90 transition hover:bg-white/10 hover:text-[#B6CBA9]"
-      >
-        <ExternalLink size={17} />
-        View Website
-      </Link>
-
-      <button
-        onClick={handleLogout}
-        disabled={loggingOut}
-        className="flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-[12px] font-semibold text-white/90 transition hover:bg-[#D78359]/15 hover:text-[#F2B18F] disabled:opacity-50"
-      >
-        <LogOut size={17} />
-        {loggingOut ? "Signing out..." : "Sign Out"}
-      </button>
-
-      <div className="mt-3 border-t border-white/10 px-3 pt-4">
-        <p className="text-[10px] font-medium tracking-wide text-white/65">
-          Growth Enzyme CMS · 2026
-        </p>
+                {active && (
+                  <ChevronRight
+                    size={16}
+                    strokeWidth={2.5}
+                    className="ml-auto text-[#29382F]"
+                  />
+                )}
+              </Link>
+            );
+          })}
+        </nav>
       </div>
-    </div>
-  </aside>
-);
+
+      {/* Bottom Actions */}
+      <div className="mt-auto space-y-2 border-t border-white/15 p-5">
+
+        <Link
+          href="/"
+          target="_blank"
+          className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-[12px] font-semibold text-white/90 transition hover:bg-white/10 hover:text-[#B6CBA9]"
+        >
+          <ExternalLink size={17} />
+          View Website
+        </Link>
+
+        <button
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className="flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-[12px] font-semibold text-white/90 transition hover:bg-[#D78359]/15 hover:text-[#F2B18F] disabled:opacity-50"
+        >
+          <LogOut size={17} />
+          {loggingOut ? "Signing out..." : "Sign Out"}
+        </button>
+
+        <div className="mt-3 border-t border-white/10 px-3 pt-4">
+          <p className="text-[10px] font-medium tracking-wide text-white/65">
+            Growth Enzyme CMS · 2026
+          </p>
+        </div>
+      </div>
+    </aside>
+  );
 
 
   return (
-    <div className="min-h-screen bg-[#f7f7f5] transition-colors dark:bg-[#0E1612]">
+    <div className="min-h-screen bg-[#f7f7f5]">
       <div className="fixed inset-y-0 left-0 z-40 hidden w-[255px] lg:block">
         {sidebar}
       </div>
@@ -553,54 +523,33 @@ const sidebar = (
       )}
 
       <div className="lg:pl-[255px]">
-        <header className="sticky top-0 z-30 flex h-[76px] items-center justify-between border-b border-gray-200 bg-white/95 px-5 backdrop-blur-md transition-colors dark:border-[#202E26] dark:bg-[#15201A]/95 md:px-9">
+        <header className="sticky top-0 z-30 flex h-[76px] items-center justify-between border-b border-gray-200 bg-white/95 px-5 backdrop-blur-md md:px-9">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
-              className="rounded-lg border border-gray-200 p-2 text-gray-700 transition hover:bg-gray-100 dark:border-white/15 dark:text-gray-200 dark:hover:bg-white/10 lg:hidden"
+              className="rounded-lg border border-gray-200 p-2 text-gray-700 transition hover:bg-gray-100 lg:hidden"
               aria-label="Open navigation"
             >
               <Menu size={20} />
             </button>
 
             <div>
-              <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-gray-400 dark:text-[#8FA89B]">
+              <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-gray-400">
                 Growth Enzyme / CMS
               </p>
-              <h2 className="mt-1 text-sm font-semibold text-gray-900 dark:text-white">
+              <h2 className="mt-1 text-sm font-semibold text-gray-900">
                 {currentPage}
               </h2>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            {/* Dark / Light Mode Toggle */}
-            <button
-              type="button"
-              onClick={toggleDarkMode}
-              className="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50/80 px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm transition hover:bg-gray-100 hover:text-gray-900 dark:border-white/15 dark:bg-white/5 dark:text-gray-200 dark:hover:bg-white/10 dark:hover:text-white"
-              title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-              aria-label={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-              {isDarkMode ? (
-                <>
-                  <Sun size={15} className="text-amber-400" />
-                  <span className="hidden sm:inline">Light</span>
-                </>
-              ) : (
-                <>
-                  <Moon size={15} className="text-gray-600" />
-                  <span className="hidden sm:inline">Dark</span>
-                </>
-              )}
-            </button>
-
+          <div className="flex items-center gap-3">
             {/* Log Out Option */}
             <button
               type="button"
               onClick={handleLogout}
               disabled={loggingOut}
-              className="flex items-center gap-2 rounded-xl border border-red-200/80 bg-red-50/70 px-3 py-2 text-xs font-semibold text-red-600 shadow-sm transition hover:bg-red-100 hover:text-red-700 disabled:opacity-50 dark:border-red-900/30 dark:bg-red-950/30 dark:text-red-400 dark:hover:bg-red-900/50"
+              className="flex items-center gap-2 rounded-xl border border-red-200/80 bg-red-50/70 px-3.5 py-2 text-xs font-semibold text-red-600 shadow-sm transition hover:bg-red-100 hover:text-red-700 disabled:opacity-50"
               title="Log Out"
             >
               <LogOut size={15} />
@@ -612,7 +561,7 @@ const sidebar = (
             {/* Growth Enzyme Logo */}
             <Link
               href="/admin/dashboard"
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white p-1.5 shadow-sm transition hover:scale-105 hover:border-[#29382F]/30 dark:border-white/15 dark:bg-[#1f2e26]"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white p-1.5 shadow-sm transition hover:scale-105 hover:border-[#29382F]/30"
               title="Growth Enzyme Dashboard"
             >
               <img
@@ -624,13 +573,12 @@ const sidebar = (
           </div>
         </header>
 
-   <main
-  className={`min-h-[calc(100vh-76px)] px-5 py-8 md:py-10 ${
-    pathname === "/admin/comments"
-      ? "md:px-5"
-      : "md:px-9"
-  }`}
->
+        <main
+          className={`min-h-[calc(100vh-76px)] px-5 py-8 md:py-10 ${pathname === "/admin/comments"
+            ? "md:px-5"
+            : "md:px-9"
+            }`}
+        >
           {children}
         </main>
       </div>
