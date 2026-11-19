@@ -10,11 +10,16 @@ import {
   Building2,
   CheckCircle2,
   ChevronRight,
+  Compass,
+  FileText,
   Layers,
+  LayoutGrid,
   Quote,
   Sparkles,
   Target,
   TrendingUp,
+  Wrench,
+  Zap,
 } from "lucide-react";
 
 import {
@@ -46,7 +51,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${study.title} | Growth Enzyme Editorial Case Study`,
+    title: `${study.title} | Growth Enzyme Bento Case Study`,
     description: study.shortDescription,
     openGraph: {
       title: `${study.client} Case Study | Growth Enzyme`,
@@ -88,8 +93,8 @@ export default async function CaseStudyDetailPage({
 
   return (
     <div className="min-h-screen bg-[#FFFDF8] text-[#29382F] antialiased selection:bg-[#B6CBA9]/30">
-      {/* ─── TOP EDITORIAL HEADER & BREADCRUMB ─── */}
-      <nav className="border-b border-[#29382F]/10 bg-[#FFFDF8]/80 pt-28 pb-4 backdrop-blur-md sm:pt-32">
+      {/* ─── BREADCRUMB NAVIGATION ─── */}
+      <nav className="border-b border-[#29382F]/10 bg-white/80 pt-28 pb-4 backdrop-blur-md sm:pt-32">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 text-xs font-semibold sm:px-8 lg:px-12">
           <div className="flex items-center gap-2 text-[#506B59]">
             <Link
@@ -97,7 +102,7 @@ export default async function CaseStudyDetailPage({
               className="inline-flex items-center gap-1.5 transition hover:text-[#29382F]"
             >
               <ArrowLeft size={14} />
-              Portfolio Index
+              All Case Studies
             </Link>
             <ChevronRight size={14} className="text-[#29382F]/30" />
             <span className="text-[#29382F]/60">{study.industry}</span>
@@ -107,168 +112,107 @@ export default async function CaseStudyDetailPage({
             </span>
           </div>
 
-          <div className="hidden sm:flex items-center gap-3 text-[11px] uppercase tracking-[0.2em] text-[#506B59]">
-            <span>Verified Impact</span>
-            <span className="h-1 w-1 rounded-full bg-[#D78359]" />
-            <span>Growth Enzyme Studio</span>
+          <div className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-[#29382F]/15 bg-[#EEF5EB] px-3 py-1 text-[11px] font-bold text-[#29382F]">
+            <LayoutGrid size={12} className="text-[#D78359]" />
+            Bento Case Study
           </div>
         </div>
       </nav>
 
-      {/* ─── HERO: MAGAZINE COVER SPLIT-SCREEN ─── */}
-      <header className="relative border-b border-[#29382F]/10 bg-gradient-to-b from-[#F3F7F1] via-[#F8FAF7] to-[#FFFDF8] py-14 sm:py-20 lg:py-28">
+      {/* ─── HEADER: TITLE & BADGES ─── */}
+      <header className="relative bg-gradient-to-b from-[#F3F7F1] via-[#F8FAF7] to-[#FFFDF8] pt-12 pb-8 sm:pt-16 sm:pb-12">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
-            {/* Left Column: Big Editorial Typography & Metadata */}
-            <div className="space-y-8 lg:col-span-7">
-              {/* Monogram / Client Index Stamp */}
-              <div className="flex items-center gap-4">
-                <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[#29382F]/20 bg-[#29382F] text-base font-black text-[#B6CBA9]">
-                  {study.client.charAt(0)}
+          <div className="max-w-4xl space-y-4">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#29382F] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-2xs">
+                <Building2 size={13} className="text-[#B6CBA9]" />
+                Client: {study.client}
+              </span>
+              <span className="rounded-full border border-[#29382F]/15 bg-white px-3.5 py-1 text-xs font-bold text-[#506B59]">
+                {study.industry}
+              </span>
+              {study.featured && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#D78359] px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
+                  <Sparkles size={12} /> Spotlight
                 </span>
-                <div>
-                  <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-[#29382F]">
-                    {study.client}
-                  </p>
-                  <p className="text-xs font-semibold text-[#D78359]">
-                    Client Case Study · {study.industry}
-                  </p>
-                </div>
-              </div>
-
-              {/* Massive Serif Title */}
-              <h1
-                className="font-heading text-3xl font-bold tracking-tight text-[#29382F] sm:text-5xl lg:text-6xl leading-[1.04]"
-                style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
-              >
-                {study.title}
-              </h1>
-
-              {/* Standfirst / Short Description */}
-              <p className="font-instrument text-base leading-relaxed text-[#506B59] sm:text-xl font-normal max-w-2xl">
-                {study.shortDescription}
-              </p>
-
-              {/* Editorial Metadata Table */}
-              <div className="grid grid-cols-2 gap-6 border-t border-b border-[#29382F]/15 py-6 text-xs sm:grid-cols-3">
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#506B59]">
-                    Client
-                  </p>
-                  <p className="mt-1 font-bold text-[#29382F] text-sm">
-                    {study.client}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#506B59]">
-                    Sector
-                  </p>
-                  <p className="mt-1 font-bold text-[#29382F] text-sm">
-                    {study.industry}
-                  </p>
-                </div>
-
-                <div className="col-span-2 sm:col-span-1">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#506B59]">
-                    Execution
-                  </p>
-                  <p className="mt-1 font-bold text-[#29382F] text-sm">
-                    Growth Enzyme
-                  </p>
-                </div>
-              </div>
-
-              {/* Key Metrics Ribbon */}
-              {study.metrics && study.metrics.length > 0 && (
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                  {study.metrics.map((m, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-2xl border border-[#29382F]/10 bg-white/90 p-4 shadow-2xs backdrop-blur-xs"
-                    >
-                      <p className="font-heading text-2xl font-black text-[#29382F] sm:text-3xl">
-                        {m.value}
-                      </p>
-                      <p className="mt-1 text-[11px] font-bold uppercase tracking-wider text-[#506B59]">
-                        {m.label}
-                      </p>
-                    </div>
-                  ))}
-                </div>
               )}
             </div>
 
-            {/* Right Column: High-Impact 4K Magazine Cover Image */}
-            <div className="lg:col-span-5">
-              <div className="group relative overflow-hidden rounded-3xl border border-[#29382F]/15 bg-[#E8EDE3] shadow-[0_25px_60px_rgba(41,56,47,0.18)]">
-                <div className="relative aspect-[4/5] w-full overflow-hidden">
-                  <Image
-                    src={study.coverImage}
-                    alt={study.coverImageAlt || study.title}
-                    fill
-                    unoptimized
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 500px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                </div>
+            <h1
+              className="font-heading text-3xl font-extrabold tracking-tight text-[#29382F] sm:text-5xl lg:text-6xl leading-[1.08]"
+              style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
+            >
+              {study.title}
+            </h1>
 
-                {/* Magazine Caption Bar */}
-                <div className="absolute bottom-0 inset-x-0 p-6 text-white backdrop-blur-xs bg-black/25 flex items-center justify-between border-t border-white/20">
-                  <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#B6CBA9]">
-                      Featured Archive
-                    </span>
-                    <p className="text-xs font-bold text-white mt-0.5">
-                      {study.client} · 4K Master Showcase
-                    </p>
-                  </div>
-                  <span className="rounded-full bg-white/25 px-2.5 py-1 text-[10px] font-extrabold tracking-wider text-white backdrop-blur-md">
-                    4K UHD
-                  </span>
-                </div>
-              </div>
-            </div>
+            <p className="font-instrument text-base leading-relaxed text-[#506B59] sm:text-lg max-w-3xl">
+              {study.shortDescription}
+            </p>
           </div>
         </div>
       </header>
 
-      {/* ─── SECTION 1: THE BRIEF & OVERVIEW (SPLIT-SCREEN) ─── */}
-      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
-          {/* Left Column: Editorial Overview Narrative */}
-          <div className="space-y-6 lg:col-span-6">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-[#D78359]">
-              <span>Chapter 01</span>
-              <span className="h-px w-8 bg-[#D78359]" />
-              <span>The Background</span>
+      {/* ─── MAIN BENTO GRID SHOWCASE ─── */}
+      <main className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14 lg:px-12 space-y-12">
+        {/* ─── BENTO ROW 1: HERO VISUAL + QUICK PROFILE + METRICS ─── */}
+        <section className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Tile 1: 4K Master Cover Image (8 Cols) */}
+          <div className="group relative min-h-[360px] overflow-hidden rounded-3xl border border-[#29382F]/15 bg-[#E8EDE3] shadow-md transition-all duration-500 hover:shadow-xl sm:min-h-[460px] lg:col-span-8">
+            <Image
+              src={study.coverImage}
+              alt={study.coverImageAlt || study.title}
+              fill
+              unoptimized
+              priority
+              sizes="(max-width: 1024px) 100vw, 800px"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+
+            {/* Bottom Floating Badge */}
+            <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between text-white">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B6CBA9]">
+                  Primary Project Showcase
+                </span>
+                <p className="font-heading text-lg font-bold text-white sm:text-xl mt-0.5">
+                  {study.client}
+                </p>
+              </div>
+              <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-bold tracking-wider text-white backdrop-blur-md">
+                4K UHD
+              </span>
             </div>
+          </div>
 
-            <h2
-              className="font-heading text-3xl font-bold tracking-tight text-[#29382F] sm:text-4xl lg:text-5xl"
-              style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
-            >
-              Project Overview & Context
-            </h2>
-
-            <div className="prose prose-lg text-[#506B59] font-instrument">
-              <p className="text-base sm:text-lg leading-relaxed">
+          {/* Tile 2: Project Overview & Profile (4 Cols) */}
+          <div className="flex flex-col justify-between rounded-3xl border border-[#29382F]/15 bg-white p-7 shadow-xs lg:col-span-4 space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#D78359]">
+                <FileText size={15} />
+                Project Overview
+              </div>
+              <h3
+                className="font-heading text-xl font-bold leading-snug text-[#29382F] sm:text-2xl"
+                style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
+              >
+                The Engagement
+              </h3>
+              <p className="font-instrument text-sm leading-relaxed text-[#506B59]">
                 {study.projectOverview || study.shortDescription}
               </p>
             </div>
 
-            {/* Scope / Services Badges */}
-            <div className="pt-4 border-t border-[#29382F]/10">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-[#29382F] mb-3">
-                Services Provided in this Engagement
+            {/* Services Tags */}
+            <div className="border-t border-[#29382F]/10 pt-4">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#29382F] mb-2.5">
+                Capabilities Applied
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {study.servicesProvided.map((service) => (
                   <span
                     key={service}
-                    className="rounded-full border border-[#29382F]/15 bg-white px-3.5 py-1 text-xs font-semibold text-[#29382F] shadow-2xs"
+                    className="rounded-lg border border-[#29382F]/10 bg-[#F6FAF3] px-2.5 py-1 text-xs font-semibold text-[#29382F]"
                   >
                     {service}
                   </span>
@@ -277,300 +221,300 @@ export default async function CaseStudyDetailPage({
             </div>
           </div>
 
-          {/* Right Column: Framed Editorial 4K Detail Photograph */}
-          <div className="lg:col-span-6">
-            <div className="relative overflow-hidden rounded-3xl border border-[#29382F]/15 bg-[#E8EDE3] shadow-lg">
-              <div className="relative aspect-[16/11] w-full overflow-hidden">
-                <Image
-                  src={secondaryImage}
-                  alt={`${study.client} context showcase`}
-                  fill
-                  unoptimized
-                  sizes="(max-width: 1024px) 100vw, 600px"
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-4 bg-white/90 border-t border-[#29382F]/10 flex items-center justify-between text-xs text-[#506B59]">
-                <span className="font-semibold">{study.client} Project Asset</span>
-                <span className="text-[10px] uppercase tracking-wider">Editorial Capture</span>
-              </div>
+          {/* Metric Tiles (Spread Across 12 Cols) */}
+          {study.metrics && study.metrics.length > 0 && (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 lg:col-span-12">
+              {study.metrics.map((metric, idx) => {
+                const isFirst = idx === 0;
+                return (
+                  <div
+                    key={idx}
+                    className={`rounded-3xl border p-7 shadow-xs transition-all duration-300 hover:shadow-md ${
+                      isFirst
+                        ? "border-[#29382F]/15 bg-gradient-to-br from-[#EEF5EB] to-white"
+                        : "border-[#29382F]/10 bg-white"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#506B59]">
+                        Impact Metric 0{idx + 1}
+                      </span>
+                      {isFirst ? (
+                        <TrendingUp size={16} className="text-[#D78359]" />
+                      ) : (
+                        <Sparkles size={16} className="text-[#B6CBA9]" />
+                      )}
+                    </div>
+                    <p className="font-heading mt-4 text-4xl font-black tracking-tight text-[#29382F] sm:text-5xl">
+                      {metric.value}
+                    </p>
+                    <p className="mt-2 text-xs font-bold uppercase tracking-wider text-[#506B59]">
+                      {metric.label}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
-          </div>
-        </div>
-      </section>
+          )}
+        </section>
 
-      {/* ─── SECTION 2: THE CHALLENGE (FULL-WIDTH EDITORIAL PULL-QUOTE) ─── */}
-      <section className="relative overflow-hidden bg-[#29382F] py-20 text-[#FFFDF8] sm:py-28">
-        {/* Subtle decorative background watermarks */}
-        <div className="pointer-events-none absolute left-8 top-8 opacity-10">
-          <Quote size={180} />
-        </div>
-        <div className="pointer-events-none absolute right-[-50px] bottom-[-50px] h-96 w-96 rounded-full bg-[#B6CBA9]/10 blur-3xl" />
-
-        <div className="relative mx-auto max-w-5xl px-5 text-center sm:px-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#B6CBA9]">
-            <Sparkles size={14} className="text-[#D78359]" />
-            Chapter 02 · The Challenge
-          </div>
-
-          <h2 className="sr-only">The Challenge</h2>
-
-          <blockquote className="mt-8 font-heading text-2xl font-bold leading-snug tracking-tight text-[#FFFDF8] sm:text-4xl lg:text-5xl">
-            "{study.theChallenge}"
-          </blockquote>
-
-          <div className="mt-8 flex items-center justify-center gap-3">
-            <span className="h-px w-12 bg-[#B6CBA9]/40" />
-            <p className="font-instrument text-xs uppercase tracking-[0.22em] text-[#B6CBA9]">
-              The Problem We Solved
-            </p>
-            <span className="h-px w-12 bg-[#B6CBA9]/40" />
-          </div>
-        </div>
-      </section>
-
-      {/* ─── SECTION 3: THE STRATEGIC SOLUTION (INVERTED SPLIT-SCREEN) ─── */}
-      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
-          {/* Left Column: Visual Print Showcase */}
-          <div className="order-2 lg:order-1 lg:col-span-6">
-            <div className="relative overflow-hidden rounded-3xl border border-[#29382F]/15 bg-[#E8EDE3] shadow-lg">
-              <div className="relative aspect-[16/11] w-full overflow-hidden">
-                <Image
-                  src={tertiaryImage}
-                  alt={`${study.client} execution visual`}
-                  fill
-                  unoptimized
-                  sizes="(max-width: 1024px) 100vw, 600px"
-                  className="object-cover"
-                />
+        {/* ─── BENTO ROW 2: THE CHALLENGE + STRATEGY TILES ─── */}
+        <section className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Tile 1: The Challenge Callout (7 Cols) */}
+          <div className="flex flex-col justify-between rounded-3xl border-2 border-[#D78359]/30 bg-gradient-to-br from-[#FFF9F3] via-white to-[#FFFDF8] p-8 shadow-xs lg:col-span-7 space-y-6">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full bg-[#D78359]/15 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#D78359]">
+                <Quote size={13} />
+                The Core Challenge
               </div>
-              <div className="p-4 bg-white/90 border-t border-[#29382F]/10 flex items-center justify-between text-xs text-[#506B59]">
-                <span className="font-semibold">Strategic Intervention</span>
-                <span className="text-[10px] uppercase tracking-wider">Growth Engine Setup</span>
-              </div>
+              <h3
+                className="font-heading text-2xl font-bold leading-tight text-[#29382F] sm:text-3xl"
+                style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
+              >
+                Obstacle & Problem Statement
+              </h3>
+              <p className="font-instrument text-base font-medium leading-relaxed text-[#5A4526] sm:text-xl">
+                "{study.theChallenge}"
+              </p>
+            </div>
+
+            <div className="border-t border-[#D78359]/20 pt-4 flex items-center justify-between text-xs text-[#5A4526]">
+              <span className="font-bold uppercase tracking-wider">Target Obstacle</span>
+              <span className="font-semibold">{study.client} · Pre-Growth State</span>
             </div>
           </div>
 
-          {/* Right Column: The Ask & What We Delivered */}
-          <div className="order-1 space-y-8 lg:order-2 lg:col-span-6">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-[#D78359]">
-              <span>Chapter 03</span>
-              <span className="h-px w-8 bg-[#D78359]" />
-              <span>The Solutions</span>
-            </div>
-
-            <h2
-              className="font-heading text-3xl font-bold tracking-tight text-[#29382F] sm:text-4xl lg:text-5xl"
-              style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
-            >
-              The Ask & Strategic Execution
-            </h2>
-
-            {/* The Ask Card */}
-            <div className="rounded-3xl border border-[#29382F]/15 bg-white p-7 shadow-xs">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#D78359]">
-                <Target size={16} />
+          {/* Tile 2: The Mandate / The Ask (5 Cols) */}
+          <div className="flex flex-col justify-between rounded-3xl border border-[#29382F]/15 bg-white p-8 shadow-xs lg:col-span-5 space-y-6">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#D78359]">
+                <Target size={15} />
                 The Mandate
               </div>
-              <p className="mt-3 font-heading text-lg font-bold text-[#29382F] sm:text-xl leading-snug">
+              <h3
+                className="font-heading text-xl font-bold text-[#29382F] sm:text-2xl"
+                style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
+              >
+                The Client's Ask
+              </h3>
+              <p className="font-heading text-lg font-bold leading-snug text-[#29382F] sm:text-xl">
                 "{study.theAsk}"
               </p>
             </div>
 
-            {/* What We Did Card */}
-            <div className="rounded-3xl border border-[#29382F]/15 bg-white p-7 shadow-xs">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#506B59]">
-                <Layers size={16} />
-                What Growth Enzyme Delivered
+            <p className="text-xs text-[#506B59] font-medium leading-relaxed border-t border-[#29382F]/10 pt-4">
+              Defined clear objectives to turn digital visibility into verified commercial results.
+            </p>
+          </div>
+
+          {/* Tile 3: What We Did (What Growth Enzyme Delivered) (7 Cols) */}
+          <div className="flex flex-col justify-between rounded-3xl border border-[#29382F]/15 bg-white p-8 shadow-xs lg:col-span-7 space-y-6">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#506B59]">
+                <Layers size={15} />
+                Execution Blueprint
               </div>
-              <p className="mt-3 font-instrument text-base leading-relaxed text-[#29382F] sm:text-lg">
+              <h3
+                className="font-heading text-2xl font-bold text-[#29382F] sm:text-3xl"
+                style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
+              >
+                What We Delivered
+              </h3>
+              <p className="font-instrument text-base leading-relaxed text-[#29382F] sm:text-lg">
                 {study.whatWeDid}
               </p>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ─── SECTION 4: STRATEGIC APPROACH (MAGAZINE CHAPTERS) ─── */}
-      <section className="border-t border-b border-[#29382F]/10 bg-[#F6FAF3] py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
-          <div className="max-w-3xl space-y-4">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-[#D78359]">
-              <span>Chapter 04</span>
-              <span className="h-px w-8 bg-[#D78359]" />
-              <span>Methodology</span>
+            <div className="border-t border-[#29382F]/10 pt-4 flex items-center justify-between text-xs text-[#506B59]">
+              <span className="font-bold uppercase tracking-wider">Engine Architecture</span>
+              <span>100% Tailored Setup</span>
             </div>
+          </div>
 
-            <h2
-              className="font-heading text-3xl font-bold tracking-tight text-[#29382F] sm:text-4xl lg:text-5xl"
-              style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
-            >
-              Our Strategic Approach
-            </h2>
+          {/* Tile 4: Secondary 4K Detail Photograph Tile (5 Cols) */}
+          <div className="group relative min-h-[280px] overflow-hidden rounded-3xl border border-[#29382F]/15 bg-[#E8EDE3] shadow-xs lg:col-span-5">
+            <Image
+              src={secondaryImage}
+              alt={`${study.client} strategic detail`}
+              fill
+              unoptimized
+              sizes="(max-width: 1024px) 100vw, 500px"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs">
+              <span className="font-bold">{study.client} Execution Asset</span>
+              <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold backdrop-blur-md">
+                Verified
+              </span>
+            </div>
+          </div>
+        </section>
 
-            <p className="font-instrument text-base text-[#506B59] sm:text-lg">
-              A structured roadmap executed step-by-step to transition brand awareness into dependable commercial pipeline.
+        {/* ─── BENTO ROW 3: OUR STRATEGIC APPROACH (MODULAR BENTO TILES) ─── */}
+        <section className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#D78359]">
+                <Compass size={14} />
+                Implementation Phases
+              </div>
+              <h2
+                className="font-heading mt-2 text-2xl font-bold text-[#29382F] sm:text-3xl lg:text-4xl"
+                style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
+              >
+                Our Strategic Approach
+              </h2>
+            </div>
+            <p className="text-xs font-medium text-[#506B59] sm:text-right max-w-sm">
+              Each strategic step designed to engineer consistent visibility and inbound demand.
             </p>
           </div>
 
-          {/* Numbered Strategic Chapters */}
-          <div className="mt-12 divide-y divide-[#29382F]/15 border-t border-b border-[#29382F]/15">
-            {study.ourApproach.map((step, index) => (
-              <div
-                key={index}
-                className="group grid grid-cols-1 items-baseline gap-4 py-8 sm:grid-cols-12 sm:gap-8 transition-colors hover:bg-white/60 px-4 rounded-xl"
-              >
-                <div className="font-heading text-xl font-black text-[#506B59] sm:col-span-2 sm:text-2xl group-hover:text-[#29382F]">
-                  /{String(index + 1).padStart(2, "0")}
-                </div>
-
-                <div className="font-heading text-lg font-bold text-[#29382F] sm:col-span-4 sm:text-xl">
-                  {step.split("–")[0] || step.split("&")[0] || `Phase ${index + 1}`}
-                </div>
-
-                <div className="font-instrument text-base leading-relaxed text-[#506B59] sm:col-span-6">
-                  {step}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── SECTION 5: VERIFIED RESULTS & EXECUTIVE IMPACT ─── */}
-      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
-        <div className="space-y-12">
-          <div className="max-w-3xl space-y-4">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-[#D78359]">
-              <span>Chapter 05</span>
-              <span className="h-px w-8 bg-[#D78359]" />
-              <span>Impact</span>
-            </div>
-
-            <h2
-              className="font-heading text-3xl font-bold tracking-tight text-[#29382F] sm:text-4xl lg:text-5xl"
-              style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
-            >
-              The Measurable Outcome
-            </h2>
-          </div>
-
-          {/* Big Editorial Stat Numbers */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {study.metrics.map((m, idx) => (
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {study.ourApproach.map((step, idx) => (
               <div
                 key={idx}
-                className="rounded-3xl border border-[#29382F]/15 bg-white p-8 shadow-sm transition hover:shadow-md"
+                className="group flex flex-col justify-between rounded-3xl border border-[#29382F]/15 bg-white p-7 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-[#B6CBA9]"
               >
-                <p className="font-heading text-4xl font-black text-[#29382F] sm:text-5xl lg:text-6xl">
-                  {m.value}
-                </p>
-                <p className="mt-3 text-xs font-bold uppercase tracking-[0.2em] text-[#506B59]">
-                  {m.label}
-                </p>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#EEF5EB] font-heading text-xs font-black text-[#29382F] transition group-hover:bg-[#29382F] group-hover:text-white">
+                      0{idx + 1}
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#506B59]">
+                      Phase 0{idx + 1}
+                    </span>
+                  </div>
+                  <h4
+                    className="font-heading mt-4 text-lg font-bold text-[#29382F]"
+                    style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
+                  >
+                    {step.split("–")[0] || step.split("&")[0] || `Phase ${idx + 1}`}
+                  </h4>
+                  <p className="font-instrument mt-2 text-sm leading-relaxed text-[#506B59]">
+                    {step}
+                  </p>
+                </div>
+
+                <div className="mt-6 border-t border-[#29382F]/10 pt-3 flex items-center justify-between text-[11px] font-semibold text-[#506B59]">
+                  <span>Execution Milestone</span>
+                  <CheckCircle2 size={13} className="text-emerald-700" />
+                </div>
               </div>
             ))}
           </div>
+        </section>
 
-          {/* Executive Verified Results Highlight */}
-          <div className="rounded-3xl border border-emerald-300 bg-gradient-to-r from-emerald-50 via-[#F3F9F1] to-white p-8 sm:p-10 shadow-sm">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-800">
-              <CheckCircle2 size={18} />
-              Verified Results Summary
-            </div>
-            <p className="mt-4 font-heading text-xl font-bold leading-relaxed text-emerald-950 sm:text-2xl lg:text-3xl">
-              {study.theResults}
-            </p>
+        {/* ─── BENTO ROW 4: VERIFIED OUTCOME SHOWCASE ─── */}
+        <section className="rounded-3xl border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 via-[#F5FAF2] to-white p-8 sm:p-12 shadow-sm space-y-6">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-800">
+            <Award size={16} />
+            Verified Business Impact
           </div>
-        </div>
-      </section>
 
-      {/* ─── SECTION 6: PROJECT GALLERY IN 4K ─── */}
-      {galleryImages.length > 0 && (
-        <section className="border-t border-[#29382F]/10 bg-[#F9FAF8] py-20 sm:py-28">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12 space-y-12">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <h3
+            className="font-heading text-2xl font-bold text-emerald-950 sm:text-3xl lg:text-4xl"
+            style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
+          >
+            The Documented Results
+          </h3>
+
+          <p className="font-heading text-xl font-bold leading-relaxed text-emerald-950 sm:text-2xl lg:text-3xl max-w-4xl">
+            "{study.theResults}"
+          </p>
+
+          <div className="border-t border-emerald-200/80 pt-6 flex flex-wrap items-center justify-between gap-4 text-xs font-bold text-emerald-900">
+            <span>Client: {study.client}</span>
+            <span>Documented Portfolio Growth Story</span>
+          </div>
+        </section>
+
+        {/* ─── BENTO ROW 5: 4K VISUAL ARCHIVE TILES ─── */}
+        {galleryImages.length > 0 && (
+          <section className="space-y-6">
+            <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#D78359]">
-                  Visual Proof
+                <p className="text-xs font-bold uppercase tracking-wider text-[#D78359]">
+                  Asset Showcase
                 </p>
                 <h3
-                  className="font-heading mt-2 text-3xl font-bold text-[#29382F] sm:text-4xl"
+                  className="font-heading mt-1 text-2xl font-bold text-[#29382F] sm:text-3xl"
                   style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
                 >
-                  Project Visual Archive in 4K
+                  4K Visual Archive
                 </h3>
               </div>
-              <span className="text-xs font-semibold text-[#506B59]">
-                Shot & Mastered in Ultra-High Definition
+              <span className="text-xs font-bold text-[#506B59]">
+                Ultra-High Definition Assets
               </span>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {galleryImages.map((imgUrl, i) => (
-                <div
-                  key={i}
-                  className="group relative aspect-[16/10] overflow-hidden rounded-3xl border border-[#29382F]/15 bg-[#E8EDE3] shadow-md transition-all duration-500 hover:shadow-2xl"
-                >
-                  <Image
-                    src={imgUrl}
-                    alt={`${study.client} archive asset ${i + 1}`}
-                    fill
-                    unoptimized
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <span className="text-xs font-bold uppercase tracking-wider">
-                      {study.client} · 4K Visual {i + 1}
-                    </span>
-                    <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-bold backdrop-blur-md">
-                      4K UHD
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ─── SECTION 7: NEXT STORY BANNER (MAGAZINE STYLE) ─── */}
-      {nextStudy && (
-        <section className="border-t border-[#29382F]/10 bg-white">
-          <Link
-            href={`/case-studies/${nextStudy.slug}`}
-            className="group block py-16 sm:py-24 transition-colors hover:bg-[#F2F7F0]/60"
-          >
-            <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
-              <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#D78359]">
-                    Next Client Story
-                  </p>
-                  <h4
-                    className="font-heading mt-2 text-2xl font-bold text-[#29382F] sm:text-4xl lg:text-5xl transition-colors group-hover:text-[#1E2B23]"
-                    style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-12">
+              {galleryImages.map((imgUrl, i) => {
+                const isWide = i === 0 && galleryImages.length % 2 !== 0;
+                return (
+                  <div
+                    key={i}
+                    className={`group relative min-h-[300px] overflow-hidden rounded-3xl border border-[#29382F]/15 bg-[#E8EDE3] shadow-sm transition-all duration-500 hover:shadow-xl ${
+                      isWide ? "lg:col-span-12" : "lg:col-span-6"
+                    }`}
                   >
-                    {nextStudy.title}
-                  </h4>
-                  <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-[#506B59]">
-                    Client: {nextStudy.client} · {nextStudy.industry}
-                  </p>
-                </div>
-
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#29382F]/20 bg-white text-[#29382F] shadow-sm transition-all duration-300 group-hover:translate-x-2 group-hover:bg-[#29382F] group-hover:text-white">
-                  <ArrowRight size={22} />
-                </span>
-              </div>
+                    <Image
+                      src={imgUrl}
+                      alt={`${study.client} archive asset ${i + 1}`}
+                      fill
+                      unoptimized
+                      sizes="(max-width: 1024px) 100vw, 600px"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 text-xs">
+                      <span className="font-bold">
+                        {study.client} · Asset {i + 1}
+                      </span>
+                      <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-bold backdrop-blur-md">
+                        4K UHD
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          </Link>
-        </section>
-      )}
+          </section>
+        )}
 
-      {/* ─── BOTTOM CTA SECTION ─── */}
+        {/* ─── BENTO ROW 6: NEXT CLIENT STORY BANNER ─── */}
+        {nextStudy && (
+          <section className="rounded-3xl border border-[#29382F]/15 bg-white p-8 sm:p-12 shadow-sm transition hover:shadow-md">
+            <Link
+              href={`/case-studies/${nextStudy.slug}`}
+              className="group flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center"
+            >
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#D78359]">
+                  Next Client Case Study
+                </p>
+                <h4
+                  className="font-heading mt-2 text-2xl font-bold text-[#29382F] sm:text-3xl transition group-hover:text-[#1E2B23]"
+                  style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
+                >
+                  {nextStudy.title}
+                </h4>
+                <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-[#506B59]">
+                  {nextStudy.client} · {nextStudy.industry}
+                </p>
+              </div>
+
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#29382F] text-white shadow-md transition-all duration-300 group-hover:translate-x-2 group-hover:bg-[#3d5446]">
+                <ArrowRight size={20} />
+              </span>
+            </Link>
+          </section>
+        )}
+      </main>
+
+      {/* ─── BOTTOM CTA ─── */}
       <section className="border-t border-[#29382F]/10 bg-[#29382F] py-16 text-white sm:py-20">
         <div className="mx-auto max-w-5xl px-5 text-center sm:px-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#B6CBA9]">
