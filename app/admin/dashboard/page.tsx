@@ -20,7 +20,7 @@ import {
   BriefcaseBusiness,
   Image as ImageIcon,
   ArrowUpRight,
-  LogOut,
+ RefreshCw,
   LayoutDashboard,
   Sparkles,
   FileText,
@@ -208,10 +208,13 @@ useEffect(() => {
   fetchDashboardStats();
 }, []);
 
-  async function handleLogout() {
-    await logoutUser();
-    router.replace("/admin/login");
-  }
+  // async function handleLogout() {
+  //   await logoutUser();
+  //   router.replace("/admin/login");
+  // }
+  async function handleRefresh() {
+  window.location.reload();
+}
 
   if (loading) {
     return (
@@ -324,13 +327,17 @@ return (
             </p>
           </div>
 
-          {/* <button
-            onClick={handleLogout}
-            className="group inline-flex items-center justify-center gap-3 rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-5 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.13)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.18)]"
-          >
-            <LogOut size={17} />
-            Logout
-          </button> */}
+<button
+  type="button"
+  onClick={handleRefresh}
+  className="group inline-flex items-center justify-center gap-2 rounded-xl border border-[#D5E1CC] bg-white px-5 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_4px_0_#D5E1CC,0_8px_16px_rgba(41,56,47,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_6px_0_#D5E1CC,0_11px_20px_rgba(41,56,47,0.12)] disabled:cursor-not-allowed disabled:opacity-50"
+>
+  <RefreshCw
+    size={17}
+    className="transition-transform duration-500 group-hover:rotate-180"
+  />
+  Refresh Dashboard
+</button>
         </div>
 
         <div className="relative mt-7 flex flex-wrap items-center gap-2 border-t border-[#29382F]/15 pt-5">
