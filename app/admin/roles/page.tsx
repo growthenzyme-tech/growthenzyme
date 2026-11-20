@@ -266,50 +266,56 @@ return (
   <div className="w-full max-w-none space-y-8 pb-12">
 
     {/* PAGE HEADER */}
-    <section className="relative isolate w-full overflow-hidden rounded-[28px] border border-[#A5B59F]/40 bg-[#B6CBA9] px-6 py-8 sm:px-9 sm:py-10 lg:px-12 lg:py-12">
-      <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 left-1/3 h-56 w-56 rounded-full bg-[#D78359]/10 blur-3xl" />
+   {/* HERO SECTION */}
+<section className="relative isolate overflow-hidden rounded-2xl bg-[#B6CBA9] px-6 py-8 text-[#29382F] sm:px-9 sm:py-10">
+  <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#FFFDF8]/30 blur-3xl" />
 
-      <div className="relative flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
-        <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#29382F]/15 bg-white/40 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#29382F]">
-            <span className="h-2 w-2 rounded-full bg-[#D78359]" />
-            <ShieldCheck size={14} />
-            Access Control
-          </div>
-
-          <h1
-            className="mt-5 text-4xl font-bold leading-tight tracking-tight text-[#29382F] sm:text-5xl"
-            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
-          >
-            Roles & Permissions
-          </h1>
-
-          <p className="mt-3 max-w-xl text-sm leading-7 text-[#29382F]/80 sm:text-base">
-            Manage team roles and control access to different areas of your CMS.
-          </p>
-        </div>
-
-        <div className="relative flex flex-wrap gap-3">
-   <button
-  onClick={loadRoles}
-  disabled={loading}
-  className="group inline-flex items-center justify-center gap-2 rounded-xl border border-[#D5E1CC] bg-white px-5 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_4px_0_#D5E1CC,0_8px_16px_rgba(41,56,47,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_6px_0_#D5E1CC,0_11px_20px_rgba(41,56,47,0.12)] disabled:cursor-not-allowed disabled:opacity-50"
->
-  <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
-  Refresh
-</button>
-
-         <button
-  onClick={openCreateForm}
-  className="group inline-flex items-center justify-center gap-3 rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-5 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.13)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.18)]"
->
-  <Plus size={17} />
-  Create Role
-</button>
-        </div>
+  <div className="relative flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
+    <div>
+      <div className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#29382F]">
+        <span className="h-2 w-2 rounded-full bg-[#D78359]" />
+        <ShieldCheck size={14} />
+        Access Control
       </div>
-    </section>
+
+      <h1 className="mt-5 font-heading text-4xl font-bold leading-tight tracking-tight text-[#29382F] sm:text-5xl lg:text-6xl">Roles & <span className="text-[#6F9259]">Permissions</span></h1>
+
+      <p className="mt-3 max-w-xl text-sm leading-7 text-[#29382F]/80">
+        Manage team roles and control access to different areas of your CMS.
+      </p>
+    </div>
+
+    <div className="relative flex shrink-0 flex-wrap gap-3">
+      <button
+        type="button"
+        onClick={loadRoles}
+        disabled={loading}
+        className="group inline-flex items-center justify-center gap-2 rounded-xl border border-[#D5E1CC] bg-white px-5 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_4px_0_#D5E1CC,0_8px_16px_rgba(41,56,47,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_6px_0_#D5E1CC,0_11px_20px_rgba(41,56,47,0.12)] disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
+        Refresh
+      </button>
+
+      <button
+        type="button"
+        onClick={openCreateForm}
+        className="group inline-flex items-center justify-center gap-3 rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-5 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.13)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.18)]"
+      >
+        <Plus size={17} />
+        Create Role
+      </button>
+    </div>
+  </div>
+
+  <div className="relative mt-7 flex flex-wrap items-center gap-2 border-t border-[#29382F]/15 pt-5">
+    <span className="rounded-full bg-[#29382F] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#FFFDF8]">
+      Content Studio
+    </span>
+    <span className="text-xs font-medium text-[#29382F]/70">
+      Manage team access and CMS permissions
+    </span>
+  </div>
+</section>
 
     {/* STATUS MESSAGES */}
     {error && (

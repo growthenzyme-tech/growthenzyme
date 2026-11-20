@@ -308,14 +308,7 @@ const rejectedComments = comments.filter(
               GrowthEnzyme CMS
             </div>
 
-            <h1
-              className="text-3xl font-bold tracking-tight text-[#29382F] sm:text-4xl"
-              style={{
-                fontFamily: "var(--font-heading), Georgia, serif",
-              }}
-            >
-              Dashboard
-            </h1>
+          <h1 className="mt-5 font-heading text-4xl font-bold leading-tight tracking-tight text-[#29382F] sm:text-5xl lg:text-6xl">Dashboard</h1>
 
             <p className="mt-2 text-sm text-[#29382F]/65">
               Welcome back, {profile.name}
