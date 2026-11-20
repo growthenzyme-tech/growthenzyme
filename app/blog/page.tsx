@@ -202,12 +202,23 @@ export default function BlogPage() {
           {/* Centered Editorial Content matching reference template */}
           <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center justify-center px-4">
             {/* Top Tagline */}
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/20 px-4 py-1.5 backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white">
-                GrowthEnzyme Journal
-              </span>
-            </div>
+  <div className="font-instrument relative -top-4 mb-4 inline-flex items-center gap-3">
+  <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+  <span
+    style={{
+      fontFamily: '"Instrument Sans", "Instrument Sans Placeholder", sans-serif',
+      fontSize: "12px",
+      fontWeight: 600,
+      fontStyle: "normal",
+      lineHeight: "14.4px",
+      letterSpacing: "0.72px",
+      color: "#FFFFFF",
+      textTransform: "uppercase",
+    }}
+  >
+    GrowthEnzyme Journal
+  </span>
+</div>
 
             {/* Largely text: THE BLOG */}
           <h1 className="whitespace-nowrap font-heading text-[clamp(2.6rem,8vw,5rem)] font-bold leading-[0.98] tracking-[-0.065em] text-[#29382F]">
@@ -223,21 +234,29 @@ export default function BlogPage() {
             </p>
 
             {/* Quick Actions */}
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
-              <a
-                href="#blog-feed"
-                className="inline-flex items-center gap-2 rounded-full border border-[#29382F] bg-[#29382F] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#173D32]"
-              >
-                <BookOpen size={14} />
-                Explore Articles
-              </a>
-              <Link
-                href="/"
-                className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/20 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-md transition-all duration-300 hover:bg-white/30"
-              >
-                Back to Home <ArrowUpRight size={14} />
-              </Link>
-            </div>
+<div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+  <a
+    href="#blog-feed"
+   className="group inline-flex w-full items-center justify-center gap-3 overflow-hidden rounded-xl border border-[#D5E1CC] bg-white px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#29382F] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.18),inset_0_2px_3px_rgba(255,255,255,0.65)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#F5F7F2] hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.2)] active:translate-y-1 active:shadow-[0_2px_0_#6F9259] sm:w-auto"
+  >
+    <BookOpen
+      size={15}
+      className="transition-transform duration-300 group-hover:-translate-y-0.5"
+    />
+    Explore Articles
+  </a>
+
+  <Link
+    href="/"
+    className="group inline-flex w-full items-center justify-center gap-3 overflow-hidden rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#29382F] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.18),inset_0_2px_3px_rgba(255,255,255,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.2)] active:translate-y-1 active:shadow-[0_2px_0_#6F9259] sm:w-auto"
+  >
+    Back to Home
+    <ArrowUpRight
+      size={15}
+      className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+    />
+  </Link>
+</div>
           </div>
 
           {/* Bottom subtle fade into page */}

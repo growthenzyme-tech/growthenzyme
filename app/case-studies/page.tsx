@@ -103,10 +103,23 @@ export default function CaseStudiesPage() {
 
             {/* LEFT: badge, heading, paragraph */}
             <div className={heroStudies.length > 0 ? "lg:col-span-7" : "lg:col-span-12"}>
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#29382F]/15 bg-white/80 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#29382F] shadow-sm backdrop-blur-md">
-                <Sparkles size={14} className="text-[#D78359]" />
-                Client Success Stories
-              </div>
+            <div className="font-instrument mb-6 inline-flex items-center gap-3">
+  <Sparkles size={14} className="text-[#D78359]" />
+  <span
+    style={{
+      fontFamily: '"Instrument Sans", "Instrument Sans Placeholder", sans-serif',
+      fontSize: "12px",
+      fontWeight: 600,
+      fontStyle: "normal",
+      lineHeight: "14.4px",
+      letterSpacing: "0.72px",
+      color: "#0D0D0D",
+      textTransform: "uppercase",
+    }}
+  >
+    Client Success Stories
+  </span>
+</div>
 
               <h1
                 className="font-heading text-4xl font-bold leading-[1.05] tracking-[-0.045em] text-[#29382F] sm:text-5xl lg:text-6xl"
