@@ -23,6 +23,9 @@ import {
   LogOut,
   LayoutDashboard,
   Sparkles,
+  FileText,
+  FolderOpen,
+  CheckCircle2
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -296,232 +299,281 @@ const rejectedComments = comments.filter(
   (comment) => comment.status === "rejected"
 ).length;
 
-  return (
-    <main className="min-h-screen bg-[#FFFDF8] p-5 sm:p-8 lg:p-10">
-      <div className="mx-auto max-w-6xl space-y-9">
+return (
+  <main className="min-h-screen w-full bg-[#FFFDF8]  ">
+  <div className="w-full space-y-8 pb-12">
 
-        {/* Header */}
-        <header className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+      {/* PAGE HEADING */}
+      <header className="relative isolate overflow-hidden rounded-2xl bg-[#B6CBA9] px-6 py-8 text-[#29382F] sm:px-9 sm:py-10">
+        <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#FFFDF8]/30 blur-3xl" />
+
+        <div className="relative flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
           <div>
-            <div className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#506B59]">
-              <LayoutDashboard size={14} />
+            <div className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#29382F]">
+              <span className="h-2 w-2 rounded-full bg-[#D78359]" />
               GrowthEnzyme CMS
             </div>
 
-          <h1 className="mt-5 font-heading text-4xl font-bold leading-tight tracking-tight text-[#29382F] sm:text-5xl lg:text-6xl">Dashboard</h1>
+            <h1 className="mt-5 font-heading text-4xl font-bold leading-tight tracking-tight text-[#29382F] sm:text-5xl lg:text-6xl">
+              Dashboard
+            </h1>
 
-            <p className="mt-2 text-sm text-[#29382F]/65">
-              Welcome back, {profile.name}
+            <p className="mt-3 max-w-xl text-sm leading-7 text-[#29382F]/80">
+              Welcome back, {profile.name}. Manage your website content and
+              digital presence from one place.
             </p>
           </div>
 
           <button
             onClick={handleLogout}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#DDE4D9] bg-white px-5 py-3 text-sm font-semibold text-[#29382F] transition hover:border-[#D78359] hover:bg-[#F5F0E5] hover:text-[#D78359]"
+            className="group inline-flex items-center justify-center gap-3 rounded-xl border border-[#D5E1CC] bg-gradient-to-b from-[#B9D99C] via-[#A5CC83] to-[#8DB76D] px-5 py-3.5 text-sm font-bold text-[#29382F] shadow-[0_5px_0_#6F9259,0_9px_18px_rgba(41,56,47,0.13)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_7px_0_#6F9259,0_12px_22px_rgba(41,56,47,0.18)]"
           >
             <LogOut size={17} />
             Logout
           </button>
-        </header>
+        </div>
 
-        {/* Welcome Banner */}
-        <section className="relative isolate overflow-hidden rounded-2xl bg-[#B6CBA9] px-6 py-8 text-[#29382F] sm:px-9 sm:py-10">
-          <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#FFFDF8]/30 blur-3xl" />
+        <div className="relative mt-7 flex flex-wrap items-center gap-2 border-t border-[#29382F]/15 pt-5">
+          <span className="rounded-full bg-[#29382F] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#FFFDF8]">
+            Content Studio
+          </span>
+          <span className="text-xs font-medium text-[#29382F]/70">
+            Your website management workspace
+          </span>
+        </div>
+      </header>
 
-          <div className="relative flex flex-col justify-between gap-7 sm:flex-row sm:items-center">
-            <div className="max-w-xl">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#29382F]/15 bg-white/25 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#29382F]">
-                <Sparkles size={13} />
-                Welcome to your workspace
-              </div>
+      {/* WELCOME BANNER */}
+      <section className="relative isolate overflow-hidden rounded-2xl border border-[#DDE4D9] bg-white p-6 shadow-[0_5px_25px_rgba(41,56,47,0.035)] sm:p-8">
+        <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#B6CBA9]/20 blur-3xl" />
 
-              <h2
-                className="text-3xl font-bold leading-tight sm:text-4xl"
-                style={{
-                  fontFamily: "var(--font-heading), Georgia, serif",
-                }}
-              >
-                Good to see you, {profile.name}.
-              </h2>
-
-              <p className="mt-3 max-w-lg text-sm leading-7 text-[#29382F]/80">
-                Manage your website content, showcase your work and keep
-                your digital presence up to date.
-              </p>
+        <div className="relative flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
+          <div className="max-w-2xl">
+            <div className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#506B59]">
+              <span className="h-2 w-2 rounded-full bg-[#D78359]" />
+              <Sparkles size={13} />
+              Welcome to your workspace
             </div>
 
-            <div className="relative flex min-w-[170px] items-center gap-3 rounded-xl border border-white/40 bg-[#FFFDF8]/50 p-4">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#29382F] text-white">
-                <LayoutDashboard size={21} />
-              </div>
+            <h2 className="font-heading text-3xl font-bold leading-tight tracking-tight text-[#29382F] sm:text-4xl">
+              Good to see you, {profile.name}.
+            </h2>
 
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#29382F]/60">
-                  Account Role
-                </p>
-                <p className="mt-1 text-sm font-bold capitalize text-[#29382F]">
-                  {profile.role || "Custom Role"}
-                </p>
-              </div>
-            </div>
+            <p className="mt-3 max-w-xl text-sm leading-7 text-[#29382F]/65">
+              Manage your website content, showcase your work and keep
+              your digital presence up to date.
+            </p>
           </div>
-        </section>
 
-{/* BLOG STATISTICS */}
-{/* CMS OVERVIEW */}
-<section className="space-y-4">
-  <div className="flex items-center justify-between">
-    <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#78916D]">
-        Overview
-      </p>
-      <h2 className="mt-1 text-xl font-semibold text-[#17251B]">
-        CMS Overview
-      </h2>
-    </div>
+          <div className="relative flex min-w-[190px] items-center gap-3 rounded-xl border border-[#DDE4D9] bg-[#F5F7F2] p-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#B6CBA9]/50 text-[#29382F]">
+              <LayoutDashboard size={21} />
+            </div>
 
-    <span className="text-sm text-gray-500">
-      Your content at a glance
-    </span>
-  </div>
-
-  <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-    <div className="rounded-xl border border-[#E7EAE3] bg-white p-4">
-      <p className="text-sm text-gray-500">Total Blogs</p>
-      <p className="mt-2 text-2xl font-semibold text-[#17251B]">
-        {statsLoading ? "—" : totalBlogs}
-      </p>
-      <p className="mt-1 text-xs text-gray-400">
-        {publishedBlogs} published · {draftBlogs} drafts
-      </p>
-    </div>
-
-    <div className="rounded-xl border border-[#E7EAE3] bg-white p-4">
-      <p className="text-sm text-gray-500">Case Studies</p>
-      <p className="mt-2 text-2xl font-semibold text-[#17251B]">
-        {statsLoading ? "—" : totalCaseStudies}
-      </p>
-      <p className="mt-1 text-xs text-gray-400">
-        {publishedCaseStudies} published · {draftCaseStudies} drafts
-      </p>
-    </div>
-    <div className="rounded-xl border border-[#E7EAE3] bg-white p-4">
-  <p className="text-sm text-gray-500">Total Users</p>
-
-  <p className="mt-2 text-2xl font-semibold text-[#17251B]">
-    {statsLoading ? "—" : totalUsers}
-  </p>
-
-  <p className="mt-1 text-xs text-gray-400">
-  {statsLoading ? "Loading..." : `${activeUsers} active users`}
-  </p>
-</div>
-<div className="rounded-xl border border-[#E7EAE3] bg-white p-4">
-  <p className="text-sm text-gray-500">Total Comments</p>
-
-  <p className="mt-2 text-2xl font-semibold text-[#17251B]">
-    {statsLoading ? "—" : totalComments}
-  </p>
-
-  <p className="mt-1 text-xs text-gray-400">
-    {pendingComments} pending · {approvedComments} approved
-  </p>
-
-  <p className="mt-1 text-xs text-gray-400">
-    {rejectedComments} rejected
-  </p>
-</div>
-  </div>
-
-  
-</section>
-        {/* Dashboard Section */}
-        <section>
-          <div className="mb-6 flex items-end justify-between gap-4">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#D78359]">
-                Workspace Overview
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#657365]">
+                Account Role
               </p>
-
-              <h2
-                className="mt-2 text-2xl font-bold text-[#29382F]"
-                style={{
-                  fontFamily: "var(--font-heading), Georgia, serif",
-                }}
-              >
-                Manage Your Website
-              </h2>
-
-              <p className="mt-2 text-sm text-[#29382F]/65">
-                Access your website management sections.
+              <p className="mt-1 text-sm font-bold capitalize text-[#29382F]">
+                {profile.role || "Custom Role"}
               </p>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <span className="hidden rounded-full bg-[#E8EDE3] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#405C48] sm:inline-block">
-              03 Sections
-            </span>
+      {/* CMS OVERVIEW */}
+      <section className="space-y-5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#6F9259]">
+              Overview
+            </p>
+            <h2 className="mt-2 font-heading text-2xl font-bold text-[#29382F]">
+              CMS Overview
+            </h2>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-3">
-            {dashboardCards.map((card) => {
-              const Icon = card.icon;
+          <span className="text-xs font-medium text-[#657365]">
+            Your content at a glance
+          </span>
+        </div>
 
-              return (
-                <button
-                  key={card.title}
-                  type="button"
-                  onClick={() => router.push(card.href)}
-                  className="group relative overflow-hidden rounded-2xl border border-[#DDE4D9] bg-white p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#A5B59F] hover:shadow-[0_15px_35px_rgba(41,56,47,0.09)]"
-                >
-                  <div className="flex items-start justify-between">
-                    <div
-                      className="flex h-12 w-12 items-center justify-center rounded-xl text-[#29382F]"
-                      style={{ backgroundColor: card.accent }}
-                    >
-                      <Icon size={22} strokeWidth={1.8} />
-                    </div>
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
-                    <span className="text-xs font-bold tracking-widest text-[#29382F]/30">
-                      {card.number}
-                    </span>
-                  </div>
+          {/* TOTAL BLOGS */}
+          <div className="group rounded-2xl border border-[#DDE4D9] bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(41,56,47,0.07)]">
+            <div className="flex items-center justify-between">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#B6CBA9]/40 text-[#29382F]">
+                <FileText size={20} />
+              </div>
+              <span className="rounded-full bg-[#F5F0E5] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#29382F]/65">
+                Total Content
+              </span>
+            </div>
 
-                  <h3
-                    className="mt-7 text-xl font-bold text-[#29382F]"
-                    style={{
-                      fontFamily: "var(--font-heading), Georgia, serif",
-                    }}
+            <p className="mt-5 text-3xl font-bold text-[#29382F]">
+              {statsLoading ? "—" : totalBlogs}
+            </p>
+            <p className="mt-1 text-xs font-medium text-[#657365]">
+              Total blogs
+            </p>
+            <p className="mt-2 text-xs text-[#657365]">
+              {publishedBlogs} published · {draftBlogs} drafts
+            </p>
+          </div>
+
+          {/* CASE STUDIES */}
+          <div className="group rounded-2xl border border-[#DDE4D9] bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(41,56,47,0.07)]">
+            <div className="flex items-center justify-between">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E8EDE3] text-[#405C48]">
+                <FolderOpen size={20} />
+              </div>
+              <span className="rounded-full bg-[#E8EDE3] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#405C48]">
+                Portfolio
+              </span>
+            </div>
+
+            <p className="mt-5 text-3xl font-bold text-[#29382F]">
+              {statsLoading ? "—" : totalCaseStudies}
+            </p>
+            <p className="mt-1 text-xs font-medium text-[#657365]">
+              Case Studies
+            </p>
+            <p className="mt-2 text-xs text-[#657365]">
+              {publishedCaseStudies} published · {draftCaseStudies} drafts
+            </p>
+          </div>
+
+          {/* USERS */}
+          <div className="group rounded-2xl border border-[#DDE4D9] bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(41,56,47,0.07)]">
+            <div className="flex items-center justify-between">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F5F0E5] text-[#9B684B]">
+                <LayoutDashboard size={20} />
+              </div>
+              <span className="rounded-full bg-[#F5F0E5] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#9B684B]">
+                Team
+              </span>
+            </div>
+
+            <p className="mt-5 text-3xl font-bold text-[#29382F]">
+              {statsLoading ? "—" : totalUsers}
+            </p>
+            <p className="mt-1 text-xs font-medium text-[#657365]">
+              Total Users
+            </p>
+            <p className="mt-2 text-xs text-[#657365]">
+              {statsLoading ? "Loading..." : `${activeUsers} active users`}
+            </p>
+          </div>
+
+          {/* COMMENTS */}
+          <div className="group rounded-2xl border border-[#DDE4D9] bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(41,56,47,0.07)]">
+            <div className="flex items-center justify-between">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E8EDE3] text-[#405C48]">
+                <CheckCircle2 size={20} />
+              </div>
+              <span className="rounded-full bg-[#F5F0E5] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#9B684B]">
+                Engagement
+              </span>
+            </div>
+
+            <p className="mt-5 text-3xl font-bold text-[#29382F]">
+              {statsLoading ? "—" : totalComments}
+            </p>
+            <p className="mt-1 text-xs font-medium text-[#657365]">
+              Total Comments
+            </p>
+            <p className="mt-2 text-xs text-[#657365]">
+              {pendingComments} pending · {approvedComments} approved
+            </p>
+            <p className="mt-1 text-xs text-[#657365]">
+              {rejectedComments} rejected
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* WORKSPACE SECTIONS */}
+      <section>
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#D78359]">
+              Workspace Overview
+            </p>
+
+            <h2 className="mt-2 font-heading text-2xl font-bold text-[#29382F]">
+              Manage Your Website
+            </h2>
+
+            <p className="mt-2 text-sm text-[#29382F]/65">
+              Access your website management sections.
+            </p>
+          </div>
+
+          <span className="hidden rounded-full bg-[#E8EDE3] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#405C48] sm:inline-block">
+            03 Sections
+          </span>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-3">
+          {dashboardCards.map((card) => {
+            const Icon = card.icon;
+
+            return (
+              <button
+                key={card.title}
+                type="button"
+                onClick={() => router.push(card.href)}
+                className="group relative overflow-hidden rounded-2xl border border-[#DDE4D9] bg-white p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#A5B59F] hover:shadow-[0_15px_35px_rgba(41,56,47,0.09)]"
+              >
+                <div className="flex items-start justify-between">
+                  <div
+                    className="flex h-12 w-12 items-center justify-center rounded-xl text-[#29382F]"
+                    style={{ backgroundColor: card.accent }}
                   >
-                    {card.title}
-                  </h3>
-
-                  <p className="mt-2 min-h-[48px] text-sm leading-6 text-[#29382F]/65">
-                    {card.description}
-                  </p>
-
-                  <div className="mt-6 flex items-center justify-between border-t border-[#E8EDE3] pt-4">
-                    <span className="text-xs font-bold text-[#405C48] transition group-hover:text-[#D78359]">
-                      Manage Section
-                    </span>
-
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E8EDE3] text-[#29382F] transition group-hover:bg-[#29382F] group-hover:text-white">
-                      <ArrowUpRight size={17} />
-                    </span>
+                    <Icon size={22} strokeWidth={1.8} />
                   </div>
-                </button>
-              );
-            })}
-          </div>
-        </section>
 
-        {/* Footer */}
-        <footer className="border-t border-[#E5E4DC] pt-5">
-          <p className="text-xs text-[#29382F]/50">
-            GrowthEnzyme CMS · Manage your digital presence
-          </p>
-        </footer>
+                  <span className="text-xs font-bold tracking-widest text-[#29382F]/30">
+                    {card.number}
+                  </span>
+                </div>
 
-      </div>
-    </main>
-  );
+                <h3 className="mt-7 font-heading text-xl font-bold text-[#29382F]">
+                  {card.title}
+                </h3>
+
+                <p className="mt-2 min-h-[48px] text-sm leading-6 text-[#29382F]/65">
+                  {card.description}
+                </p>
+
+                <div className="mt-6 flex items-center justify-between border-t border-[#E8EDE3] pt-4">
+                  <span className="text-xs font-bold text-[#405C48] transition group-hover:text-[#D78359]">
+                    Manage Section
+                  </span>
+
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E8EDE3] text-[#29382F] transition group-hover:bg-[#29382F] group-hover:text-white">
+                    <ArrowUpRight size={17} />
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="flex flex-col gap-2 border-t border-[#E5E4DC] pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-[11px] font-medium text-[#657365]">
+          GrowthEnzyme CMS · Manage your digital presence
+        </p>
+        <p className="text-[10px] font-medium tracking-wide text-[#657365]/70">
+          Content Studio
+        </p>
+      </footer>
+
+    </div>
+  </main>
+);
 }
