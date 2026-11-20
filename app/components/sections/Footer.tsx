@@ -107,46 +107,12 @@ export default function Footer() {
       {/* ─────────────────────────────────────────────────────────────
           COMPACT UNDULATING HORIZON WAVE WITH TECHNICAL SILHOUETTES
       ───────────────────────────────────────────────────────────── */}
-      <div className="relative z-10 w-full leading-none pointer-events-none select-none -mb-1">
-        <svg
-          viewBox="0 0 1440 170"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          className="w-full h-[85px] sm:h-[110px] md:h-[135px] lg:h-[155px] block align-bottom"
-        >
-          <defs>
-            <linearGradient id="backHillsGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#1C4B3C" />
-              <stop offset="100%" stopColor="#12352A" />
-            </linearGradient>
-            <linearGradient id="foreHillsGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#0E2921" />
-              <stop offset="100%" stopColor="#0E2921" />
-            </linearGradient>
-          </defs>
-
-          {/* ──────────────── BACKGROUND LAYER (Distant Rolling Hill) ──────────────── */}
-          <g opacity="0.85">
-            {/* Background Rolling Hill Silhouette */}
-            <path
-              d="M 0 95 C 160 95 280 58 460 58 C 620 58 720 110 900 110 C 1060 110 1200 62 1360 62 C 1400 62 1425 67 1440 70 L 1440 175 L 0 175 Z"
-              fill="url(#backHillsGrad)"
-            />
-          </g>
-
-          {/* ──────────────── FOREGROUND LAYER (Solid Dark Green Rolling Hill) ──────────────── */}
-          <path
-            d="M 0 90 C 120 90 200 48 320 48 C 440 48 560 102 720 102 C 880 102 1000 44 1140 44 C 1260 44 1360 80 1440 84 L 1440 175 L 0 175 Z"
-            fill="url(#foreHillsGrad)"
-          />
-        </svg>
-      </div>
+    
 
       {/* ─────────────────────────────────────────────────────────────
           COMPACT MAIN FOOTER BODY
       ───────────────────────────────────────────────────────────── */}
-      <div className="relative z-0 w-full bg-[#0E2921] px-6 pb-6 pt-1 sm:px-10 sm:pb-8 md:px-14 lg:px-20 xl:px-24">
+      <div className="relative z-0 w-full bg-[#0E2921] px-6 pb-6 pt-10 sm:px-10 sm:pb-8 md:px-14 lg:px-20 xl:px-24 ">
         <div className="mx-auto max-w-[1400px]">
           {/* TOP CONTENT GRID (4 COLUMNS - COMPACT GAPS & PADDING) */}
           <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-[1.2fr_0.9fr_0.9fr_1fr] lg:gap-8 xl:gap-10">
