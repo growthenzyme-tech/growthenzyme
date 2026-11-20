@@ -25,7 +25,8 @@ import {
 } from "@/app/lib/settings";
 
 import MediaPickerModal from "@/app/components/cms/MediaPickerModal";
-
+// Keep settings available when navigating between CMS pages.
+let generalSettingsCache: GeneralSettings | null = null;
 const inputClass =
   "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#405C48] focus:ring-2 focus:ring-[#405C48]/10";
 
@@ -117,11 +118,13 @@ function Toggle({
 }
 
 export default function AdminSettingsPage() {
-  const [settings, setSettings] = useState<GeneralSettings>(
-    defaultGeneralSettings
-  );
+const [settings, setSettings] = useState<GeneralSettings>(
+  () => generalSettingsCache ?? defaultGeneralSettings
+);
 
-  const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(
+  () => generalSettingsCache === null
+);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -131,26 +134,34 @@ export default function AdminSettingsPage() {
   useEffect(() => {
     let active = true;
 
-    async function loadSettings() {
-      try {
-        setLoading(true);
-        setError("");
-
-        const data = await getGeneralSettings();
-
-        if (active) {
-          setSettings(data);
-        }
-      } catch (err) {
-        console.error("Unable to load settings:", err);
-
-        if (active) {
-          setError("Unable to load settings. Please check your connection and try again.");
-        }
-      } finally {
-        if (active) setLoading(false);
-      }
+  async function loadSettings() {
+  try {
+    if (generalSettingsCache === null) {
+      setLoading(true);
     }
+
+    setError("");
+
+    const data = await getGeneralSettings();
+
+    if (active) {
+      generalSettingsCache = data;
+      setSettings(data);
+    }
+  } catch (err) {
+    console.error("Unable to load settings:", err);
+
+    if (active) {
+      setError(
+        "Unable to load settings. Please check your connection and try again."
+      );
+    }
+  } finally {
+    if (active) {
+      setLoading(false);
+    }
+  }
+}
 
     loadSettings();
 
@@ -195,6 +206,7 @@ export default function AdminSettingsPage() {
       setSuccess("");
 
       await updateGeneralSettings(settings);
+generalSettingsCache = settings;
 
       setSuccess("Your website settings have been saved successfully.");
     } catch (err) {

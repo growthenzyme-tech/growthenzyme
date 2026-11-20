@@ -41,10 +41,17 @@ const CATEGORIES: { label: string; value: string }[] = [
   { label: "PDF Documents", value: "pdf-document" },
   { label: "General", value: "general" },
 ];
+// Keep previously loaded media available during CMS navigation.
+let mediaItemsCache: MediaItem[] | null = null;
 
 export default function MediaLibraryPage() {
-  const [mediaList, setMediaList] = useState<MediaItem[]>([]);
-  const [loading, setLoading] = useState(true);
+const [mediaList, setMediaList] = useState<MediaItem[]>(
+  () => mediaItemsCache ?? []
+);
+
+const [loading, setLoading] = useState(
+  () => mediaItemsCache === null
+);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
@@ -76,19 +83,28 @@ export default function MediaLibraryPage() {
     loadMedia();
   }, []);
 
-  async function loadMedia() {
-    try {
+ async function loadMedia() {
+  try {
+    // Only show the loading screen if no cached assets exist.
+    if (mediaItemsCache === null) {
       setLoading(true);
-      setError("");
-      const items = await getAllMediaItems();
-      setMediaList(items);
-    } catch (err: any) {
-      console.error("Error loading media:", err);
-      setError("Unable to load media assets from Cloud Storage.");
-    } finally {
-      setLoading(false);
     }
+
+    setError("");
+
+    const items = await getAllMediaItems();
+
+    // Update the cache and the displayed media.
+    mediaItemsCache = items;
+    setMediaList(items);
+
+  } catch (err: any) {
+    console.error("Error loading media:", err);
+    setError("Unable to load media assets from Cloud Storage.");
+  } finally {
+    setLoading(false);
   }
+}
 
   function handleCopyUrl(url: string, id: string) {
     if (typeof window !== "undefined") {
@@ -143,7 +159,11 @@ export default function MediaLibraryPage() {
         newItems.push(item);
       }
 
-      setMediaList((prev) => [...newItems, ...prev]);
+   setMediaList((prev) => {
+  const updated = [...newItems, ...prev];
+  mediaItemsCache = updated;
+  return updated;
+});
       setSuccessMsg(`Successfully uploaded ${newItems.length} asset(s) to Cloud Storage.`);
       setTimeout(() => setSuccessMsg(""), 4000);
 
@@ -166,7 +186,14 @@ export default function MediaLibraryPage() {
     try {
       setDeleting(true);
       await deleteMediaItem(deleteTarget.id, deleteTarget.storagePath);
-      setMediaList((prev) => prev.filter((item) => item.id !== deleteTarget.id));
+      setMediaList((prev) => {
+  const updated = prev.filter(
+    (item) => item.id !== deleteTarget.id
+  );
+
+  mediaItemsCache = updated;
+  return updated;
+});
       setSuccessMsg(`Deleted asset: ${deleteTarget.name}`);
       setTimeout(() => setSuccessMsg(""), 4000);
       setDeleteTarget(null);
