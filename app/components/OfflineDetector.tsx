@@ -10,6 +10,22 @@ export default function OfflineDetector() {
   const [checking, setChecking] = useState(false);
 
   useEffect(() => {
+    // Register the service worker to cache the offline image
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((registration) => {
+          console.log(
+            "Offline service worker registered:",
+            registration.scope
+          );
+        })
+        .catch((error) => {
+          console.error("Service worker registration failed:", error);
+        });
+    }
+
+    // Detect internet connection
     const updateConnection = () => {
       setIsOffline(!navigator.onLine);
     };
@@ -40,7 +56,6 @@ export default function OfflineDetector() {
   return (
     <main className="fixed inset-0 z-[99999] flex min-h-screen items-center justify-center overflow-y-auto bg-[#F8F8EF] px-6 py-10">
       <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2">
-
         {/* Dog image */}
         <div className="relative flex justify-center">
           <div className="absolute inset-10 rounded-full bg-[#DCE8C9] blur-3xl" />
@@ -51,6 +66,7 @@ export default function OfflineDetector() {
             width={600}
             height={600}
             priority
+            unoptimized
             className="relative h-auto max-h-[480px] w-full object-contain"
           />
         </div>
