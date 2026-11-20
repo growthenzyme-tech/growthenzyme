@@ -163,16 +163,6 @@ export default function Footer() {
                     </Link>
                   </li>
                 ))}
-                <li>
-                  <Link
-                    href="/blog"
-                    className="group flex items-center text-sm font-medium text-white/85 transition-colors hover:text-[#D78359] pt-0.5 sm:text-[15px]"
-                  >
-                    <span className="transition-transform duration-200 group-hover:translate-x-1">
-                      Blog & Insights
-                    </span>
-                  </Link>
-                </li>
               </ul>
             </div>
 
