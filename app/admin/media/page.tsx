@@ -225,7 +225,7 @@ return (
         Cloud Storage Assets
       </div>
 
-      <h1 className="mt-5 font-heading text-4xl font-bold leading-tight tracking-tight text-[#29382F] sm:text-5xl lg:text-6xl">Media <span className="text-[#506B59]">Library</span></h1>
+      <h1 className="mt-5 font-heading text-4xl font-bold leading-tight tracking-tight text-[#29382F] sm:text-5xl lg:text-6xl">Media <span className="text-[#6F9259]">Library</span></h1>
 
       <p className="mt-3 max-w-xl text-sm leading-7 text-[#29382F]/80">
         Organize and manage your digital assets in one place. Access blog
