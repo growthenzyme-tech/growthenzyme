@@ -56,9 +56,9 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="fixed top-0 z-50 w-full">
-        {announcementEnabled && announcementText && (
-          <div className="flex min-h-9 items-center justify-center bg-[#173D32] px-4 py-2 text-center text-xs sm:text-sm font-medium text-white">
+      <div className="fixed top-0 z-50 w-full bg-white">
+      {announcementEnabled && announcementText && (
+        <div className="flex min-h-9 items-center justify-center border-b border-[#29382F]/10 bg-white px-4 py-2 text-center text-xs sm:text-sm font-medium text-[#29382F]">
             {announcementLink ? (
               <Link
                 href={announcementLink}
@@ -171,14 +171,14 @@ export default function Navbar() {
       </div>
 
       {/* Spacer for fixed announcement and navbar */}
-      <div
-        aria-hidden="true"
-        className={
-          announcementEnabled && announcementText
-            ? "h-[118px] sm:h-[124px]"
-            : "h-[82px] sm:h-[88px]"
-        }
-      />
+  {/* Spacer for fixed announcement and navbar */}
+    <div
+      aria-hidden="true"
+      className={announcementEnabled && announcementText
+        ? "h-[118px] w-full bg-white sm:h-[124px]"
+        : "h-[82px] w-full bg-white sm:h-[88px]"
+      }
+    />
     </>
   );
 }

@@ -8,7 +8,13 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/app/lib/firebase";
 import { logoutUser } from "@/app/lib/auth";
 import { getAllBlogs, type Blog } from "@/app/lib/blog";
-import { FileEdit, CheckCircle2 } from "lucide-react";
+import { getAllUsers, type CMSUser } from "@/app/lib/users";
+import {
+  getCaseStudiesForDashboard,
+  type CaseStudy,
+} from "@/app/lib/case-studies";
+
+import { getAllComments, type BlogComment } from "@/app/lib/comments";
 import {
   BookOpen,
   BriefcaseBusiness,
@@ -24,7 +30,28 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
 const [blogs, setBlogs] = useState<Blog[]>([]);
+const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
 const [statsLoading, setStatsLoading] = useState(true);
+const [users, setUsers] = useState<CMSUser[]>([]);
+const [comments, setComments] = useState<BlogComment[]>([]);
+type DashboardPermission =
+  | "blogs"
+  | "comments"
+  | "caseStudies"
+  | "media"
+  | "users";
+
+const [isAdministrator, setIsAdministrator] = useState(false);
+
+const [dashboardPermissions, setDashboardPermissions] = useState<
+  Record<DashboardPermission, boolean>
+>({
+  blogs: false,
+  comments: false,
+  caseStudies: false,
+  media: false,
+  users: false,
+});
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -56,7 +83,66 @@ const [statsLoading, setStatsLoading] = useState(true);
           return;
         }
 
-        setProfile(data);
+        const rawRole = (
+  data.role || data.roleId || ""
+).toString().toLowerCase();
+
+const isSystemAdmin =
+  data.role === "admin" ||
+  data.role === "administrator" ||
+  data.roleId === "system-admin" ||
+  rawRole.includes("admin") ||
+  rawRole.includes("super");
+
+if (isSystemAdmin) {
+  setIsAdministrator(true);
+
+  setDashboardPermissions({
+    blogs: true,
+    comments: true,
+    caseStudies: true,
+    media: true,
+    users: true,
+  });
+} else if (data.role === "writer" && !data.roleId) {
+  setIsAdministrator(false);
+
+  setDashboardPermissions({
+    blogs: true,
+    comments: false,
+    caseStudies: false,
+    media: true,
+    users: false,
+  });
+} else if (data.roleId) {
+  const roleRef = doc(db, "roles", data.roleId);
+  const roleSnap = await getDoc(roleRef);
+
+  if (!roleSnap.exists() || roleSnap.data().isActive !== true) {
+    throw new Error("Assigned role is inactive or unavailable.");
+  }
+
+  const roleData = roleSnap.data();
+  const savedPermissions = roleData.permissions || {};
+
+  const isAdminRole = ["admin", "administrator"].includes(
+    String(roleData.name || "").toLowerCase()
+  );
+
+  setIsAdministrator(isAdminRole);
+
+  setDashboardPermissions({
+    blogs: savedPermissions.blogs === true,
+    comments: savedPermissions.comments === true,
+    caseStudies: savedPermissions.caseStudies === true,
+    media: savedPermissions.media === true,
+    users: savedPermissions.users === true,
+  });
+} else {
+  throw new Error("No valid role is assigned to your account.");
+}
+
+setProfile(data);
       } catch {
         await logoutUser();
         router.replace("/admin/login");
@@ -69,13 +155,48 @@ const [statsLoading, setStatsLoading] = useState(true);
   }, [router]);
 
 
-  useEffect(() => {
+useEffect(() => {
   async function fetchDashboardStats() {
     try {
-      const data = await getAllBlogs();
-      setBlogs(data as Blog[]);
+      const results = await Promise.allSettled([
+        getAllBlogs(),
+        getCaseStudiesForDashboard(),
+        getAllUsers(),
+        getAllComments(),
+      ]);
+
+      const [
+        blogResult,
+        caseStudyResult,
+        userResult,
+        commentResult,
+      ] = results;
+
+      if (blogResult.status === "fulfilled") {
+        setBlogs(blogResult.value as Blog[]);
+      } else {
+        console.error("Blogs error:", blogResult.reason);
+      }
+
+      if (caseStudyResult.status === "fulfilled") {
+        setCaseStudies(caseStudyResult.value);
+      } else {
+        console.error("Case studies error:", caseStudyResult.reason);
+      }
+
+      if (userResult.status === "fulfilled") {
+        setUsers(userResult.value);
+      } else {
+        console.error("Users error:", userResult.reason);
+      }
+
+      if (commentResult.status === "fulfilled") {
+        setComments(commentResult.value);
+      } else {
+        console.error("Comments error:", commentResult.reason);
+      }
     } catch (error) {
-      console.error("Error loading dashboard blog statistics:", error);
+      console.error("Dashboard statistics error:", error);
     } finally {
       setStatsLoading(false);
     }
@@ -136,14 +257,43 @@ const [statsLoading, setStatsLoading] = useState(true);
     },
   ];
 
-  const totalBlogs = blogs.length;
-
+// Blog statistics
+const totalBlogs = blogs.length;
 const publishedBlogs = blogs.filter(
   (blog) => blog.status === "published"
 ).length;
-
 const draftBlogs = blogs.filter(
   (blog) => blog.status === "draft"
+).length;
+
+// Case study statistics
+const totalCaseStudies = caseStudies.length;
+const publishedCaseStudies = caseStudies.filter(
+  (study) => study.status === "published"
+).length;
+const draftCaseStudies = caseStudies.filter(
+  (study) => study.status === "draft"
+).length;
+
+// User statistics
+const totalUsers = users.length;
+const activeUsers = users.filter(
+  (user) => user.isActive === true
+).length;
+
+// Comment statistics
+const totalComments = comments.length;
+
+const pendingComments = comments.filter(
+  (comment) => comment.status === "pending"
+).length;
+
+const approvedComments = comments.filter(
+  (comment) => comment.status === "approved"
+).length;
+
+const rejectedComments = comments.filter(
+  (comment) => comment.status === "rejected"
 ).length;
 
   return (
@@ -225,85 +375,72 @@ const draftBlogs = blogs.filter(
         </section>
 
 {/* BLOG STATISTICS */}
-<section>
-  <div className="mb-5">
-    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#D78359]">
-      Content Performance
-    </p>
+{/* CMS OVERVIEW */}
+<section className="space-y-4">
+  <div className="flex items-center justify-between">
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#78916D]">
+        Overview
+      </p>
+      <h2 className="mt-1 text-xl font-semibold text-[#17251B]">
+        CMS Overview
+      </h2>
+    </div>
 
-    <h2
-      className="mt-2 text-2xl font-bold text-[#29382F]"
-      style={{
-        fontFamily: "var(--font-heading), Georgia, serif",
-      }}
-    >
-      Blog Overview
-    </h2>
+    <span className="text-sm text-gray-500">
+      Your content at a glance
+    </span>
   </div>
 
-  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-
-    {/* Total Blogs */}
-    <div className="rounded-2xl border border-[#DDE4D9] bg-white p-6">
-      <div className="flex items-center justify-between">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E8EDE3] text-[#29382F]">
-          <BookOpen size={21} />
-        </div>
-        <span className="text-[10px] font-bold uppercase tracking-wider text-[#829181]">
-          Total
-        </span>
-      </div>
-
-      <p className="mt-5 text-3xl font-bold text-[#29382F]">
-        {statsLoading ? "..." : totalBlogs}
+  <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="rounded-xl border border-[#E7EAE3] bg-white p-4">
+      <p className="text-sm text-gray-500">Total Blogs</p>
+      <p className="mt-2 text-2xl font-semibold text-[#17251B]">
+        {statsLoading ? "—" : totalBlogs}
       </p>
-
-      <p className="mt-1 text-sm text-[#667267]">
-        Total Blog Articles
+      <p className="mt-1 text-xs text-gray-400">
+        {publishedBlogs} published · {draftBlogs} drafts
       </p>
     </div>
 
-    {/* Published Blogs */}
-    <div className="rounded-2xl border border-[#DDE4D9] bg-white p-6">
-      <div className="flex items-center justify-between">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E8EDE3] text-[#405C48]">
-          <CheckCircle2 size={21} />
-        </div>
-        <span className="text-[10px] font-bold uppercase tracking-wider text-[#405C48]">
-          Live
-        </span>
-      </div>
-
-      <p className="mt-5 text-3xl font-bold text-[#29382F]">
-        {statsLoading ? "..." : publishedBlogs}
+    <div className="rounded-xl border border-[#E7EAE3] bg-white p-4">
+      <p className="text-sm text-gray-500">Case Studies</p>
+      <p className="mt-2 text-2xl font-semibold text-[#17251B]">
+        {statsLoading ? "—" : totalCaseStudies}
       </p>
-
-      <p className="mt-1 text-sm text-[#667267]">
-        Published Blogs
+      <p className="mt-1 text-xs text-gray-400">
+        {publishedCaseStudies} published · {draftCaseStudies} drafts
       </p>
     </div>
+    <div className="rounded-xl border border-[#E7EAE3] bg-white p-4">
+  <p className="text-sm text-gray-500">Total Users</p>
 
-    {/* Draft Blogs */}
-    <div className="rounded-2xl border border-[#DDE4D9] bg-white p-6">
-      <div className="flex items-center justify-between">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F5F0E5] text-[#29382F]">
-          <FileEdit size={21} />
-        </div>
-        <span className="text-[10px] font-bold uppercase tracking-wider text-[#829181]">
-          In Progress
-        </span>
-      </div>
+  <p className="mt-2 text-2xl font-semibold text-[#17251B]">
+    {statsLoading ? "—" : totalUsers}
+  </p>
 
-      <p className="mt-5 text-3xl font-bold text-[#29382F]">
-        {statsLoading ? "..." : draftBlogs}
-      </p>
+  <p className="mt-1 text-xs text-gray-400">
+  {statsLoading ? "Loading..." : `${activeUsers} active users`}
+  </p>
+</div>
+<div className="rounded-xl border border-[#E7EAE3] bg-white p-4">
+  <p className="text-sm text-gray-500">Total Comments</p>
 
-      <p className="mt-1 text-sm text-[#667267]">
-        Draft Blogs
-      </p>
-    </div>
+  <p className="mt-2 text-2xl font-semibold text-[#17251B]">
+    {statsLoading ? "—" : totalComments}
+  </p>
 
+  <p className="mt-1 text-xs text-gray-400">
+    {pendingComments} pending · {approvedComments} approved
+  </p>
+
+  <p className="mt-1 text-xs text-gray-400">
+    {rejectedComments} rejected
+  </p>
+</div>
   </div>
+
+  
 </section>
         {/* Dashboard Section */}
         <section>

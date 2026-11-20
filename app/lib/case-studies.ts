@@ -11,9 +11,11 @@ import {
   serverTimestamp,
   updateDoc,
   where,
+  setDoc ,
 } from "firebase/firestore";
 
 import { db } from "./firebase";
+
 
 export interface CaseStudy {
   id: string;
@@ -345,6 +347,15 @@ export async function getAllCaseStudies(): Promise<CaseStudy[]> {
   }
 }
 
+export async function getCaseStudiesForDashboard(): Promise<CaseStudy[]> {
+  const snapshot = await getDocs(caseStudiesRef);
+
+  return snapshot.docs.map((docSnap) => ({
+    id: docSnap.id,
+    ...(docSnap.data() as Omit<CaseStudy, "id">),
+  }));
+}
+
 export async function getPublishedCaseStudies(): Promise<CaseStudy[]> {
   try {
     const q = query(
@@ -432,15 +443,28 @@ export async function deleteCaseStudy(id: string) {
 }
 
 export async function seedInitialCaseStudies() {
-  const results = [];
+  const results: string[] = [];
+
   for (const item of INITIAL_CASE_STUDIES) {
-    const docRef = await addDoc(caseStudiesRef, {
-      ...item,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-      publishedAt: serverTimestamp(),
-    });
-    results.push(docRef.id);
+    // Use the existing ID so syncing cannot create duplicates
+    const studyRef = doc(caseStudiesRef, item.id);
+
+    const existingStudy = await getDoc(studyRef);
+
+    if (!existingStudy.exists()) {
+      const { id, ...studyData } = item;
+
+      await setDoc(studyRef, {
+        ...studyData,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        publishedAt:
+          item.status === "published" ? serverTimestamp() : null,
+      });
+
+      results.push(id);
+    }
   }
+
   return results;
 }
