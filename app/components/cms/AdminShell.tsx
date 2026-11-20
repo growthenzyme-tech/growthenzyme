@@ -22,6 +22,8 @@ import {
 import { logoutUser, observeAuth } from "@/app/lib/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/app/lib/firebase";
+import NotificationProvider from "@/app/components/cms/NotificationProvider";
+import { useNotification } from "@/app/components/cms/NotificationProvider";
 
 const navigation = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -41,6 +43,7 @@ export default function AdminShell({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -513,7 +516,8 @@ if (
   );
 
 
-  return (
+ return (
+  <NotificationProvider>
     <div className="min-h-screen bg-[#f7f7f5]">
       <div className="fixed inset-y-0 left-0 z-40 hidden w-[255px] lg:block">
         {sidebar}
@@ -594,5 +598,6 @@ if (
         </main>
       </div>
     </div>
+  </NotificationProvider>
   );
 }

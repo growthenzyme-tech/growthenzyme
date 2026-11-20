@@ -9,6 +9,8 @@ import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
 import { auth, db } from "@/app/lib/firebase";
+import { useNotification } from "@/app/components/cms/NotificationProvider";
+import { NodeSelection } from "@tiptap/pm/state";
 import {
   collection,
   addDoc,
@@ -44,6 +46,7 @@ import {
   Image as ImageIconLucide,
   Loader2,
   Upload,
+   Trash2,
 } from "lucide-react";
 import MediaPickerModal from "@/app/components/cms/MediaPickerModal";
 import { uploadMediaFile } from "@/app/lib/media";
@@ -63,6 +66,7 @@ type BlogEditorProps = {
 
 export default function BlogEditor({ blogId }: BlogEditorProps) {
   const router = useRouter();
+  const { notify } = useNotification();
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
@@ -77,6 +81,7 @@ export default function BlogEditor({ blogId }: BlogEditorProps) {
   const [loadingBlog, setLoadingBlog] = useState(Boolean(blogId));
   const [existingPublishedAt, setExistingPublishedAt] =
     useState<any>(null);
+    const [blogContent, setBlogContent] = useState("<p></p>");
 
   const [existingCoverImageId, setExistingCoverImageId] =
     useState<string | null>(null);
@@ -85,21 +90,27 @@ export default function BlogEditor({ blogId }: BlogEditorProps) {
   const [coverPickerOpen, setCoverPickerOpen] = useState(false);
   const [inlinePickerOpen, setInlinePickerOpen] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
-
+const [imageSelected, setImageSelected] = useState(false);
   const editor = useEditor({
     immediatelyRender: false,
-    extensions: [
-      StarterKit,
-      Underline,
-      Link.configure({
-        openOnClick: false,
-        HTMLAttributes: {
-          target: "_blank",
-          rel: "noopener noreferrer",
-        },
-      }),
-      Image,
-    ],
+ extensions: [
+  StarterKit.configure({
+    link: false,
+    underline: false,
+  }),
+  Underline,
+  Link.configure({
+    openOnClick: false,
+    HTMLAttributes: {
+      target: "_blank",
+      rel: "noopener noreferrer",
+    },
+  }),
+Image.configure({
+  inline: false,
+  allowBase64: true,
+}),
+],
     content: "<p></p>",
     editorProps: {
       attributes: {
@@ -107,7 +118,28 @@ export default function BlogEditor({ blogId }: BlogEditorProps) {
           "prose prose-lg max-w-none min-h-[320px] p-6 focus:outline-none text-[#405C48]",
       },
     },
+    onSelectionUpdate: ({ editor }) => {
+  const selection = editor.state.selection;
+
+  setImageSelected(
+    selection instanceof NodeSelection &&
+    selection.node.type.name === "image"
+  );
+},
   });
+  function removeSelectedImage() {
+  if (!editor) return;
+
+  const selection = editor.state.selection;
+
+  if (
+    selection instanceof NodeSelection &&
+    selection.node.type.name === "image"
+  ) {
+    editor.chain().focus().deleteSelection().run();
+    setImageSelected(false);
+  }
+}
 
   useEffect(() => {
     if (!slugEdited) {
@@ -123,8 +155,10 @@ export default function BlogEditor({ blogId }: BlogEditorProps) {
 
 
 
-  useEffect(() => {
-  if (!blogId || !editor) return;
+useEffect(() => {
+  if (!blogId) return;
+
+  let cancelled = false;
 
   async function loadBlog() {
     try {
@@ -133,12 +167,15 @@ export default function BlogEditor({ blogId }: BlogEditorProps) {
       const blogRef = doc(db, "blogs", blogId!);
       const blogSnap = await getDoc(blogRef);
 
+      if (cancelled) return;
+
       if (!blogSnap.exists()) {
         setError("Blog not found.");
         return;
       }
 
       const data = blogSnap.data();
+
       setExistingPublishedAt(data.publishedAt || null);
 
       setTitle(data.title || "");
@@ -150,6 +187,7 @@ export default function BlogEditor({ blogId }: BlogEditorProps) {
 
       setSeoTitle(data.seoTitle || "");
       setMetaDescription(data.metaDescription || "");
+      setBlogContent(data.content || "<p></p>");
 
       setExistingCoverImageId(data.coverImageId || null);
 
@@ -158,25 +196,40 @@ export default function BlogEditor({ blogId }: BlogEditorProps) {
           doc(db, "media", data.coverImageId)
         );
 
+        if (cancelled) return;
+
         if (mediaSnap.exists()) {
           const mData = mediaSnap.data();
-          setCoverImage(mData.url || mData.downloadUrl || mData.data || "");
+
+          setCoverImage(
+            mData.url || mData.downloadUrl || mData.data || ""
+          );
         }
       }
-
-      editor?.commands.setContent(
-  data.content || "<p></p>"
-);
     } catch (err) {
+      if (cancelled) return;
+
       console.error("Error loading blog:", err);
       setError("Unable to load this blog.");
     } finally {
-      setLoadingBlog(false);
+      if (!cancelled) {
+        setLoadingBlog(false);
+      }
     }
   }
 
   loadBlog();
-}, [blogId, editor]);
+
+  return () => {
+    cancelled = true;
+  };
+}, [blogId]);
+
+useEffect(() => {
+  if (!editor || !blogId || loadingBlog) return;
+
+  editor.commands.setContent(blogContent);
+}, [editor, blogId, loadingBlog, blogContent]);
 
   async function handleCoverImage(file?: File) {
     if (!file) return;
@@ -297,18 +350,33 @@ async function handleSubmit(status: "draft" | "published") {
     }
 
     // 5. Redirect after successful save
-    router.push("/admin/blogs");
-    router.refresh();
+   // 5. Show success notification and redirect
+notify(
+  blogId
+    ? status === "published"
+      ? "Blog updated and published successfully."
+      : "Blog updated successfully."
+    : status === "published"
+      ? "Blog published successfully."
+      : "Blog draft created successfully.",
+  "success"
+);
+await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  } catch (err) {
-    console.error("Blog save error:", err);
+router.push("/admin/blogs");
+router.refresh();
 
-    setError(
-      err instanceof Error
-        ? err.message
-        : "Unable to save the blog. Please try again."
-    );
-  } finally {
+} catch (err) {
+  console.error("Blog save error:", err);
+
+  const message =
+    err instanceof Error
+      ? err.message
+      : "Unable to save the blog. Please try again.";
+
+  setError(message);
+  notify(message, "error");
+} finally {
     setSaving(false);
   }
 }
@@ -674,6 +742,20 @@ if (blogId && error === "Blog not found.") {
             >
               <ImageIconLucide size={17} />
             </button>
+            <button
+  type="button"
+  title="Remove Selected Image"
+  disabled={!imageSelected}
+  onMouseDown={(e) => e.preventDefault()}
+  onClick={removeSelectedImage}
+  className={`${toolbarButtonClass} ${
+    imageSelected
+      ? "text-red-600 hover:border-red-200 hover:bg-red-50"
+      : "cursor-not-allowed opacity-40"
+  }`}
+>
+  <Trash2 size={16} />
+</button>
 
             <span className="mx-1 hidden h-9 w-px bg-[#DCE5D8] sm:block" />
 
@@ -811,11 +893,17 @@ if (blogId && error === "Blog not found.") {
         allowedType="image"
         defaultCategory="blog-cover"
         title="Select Cover Image"
-        onSelect={(item) => {
-          setCoverImage(item.url);
-          setExistingCoverImageId(item.id);
-          setCoverImageChanged(false);
-        }}
+       onSelect={(item) => {
+  console.log("Selected image:", item);
+  console.log("Image URL:", item.url);
+
+  editor?.chain().focus().setImage({
+    src: item.url,
+    alt: item.name,
+  }).run();
+
+  setInlinePickerOpen(false);
+}}
       />
 
       {/* INLINE CONTENT IMAGE PICKER MODAL */}

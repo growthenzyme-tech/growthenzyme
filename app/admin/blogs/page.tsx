@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useNotification } from "@/app/components/cms/NotificationProvider";
 import {
   Search,
   Plus,
@@ -47,6 +48,7 @@ type FilterType = "all" | "published" | "draft";
 
 export default function BlogManagementPage() {
   const router = useRouter();
+  const { notify } = useNotification();
 
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -122,7 +124,7 @@ const fetchBlogs = useCallback(async () => {
   }
 
 
-  async function handleSetLeadArticle(blog: Blog) {
+async function handleSetLeadArticle(blog: Blog) {
   if (blog.status !== "published") return;
 
   try {
@@ -131,74 +133,83 @@ const fetchBlogs = useCallback(async () => {
     await updateFeaturedBlogId(blog.id);
 
     setFeaturedBlogId(blog.id);
+    notify("Lead Article updated successfully.", "success");
   } catch (err) {
     console.error("Error setting Lead Article:", err);
-    alert("Unable to set this blog as the Lead Article.");
+    notify("Unable to set this blog as the Lead Article.", "error");
   } finally {
     setActionId(null);
   }
 }
 
-  async function handleDelete(blog: Blog) {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${blog.title || "this blog"}"?`
-    );
-
-    if (!confirmed) return;
-
-    try {
-      setActionId(blog.id);
-      await deleteBlog(blog.id);
-
-      setBlogs((current) =>
-        current.filter((item) => item.id !== blog.id)
-      );
-} catch (err: any) {
-  console.error("Delete error details:", {
-    code: err?.code,
-    message: err?.message,
-    error: err,
-  });
-
-  alert(
-    `Unable to delete blog.\n\nError: ${err?.code || "Unknown"}\n${err?.message || "Please try again."}`
+async function handleDelete(blog: Blog) {
+  const confirmed = window.confirm(
+    `Are you sure you want to delete "${blog.title || "this blog"}"?`
   );
-} finally {
-      setActionId(null);
-    }
-  }
 
-  async function handleStatusChange(blog: Blog) {
-    const newStatus =
-      blog.status === "published" ? "draft" : "published";
+  if (!confirmed) return;
 
-    const confirmed = window.confirm(
-      newStatus === "published"
-        ? `Publish "${blog.title}"?`
-        : `Move "${blog.title}" back to drafts?`
+  try {
+    setActionId(blog.id);
+
+    await deleteBlog(blog.id);
+
+    setBlogs((current) =>
+      current.filter((item) => item.id !== blog.id)
     );
 
-    if (!confirmed) return;
+    notify("Blog deleted successfully.", "success");
+  } catch (err: any) {
+    console.error("Delete error details:", {
+      code: err?.code,
+      message: err?.message,
+      error: err,
+    });
 
-    try {
-      setActionId(blog.id);
-
-      await updateBlogStatus(blog.id, newStatus);
-
-      setBlogs((current) =>
-        current.map((item) =>
-          item.id === blog.id
-            ? { ...item, status: newStatus }
-            : item
-        )
-      );
-    } catch (err) {
-      console.error("Status update error:", err);
-      alert("Unable to update the blog status.");
-    } finally {
-      setActionId(null);
-    }
+    notify("Unable to delete this blog. Please try again.", "error");
+  } finally {
+    setActionId(null);
   }
+}
+
+async function handleStatusChange(blog: Blog) {
+  const newStatus =
+    blog.status === "published" ? "draft" : "published";
+
+  const confirmed = window.confirm(
+    newStatus === "published"
+      ? `Publish "${blog.title}"?`
+      : `Move "${blog.title}" back to drafts?`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    setActionId(blog.id);
+
+    await updateBlogStatus(blog.id, newStatus);
+
+    setBlogs((current) =>
+      current.map((item) =>
+        item.id === blog.id
+          ? { ...item, status: newStatus }
+          : item
+      )
+    );
+
+    notify(
+      newStatus === "published"
+        ? "Blog published successfully."
+        : "Blog moved to drafts successfully.",
+      "success"
+    );
+  } catch (err) {
+    console.error("Status update error:", err);
+    notify("Unable to update the blog status.", "error");
+  } finally {
+    setActionId(null);
+  }
+}
 
   const filters: {
     label: string;
