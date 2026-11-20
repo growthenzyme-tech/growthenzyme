@@ -319,7 +319,7 @@ export default function CaseStudiesPage() {
       )}
 
       {/* CASE STUDIES GRID */}
-      <section className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12 pb-24">
+      <section className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12 pb-8 sm:pb-12">
         {loading ? (
           <div className="py-20 text-center">
             <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[#29382F]/20 border-t-[#29382F]" />
@@ -461,7 +461,7 @@ export default function CaseStudiesPage() {
       </section>
 
       {/* BOTTOM CTA */}
-      <section className="relative w-full bg-transparent py-16 sm:py-20 lg:py-24 text-[#29382F]">
+      <section className="relative w-full bg-transparent pt-4 pb-12 sm:pt-6 sm:pb-16 text-[#29382F]">
         <div className="mx-auto max-w-5xl px-5 text-center sm:px-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#29382F]/15 bg-white/80 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#29382F] shadow-sm backdrop-blur-sm">
             <TrendingUp size={14} className="text-[#D78359]" />
