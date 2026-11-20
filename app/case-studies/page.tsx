@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -72,78 +71,161 @@ export default function CaseStudiesPage() {
     });
   }, [caseStudies, activeIndustry, search]);
 
+  // hero image cards: only studies that actually have a cover image
+  const heroStudies = useMemo(() => {
+    return caseStudies.filter((s) => Boolean(s?.coverImage)).slice(0, 2);
+  }, [caseStudies]);
+
   return (
     <div className="min-h-screen bg-[#FFFDF8] text-[#29382F] antialiased">
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#EEF5EB] via-[#F6FAF3] to-[#FFFDF8] pt-28 pb-16 sm:pt-36 sm:pb-20">
-        <div className="pointer-events-none absolute left-1/2 top-[-200px] h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-[#B6CBA9]/30 blur-3xl" />
+<section className="relative mb-20 bg-[#FFFDF8] pb-0 pt-16 sm:mb-20 sm:pt-14">
+  {/* GREEN BACKGROUND — ends behind the middle of the filter */}
+<div
+  aria-hidden="true"
+  className="pointer-events-none absolute inset-x-0 top-0 h-[calc(100%-120px)] bg-gradient-to-br from-[#C9D9BF] via-[#B6CBA9] to-[#A5BE98] sm:h-[calc(100%-120px)]"
+/>
 
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
-          <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#29382F]/15 bg-white/80 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#29382F] shadow-sm backdrop-blur-md">
-              <Sparkles size={14} className="text-[#D78359]" />
-              Client Success Stories
-            </div>
+        {/* soft light sweep (gradient only) */}
+    <div
+  aria-hidden="true"
+  className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+  style={{
+    background:
+      "linear-gradient(115deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.1) 40%, transparent 65%)",
+  }}
+/>
 
-            <h1
-              className="font-heading text-4xl font-bold tracking-tight text-[#29382F] sm:text-5xl lg:text-6xl"
-              style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
-            >
-              Real Growth. Real Stories. Verified Impact.
-            </h1>
+        <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
 
-            <p className="font-instrument mt-5 text-base leading-relaxed text-[#506B59] sm:text-lg">
-              Explore how Growth Enzyme helps ambitious founders, legacy
-              enterprises, and healthcare institutions turn brand presence into
-              sustainable lead pipelines and digital authority.
-            </p>
-          </div>
+          {/* ===== HEADLINE + FRAMED IMAGE CARDS ===== */}
+          <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
 
-          {/* SEARCH & INDUSTRY FILTER BAR */}
-          <div className="mt-12 space-y-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              {/* Search Bar */}
-              <div className="relative w-full sm:max-w-md">
-                <Search
-                  size={18}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#29382F]/40"
-                />
-                <input
-                  type="text"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search by client, industry, or service..."
-                  className="font-instrument w-full rounded-2xl border border-[#29382F]/15 bg-white py-3 pl-11 pr-4 text-sm text-[#29382F] shadow-sm transition placeholder:text-[#29382F]/40 focus:border-[#29382F] focus:outline-none focus:ring-2 focus:ring-[#B6CBA9]/50"
-                />
+            {/* LEFT: badge, heading, paragraph */}
+            <div className={heroStudies.length > 0 ? "lg:col-span-7" : "lg:col-span-12"}>
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#29382F]/15 bg-white/80 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#29382F] shadow-sm backdrop-blur-md">
+                <Sparkles size={14} className="text-[#D78359]" />
+                Client Success Stories
               </div>
 
-              {/* Total count badge */}
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#506B59]">
-                Showing {filteredStudies.length} of {caseStudies.length} Client
-                Stories
+              <h1
+                className="font-heading text-4xl font-bold leading-[1.05] tracking-[-0.045em] text-[#29382F] sm:text-5xl lg:text-6xl"
+                style={{ fontFamily: "var(--font-heading), Georgia, serif" }}
+              >
+                Real Growth. Real Stories.{" "}
+                <span className="mt-2 inline-block rounded-full bg-[#29382F] px-5 py-1.5 text-white shadow-[0_6px_0_rgba(23,41,31,0.35)] sm:mt-3 sm:px-7">
+                  Verified Impact.
+                </span>
+              </h1>
+
+              <p className="font-instrument mt-7 max-w-xl border-l-2 border-[#D78359] pl-5 text-base leading-relaxed text-[#29382F]/80 sm:text-lg">
+                Explore how Growth Enzyme helps ambitious founders, legacy
+                enterprises, and healthcare institutions turn brand presence into
+                sustainable lead pipelines and digital authority.
               </p>
             </div>
 
-            {/* Filter Pills */}
-            <div className="flex flex-wrap items-center gap-2 pt-2">
-              {industries.map((industry) => {
-                const active = activeIndustry === industry;
-                return (
-                  <button
-                    key={industry}
-                    onClick={() => setActiveIndustry(industry)}
-                    className={`rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${active
-                      ? "bg-[#29382F] text-white shadow-md shadow-[#29382F]/15"
-                      : "border border-[#29382F]/15 bg-white text-[#29382F]/80 hover:bg-[#EEF5EB] hover:text-[#29382F]"
+            {/* RIGHT: framed image cards (first two case studies) */}
+            {heroStudies.length > 0 && (
+              <div className="relative hidden lg:col-span-5 lg:block">
+               <div className="relative mx-auto min-h-[300px] max-w-md">
+
+  {/* cards above the frame */}
+  <div className="relative z-20 pb-0">
+                    {heroStudies.map((study, i) => (
+                      <Link
+                        key={study.id}
+                        href={`/case-studies/${study.slug}`}
+                        className={`group relative z-20 block w-[64%] ${
+                          i === 0 ? "-ml-6 -mt-5" : "-mr-6 -mt-10 ml-auto"
+                        }`}
+                      >
+                        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border-2 border-[#29382F] bg-[#E8EDE3] shadow-[0_14px_30px_rgba(41,56,47,0.18)]">
+                          <Image
+                            src={study.coverImage}
+                            alt={study.coverImageAlt || study.title}
+                            fill
+                            unoptimized
+                            sizes="260px"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+
+                        <div className="relative z-30 -mt-7 mx-3 rounded-xl border border-[#29382F]/15 bg-white p-3 shadow-[0_12px_28px_rgba(41,56,47,0.15)] transition-transform duration-300 group-hover:-translate-y-0.5">
+                          <span
+                            className={`rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
+                              i === 0
+                                ? "bg-[#D5E1CC] text-[#29382F]"
+                                : "bg-[#29382F] text-[#B6CBA9]"
+                            }`}
+                          >
+                            {study.industry}
+                          </span>
+                          <p className="font-heading mt-1.5 line-clamp-1 text-xs font-bold text-[#29382F]">
+                            {study.client}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* ===== SEARCH & INDUSTRY FILTER CARD ===== */}
+<div className="relative z-20 mt-8 -mb-12 translate-y-0 rounded-[1.5rem] bg-white p-3 shadow-[0_8px_0_#8FA68B,0_24px_48px_rgba(41,56,47,0.18)] sm:mt-12 sm:-mb-5 sm:rounded-[2rem] sm:p-4">
+            <div className="space-y-4 rounded-[1.1rem] border border-dashed border-[#29382F]/20 p-4 sm:rounded-[1.5rem] sm:p-6">
+
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                {/* Search Bar */}
+                <div className="relative w-full sm:max-w-md">
+                  <Search
+                    size={18}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-[#29382F]/40"
+                  />
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search by client, industry, or service..."
+                    className="font-instrument w-full rounded-2xl border border-[#29382F]/15 bg-[#F6F9F3] py-3 pl-11 pr-4 text-sm text-[#29382F] transition placeholder:text-[#29382F]/40 focus:border-[#29382F] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#B6CBA9]/50"
+                  />
+                </div>
+
+                {/* Total count badge */}
+                <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#506B59]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#D78359]" />
+                  Showing {filteredStudies.length} of {caseStudies.length} Client
+                  Stories
+                </p>
+              </div>
+
+              {/* Filter Pills */}
+              <div className="flex flex-wrap items-center gap-2 border-t border-[#29382F]/10 pt-4">
+                {industries.map((industry) => {
+                  const active = activeIndustry === industry;
+                  return (
+                    <button
+                      key={industry}
+                      onClick={() => setActiveIndustry(industry)}
+                      className={`rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
+                        active
+                          ? "bg-[#29382F] text-white shadow-[0_4px_0_#17291F]"
+                          : "border border-[#29382F]/15 bg-white text-[#29382F]/80 hover:-translate-y-0.5 hover:bg-[#EEF5EB] hover:text-[#29382F]"
                       }`}
-                  >
-                    {industry}
-                  </button>
-                );
-              })}
+                    >
+                      {industry}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
+
+        {/* soft wave edge into the next section (matches #FFFDF8 page bg) */}
+  
       </section>
 
       {/* FEATURED SPOTLIGHT CASE STUDY */}
