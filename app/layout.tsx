@@ -7,6 +7,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import SiteNavbar from "./components/SiteNavbar";
 import SplashScreen from "./components/SplashScreen";
+import OfflineDetector from "@/app/components/OfflineDetector";
 
 const bricolageGrotesque = localFont({
   src: "../public/fonts/BricolageGrotesque.woff2",
@@ -104,6 +105,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col font-sans">
+         <OfflineDetector />
         <SplashScreen />
         <SiteNavbar />
         {children}

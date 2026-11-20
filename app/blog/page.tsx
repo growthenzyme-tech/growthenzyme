@@ -183,15 +183,15 @@ export default function BlogPage() {
     <>
       <main className="min-h-screen overflow-hidden bg-[#FFFDF8]">
         {/* ================= BLOG HERO ================= */}
-        <section className="relative flex min-h-[380px] sm:min-h-[440px] lg:min-h-[500px] w-full items-center justify-center overflow-hidden bg-[#1F5930] px-6 py-20 text-center text-white">
+        <section className="relative flex min-h-[380px] sm:min-h-[440px] lg:min-h-[500px] w-full items-center justify-center overflow-hidden bg-[#B6CBA9]  px-6 py-20 text-center text-white">
           {/* Background Hero Image with user-selected green gradient */}
-          <Image
+           <Image
             src="/images/blog-hero-bg.png"
             alt="The Blog Hero"
             fill
             priority
             className="object-cover object-center"
-          />
+          /> 
 
           {/* Soft ambient tint overlay to preserve contrast while keeping the exact rich green vibrant */}
           <div
@@ -210,9 +210,12 @@ export default function BlogPage() {
             </div>
 
             {/* Largely text: THE BLOG */}
-            <h1 className="font-heading text-[clamp(3rem,8.5vw,5.5rem)] font-extrabold uppercase tracking-[0.16em] text-white sm:tracking-[0.2em] drop-shadow-xl">
-              The Blog
-            </h1>
+          <h1 className="whitespace-nowrap font-heading text-[clamp(2.6rem,8vw,5rem)] font-bold leading-[0.98] tracking-[-0.065em] text-[#29382F]">
+  The{" "}
+  <span className="inline-block rounded-full bg-[#29382F] px-5 py-2.5 text-white sm:px-8">
+    Blog
+  </span>
+</h1>
 
             {/* Subtitle matching reference */}
             <p className="mt-4 max-w-2xl text-xs font-semibold uppercase tracking-[0.22em] text-white sm:text-sm md:text-base leading-relaxed drop-shadow-md">
