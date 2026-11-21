@@ -28,9 +28,10 @@ import MediaPickerModal from "@/app/components/cms/MediaPickerModal";
 // Keep settings available when navigating between CMS pages.
 let generalSettingsCache: GeneralSettings | null = null;
 const inputClass =
-  "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#405C48] focus:ring-2 focus:ring-[#405C48]/10";
+  "w-full rounded-xl border border-[#29382F]/15 bg-[#F6F9F3] px-4 py-3 text-sm text-[#29382F] outline-none transition placeholder:text-[#29382F]/35 focus:border-[#29382F] focus:bg-white focus:ring-2 focus:ring-[#B6CBA9]/50";
 
-const labelClass = "mb-2 block text-sm font-medium text-gray-700";
+const labelClass =
+  "mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-[#29382F]/80";
 
 function Section({
   title,
@@ -44,17 +45,20 @@ function Section({
   children: ReactNode;
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
-      <div className="flex items-start gap-4 border-b border-gray-100 px-6 py-5">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#405C48]/10 text-[#405C48]">
+    <section className="overflow-hidden rounded-2xl border border-[#29382F]/20 bg-white shadow-[0_6px_0_#CFDCC7]">
+      {/* header */}
+      <div className="flex items-start gap-4 border-b border-[#29382F]/15 bg-[#EEF3EA] px-6 py-5">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#29382F]/20 bg-white text-[#29382F]">
           <Icon size={19} />
         </div>
+
         <div>
-          <h2 className="text-base font-semibold text-gray-900">{title}</h2>
-          <p className="mt-1 text-sm text-gray-500">{description}</p>
+          <h2 className="text-base font-bold text-[#29382F]">{title}</h2>
+          <p className="mt-1 text-sm text-[#506B59]">{description}</p>
         </div>
       </div>
 
+      {/* body */}
       <div className="grid gap-5 p-6">{children}</div>
     </section>
   );
@@ -70,11 +74,13 @@ function Field({
   description?: string;
 }) {
   return (
-    <div className="min-w-0">
+    <div className="min-w-0 rounded-xl border border-[#29382F]/10 p-4">
       <label className={labelClass}>{label}</label>
       {children}
       {description && (
-        <p className="mt-2 text-xs leading-5 text-gray-400">{description}</p>
+        <p className="mt-2 text-xs leading-5 text-[#506B59]/80">
+          {description}
+        </p>
       )}
     </div>
   );
