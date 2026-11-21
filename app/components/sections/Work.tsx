@@ -1,7 +1,11 @@
+"use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+
+import { getGeneralSettings } from "@/app/lib/settings";
 
 interface Project {
   number: string;
@@ -82,6 +86,31 @@ const projects: Project[] = [
 ];
 
 export default function Work() {
+    const [maxFeaturedCaseStudies, setMaxFeaturedCaseStudies] = useState(4);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadSettings() {
+      try {
+        const settings = await getGeneralSettings();
+
+        if (active) {
+          setMaxFeaturedCaseStudies(
+            Math.max(0, settings.maxFeaturedCaseStudies)
+          );
+        }
+      } catch (error) {
+        console.error("Unable to load homepage settings:", error);
+      }
+    }
+
+    loadSettings();
+
+    return () => {
+      active = false;
+    };
+  }, []);
   return (
     <section
       id="work"
@@ -122,7 +151,7 @@ export default function Work() {
 
         {/* PROJECT CARDS - TWO COLUMNS, TWO ROWS */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:gap-6">
-          {projects.map((project, index) => {
+      {projects.slice(0, maxFeaturedCaseStudies).map((project, index) => {
             const isLeftCard = index % 2 === 0;
             const cardClasses = `group relative flex min-w-0 flex-col overflow-visible border border-white/60 bg-white p-4 shadow-[0_18px_40px_rgba(41,56,47,0.14)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_50px_rgba(41,56,47,0.2)] sm:p-5 ${project.link ? "cursor-pointer" : ""
               }`;
