@@ -476,7 +476,7 @@ export default function BlogPage() {
                         </Link>
 
                         {/* Right: Article Details */}
-                        <div className="relative z-20 -ml-5 flex min-h-[220px] min-w-0 flex-col items-start rounded-2xl border border-[#29382F]/[0.06] bg-[#FFFDF8] p-4 shadow-[0_15px_40px_rgba(41,56,47,0.09)] sm:-ml-8 sm:min-h-[260px] sm:p-6">
+                        <div className="relative z-20 -ml-5 flex min-h-[220px] min-w-0 flex-col items-start rounded-2xl border border-[#29382F]/[0.06] bg-white p-4 shadow-[0_15px_40px_rgba(41,56,47,0.09)] sm:-ml-8 sm:min-h-[260px] sm:p-6">
                           <span className="mb-3 rounded-full bg-[#D5E1CC] px-3 py-1.5 text-[8px] font-bold uppercase tracking-widest text-[#405C48]">
                             {blog.category || "Insights"}
                           </span>
